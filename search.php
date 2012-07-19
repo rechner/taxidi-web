@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!-- vim: tabstop=2:softtabstop=2 -->
 <?php require_once "template/header.php"; ?>
+					<!-- sidebar -->
           <div class="span3">
             <div class="well sidebar-nav">
               <ul class="nav nav-list">
@@ -15,8 +16,8 @@
                 <li><a href="#"><i class="icon-user"></i>Register Visitor</a></li>
                 <li><a href="#"><i class="icon-print"></i>Print Search</a></li>
                 <li><a href="#"><i class="icon-download-alt"></i>Download Results</a></li>
-            </div><!--/.well -->
-          </div><!--/span-->
+            </div>
+          </div>
           <!-- /sidebar -->
 
           <div class="span9">

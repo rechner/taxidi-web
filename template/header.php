@@ -42,7 +42,7 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="#">Home</a></li>
-              <li><a href="search.php">Search</a></li>
+              <li<?php echo (basename($_SERVER['PHP_SELF']) == "search.php" ? " class=\"active\"" : "");?>><a href="search.php">Search</a></li>
               <li><a href="#register">Register</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -54,11 +54,4 @@
     <div class="container">
       <div class="container-fluid">
         <div class="row-fluid">
-          <div class="span3">
-            <div class="well sidebar-nav">
-              <ul class="nav nav-list">
-                <li class="nav-header">Search</li>
-                <li><a href="search.php"><i class="icon-search"></i>Search</a></li>
-                <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
-                <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
 

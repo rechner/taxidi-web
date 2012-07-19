@@ -90,11 +90,9 @@
           <input type="text" class="input-small" style="height: 28px;" name="date" id="date" value="<?php echo date("Y-m-d"); ?>">
         </div>
       </div>
-      <div class="form-actions">
-        <input type="submit" class="btn btn-primary" value="Filter" />
-      </div>
-    </fieldset>
-  </form>
+      <div class="control-group form-inline">
+        <label class="control-label" >Statistics</label>
+        <div class="controls">
 <?php
 
     $filters = array();
@@ -111,20 +109,29 @@
       $filters[] = "date = DATE '{$_GET["date"]}'";
     }
     
-    $query = "SELECT person, volunteer FROM statistics" . (count($filters) > 0 ? " WHERE " . implode(" and ", $filters) : "") . ";";
-    
+    $query = "SELECT count(*) FROM statistics" . (count($filters) > 0 ? " WHERE " . implode(" and ", $filters) : "") . ";";
     $result = pg_query($connection, $query) or 
       die("Error in query: $query." . pg_last_error($connection));
-    
-    echo $query . "<br/>\n";
-    
-    while ($row = pg_fetch_assoc($result)) {
-         print_r($row);
-         echo "<br/>\n";
-    } 
-    
+    $row = pg_fetch_assoc($result);
+    echo "Total: " . $row["count"] . "<br/>";
     pg_free_result($result);
+    
+    $query = "SELECT count(*) FROM statistics WHERE volunteer > 1" . (count($filters) > 0 ? " and " . implode(" and ", $filters) : "") . ";";
+    $result = pg_query($connection, $query) or 
+      die("Error in query: $query." . pg_last_error($connection));
+    $row = pg_fetch_assoc($result);
+    echo "Volunteers: " . $row["count"] . "<br/>";
+    pg_free_result($result);
+    
+    print_r($entries);
 ?> 
+        </div>
+      </div>
+      <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="Filter" />
+      </div>
+    </fieldset>
+  </form>
 </div>
 <?php
   require_once "template/footer.php" ;

@@ -278,6 +278,7 @@
       </fieldset>
     </form>
   </div>
+</div>
 <?php
   require_once "template/footer.php" ;
   pg_close($connection);

@@ -2,7 +2,6 @@
 <!-- vim: tabstop=2:softtabstop=2 -->
 <?php
 /* vim: tabstop=2:expandtab:softtabstop=2 */
-	//test
   /* TODO list
 		* Successful update notification?
     * Phone mask
@@ -84,6 +83,59 @@
 
   require_once "template/header.php";
 ?> 
+
+					<div id="downloadModal" class="modal hide fade">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h3>Download Record Data</h3>
+						</div>
+						<div class="modal-body">
+						  <h4>Download format</h4>
+						  <form class="form-horizontal">
+						    <fieldset>	
+						      <div class="control-group">
+						        <label class="control-label" for="inlineCheckboxes">Select Format:</label>
+						        <div class="controls">
+						          <label class="radio inline">
+						            <input type="radio" name="format" id="inlineCheckbox1" value="option1" checked> csv
+						          </label>
+						          <label class="radio inline">
+						            <input type="radio" name="format" id="inlineCheckbox2" value="option2"> xml
+						          </label>
+						          <label class="radio inline">
+						            <input type="radio" name="format" id="inlineCheckbox3" value="option3"> yaml
+						          </label>
+						        </div>        
+						      </div>
+						    </fieldset>
+						  </form>
+						</div>
+						<div class="modal-footer">
+						  <a href="#" class="btn" data-dismiss="modal" >Close</a>
+						  <a href="#" class="btn btn-primary">Download</a>
+						</div>
+					</div>
+
+					<div id="deleteModal" class="modal hide fade">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h3>Delete Record</h3>
+						</div>
+						<div class="modal-body">
+						  <h4>Are you sure you want to delete this record?</h4>
+						  <p>This action cannot be undone.</p>
+						</div>
+						<div class="modal-footer">
+						  <a href="#" class="btn" data-dismiss="modal" >Close</a>
+						  <a href="delete.php?id=<?php 
+						          if ($query != '') {
+						            echo $id . "&query=" . $search;
+						          } else {
+						            echo $id;
+						          } ?>" class="btn btn-danger">Delete</a>
+						</div>
+					</div>
+
           <div class="span9 well" style="overflow-x: auto;">
             
               <ul class="thumbnails">

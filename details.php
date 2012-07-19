@@ -83,187 +83,192 @@
 
   require_once "template/header.php";
 ?> 
+                <li class="nav-header">Actions</li>
+                <li><a href="print.php?id=<?php echo $_GET["id"]; ?>" target="_blank"><i class="icon-print"></i>Print details</a></li>
+                <li><a data-toggle="modal" href="#downloadModal"><i class="icon-download"></i>Download details</a></li>
+                <li><a href="#"><i class="icon-bullhorn"></i>Create incident report</a></li>
+                <li><a data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i>Delete record</a></li>
+<?php
+  require_once "template/sidebar_end.php";
+?>
 
-					<div id="downloadModal" class="modal hide fade">
-						<div class="modal-header">
-						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h3>Download Record Data</h3>
-						</div>
-						<div class="modal-body">
-						  <h4>Download format</h4>
-						  <form class="form-horizontal">
-						    <fieldset>	
-						      <div class="control-group">
-						        <label class="control-label" for="inlineCheckboxes">Select Format:</label>
-						        <div class="controls">
-						          <label class="radio inline">
-						            <input type="radio" name="format" id="inlineCheckbox1" value="option1" checked> csv
-						          </label>
-						          <label class="radio inline">
-						            <input type="radio" name="format" id="inlineCheckbox2" value="option2"> xml
-						          </label>
-						          <label class="radio inline">
-						            <input type="radio" name="format" id="inlineCheckbox3" value="option3"> yaml
-						          </label>
-						        </div>        
-						      </div>
-						    </fieldset>
-						  </form>
-						</div>
-						<div class="modal-footer">
-						  <a href="#" class="btn" data-dismiss="modal" >Close</a>
-						  <a href="#" class="btn btn-primary">Download</a>
-						</div>
-					</div>
+<div id="downloadModal" class="modal hide fade">
+	<div class="modal-header">
+	  <button type="button" class="close" data-dismiss="modal">&times;</button>
+	  <h3>Download Record Data</h3>
+	</div>
+	<div class="modal-body">
+	  <h4>Download format</h4>
+	  <form class="form-horizontal">
+	    <fieldset>	
+	      <div class="control-group">
+	        <label class="control-label" for="inlineCheckboxes">Select Format:</label>
+	        <div class="controls">
+	          <label class="radio inline">
+	            <input type="radio" name="format" id="inlineCheckbox1" value="option1" checked> csv
+	          </label>
+	          <label class="radio inline">
+	            <input type="radio" name="format" id="inlineCheckbox2" value="option2"> xml
+	          </label>
+	          <label class="radio inline">
+	            <input type="radio" name="format" id="inlineCheckbox3" value="option3"> yaml
+	          </label>
+	        </div>        
+	      </div>
+	    </fieldset>
+	  </form>
+	</div>
+	<div class="modal-footer">
+	  <a href="#" class="btn" data-dismiss="modal" >Close</a>
+	  <a href="#" class="btn btn-primary">Download</a>
+	</div>
+</div>
 
-					<div id="deleteModal" class="modal hide fade">
-						<div class="modal-header">
-						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h3>Delete Record</h3>
-						</div>
-						<div class="modal-body">
-						  <h4>Are you sure you want to delete this record?</h4>
-						  <p>This action cannot be undone.</p>
-						</div>
-						<div class="modal-footer">
-						  <a href="#" class="btn" data-dismiss="modal" >Close</a>
-						  <a href="delete.php?id=<?php 
-						          if ($query != '') {
-						            echo $id . "&query=" . $search;
-						          } else {
-						            echo $id;
-						          } ?>" class="btn btn-danger">Delete</a>
-						</div>
-					</div>
+<div id="deleteModal" class="modal hide fade">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h3>Delete Record</h3>
+	</div>
+	<div class="modal-body">
+		<h4>Are you sure you want to delete this record?</h4>
+		<p>This action cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal" >Close</a>
+		<a href="delete.php?id=<?php 
+				    if ($query != '') {
+				      echo $id . "&query=" . $search;
+				    } else {
+				      echo $id;
+				    } ?>" class="btn btn-danger">Delete</a>
+	</div>
+</div>
 
-          <div class="span9 well" style="overflow-x: auto;">
-            
-              <ul class="thumbnails">
-                <li class="span3">
-                  <a href="#" class="thumbnail">
-                    <!--<img src="http://placehold.it/480x480" alt="">-->
-                     <img src="photo.php<?php echo "?id=" . $edata["picture"] ?>"/>
-                  </a>
-                </li>
-                <li class="span6">
-                  <div class="page-header">
-                    <h1><?php echo "{$edata["name"]}</h1> <h2>{$edata["lastname"]}"; ?></h2>
-                    <?php echo ($edata["visitor"] == "f" ? "Member" : "Visitor") . "<br>"; 
-                          echo ($edata["visitor"] == "f" ? "" : "Expiry: " . $edata["expiry"]) . "<br>";
-                          echo "Created: " . date("j M Y", strtotime($edata["joinDate"])) . "<br>";
-                          echo "Last Seen: " . date("j M Y", strtotime($edata["lastSeen"])) . "<br>";
-                          echo "Modified: " . date("j M Y H:i:s", strtotime($edata["lastModified"])) . "<br>";
-                          echo "Count: " . $edata["count"];
-                    ?>
-                  </div>
-                </li>
-              </ul>
-              
-              <form class="form-horizontal" action="" method="post" name="details">
-                <fieldset>
-                  <div class="control-group">
-                    <label class="control-label" for="name">Name</label>
-                    <div class="controls">
-                      <input type="text" class="input" name="name" id="name" placeholder="Name" value="<?php echo $edata["name"]; ?>">
-                      <input type="text" class="input" name="lastname" id="lastname" placeholder="Lastname" value="<?php echo $edata["lastname"]; ?>">
-                    </div>
-                  </div>
-                  <div class="control-group form-inline">
-                    <label class="control-label" for="phone">Phone</label>
-                    <div class="controls">
-                      <input type="tel" class="input-medium" name="phone" id="phone" placeholder="Phone" value="<?php echo $edata["phone"]; ?>">
-                      <label class="checkbox">
-                        <input type="checkbox" name="mobileCarrier" <?php echo $edata["mobileCarrier"] ? "checked" : ""?>> Mobile phone
-                      </label>
-                    </div>
-                  </div>
-                  <div class="control-group form-inline">
-                    <label class="control-label" for="grade">Grade</label>
-                    <div class="controls">
-                      <div style="width: 220px; float: left; margin-right: 4px;">
-                        <input type="text" class="input-small" name="grade" id="grade" placeholder="Grade" value="<?php echo $edata["grade"]; ?>">
-                        <label for="dob" style="float: right; padding-top: 5px; margin-right: 16px;">Birthdate</label>
-                      </div>
-                      <div>
-                        <input type="text" class="input-small" name="dob" id="dob" placeholder="YYYY-MM-DD" value="<?php echo $edata["dob"]; ?>"> <?php echo $agestr ?>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="control-group">
-                    <label class="control-label" for="activity">Activity</label>
-                    <div class="controls">
-                      <select name="activity" id="activity">
-                        <?php
-                          echo (is_null($edata["activity"]) ? "<option disabled selected>Activity</option>\n" : "");
-                          $query = "SELECT id, name FROM activities;";
-                          $result = pg_query($connection, $query) or
-                              die("Error in query: $query." . pg_last_error($connection));
-                          while ($data = pg_fetch_assoc($result)) {
-                            echo "<option value=\"{$data["id"]}\"" . ($data["id"] == $edata["activity"] ? " selected" : "") . ">{$data["name"]}</option>\n";
-                          }
-                          pg_free_result($result);
-                        ?>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="control-group">
-                    <label class="control-label" for="room">Room</label>
-                    <div class="controls">
-                      <select name="room" id="room">
-                        <?php
-                          echo (is_null($edata["room"]) ? "<option disabled selected>Room</option>\n" : "");
-                          $query = "SELECT id, name FROM rooms;";
-                          $result = pg_query($connection, $query) or
-                            die("Error in query: $query." . pg_last_error($connection));
-                          while ($data = pg_fetch_assoc($result)) {
-                            echo "<option value=\"{$data["id"]}\"" . ($data["id"] == $edata["room"] ? " selected" : "") . ">{$data["name"]}</option>\n";
-                          }
-                          pg_free_result($result);
-                        ?>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="control-group form-inline">
-                    <label class="control-label" for="p1_name">Medical Info</label>
-                    <div class="controls">
-                      <input type="text" class="input" name="medical" id="medical" placeholder="Medical" value="<?php echo $edata["medical"]; ?>">
-                    </div>
-                  </div>
-                  <div class="control-group form-inline">
-                    <label class="control-label" for="p1_name">Parent 1</label>
-                    <div class="controls">
-                      <input type="text" class="input" name="parent1" id="parent1" placeholder="Name" value="<?php echo $edata["parent1"]; ?>">
-                    </div>
-                  </div>
-                  <div class="control-group form-inline">
-                    <label class="control-label" for="p2_name">Parent 2</label>
-                    <div class="controls">
-                      <input type="text" class="input" name="parent2" id="parent2" placeholder="Name" value="<?php echo $edata["parent2"]; ?>">
-                    </div>
-                  </div>
-                  <div class="control-group form-inline">
-                    <label class="control-label" for="p1_name">Parent's Email</label>
-                    <div class="controls">
-                      <input type="text" class="input" name="parent_email" id="parent_email" placeholder="Email" 
-                        value="<?php echo $edata["parentEmail"]; ?>">
-                        <button class="btn" type="button" onClick="parent.location='mailto:<?php echo $edata["parentEmail"]; ?>'">
-                        <i class="icon-envelope"></i></button>
-                    </div>
-                  </div>
-                  <div class="control-group form-inline">
-                    <label class="control-label" for="notes">Notes</label>
-                    <div class="controls">
-                      <textarea name="notes" id="notes" placeholder="Notes" style="width: 434px;"><?php echo $edata["notes"]; ?></textarea>
-                    </div>
-                  </div>
-                  <div class="form-actions">
-                    <input type="submit" class="btn btn-primary" value="Save changes" />
-                    <button class="btn">Cancel</button>
-                  </div>
-                </fieldset>
-              </form>
-            
+<div class="span9 well" style="overflow-x: auto;">
+	<ul class="thumbnails">
+		<li class="span3">
+		  <a href="#" class="thumbnail">
+		    <!--<img src="http://placehold.it/480x480" alt="">-->
+		     <img src="photo.php<?php echo "?id=" . $edata["picture"] ?>"/>
+		  </a>
+		</li>
+		<li class="span6">
+		  <div class="page-header">
+		    <h1><?php echo "{$edata["name"]}</h1> <h2>{$edata["lastname"]}"; ?></h2>
+		    <?php echo ($edata["visitor"] == "f" ? "Member" : "Visitor") . "<br>"; 
+		          echo ($edata["visitor"] == "f" ? "" : "Expiry: " . $edata["expiry"]) . "<br>";
+		          echo "Created: " . date("j M Y", strtotime($edata["joinDate"])) . "<br>";
+		          echo "Last Seen: " . date("j M Y", strtotime($edata["lastSeen"])) . "<br>";
+		          echo "Modified: " . date("j M Y H:i:s", strtotime($edata["lastModified"])) . "<br>";
+		          echo "Count: " . $edata["count"];
+		    ?>
+		  </div>
+		</li>
+	</ul>   
+    <form class="form-horizontal" action="" method="post" name="details">
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label" for="name">Name</label>
+          <div class="controls">
+            <input type="text" class="input" name="name" id="name" placeholder="Name" value="<?php echo $edata["name"]; ?>">
+            <input type="text" class="input" name="lastname" id="lastname" placeholder="Lastname" value="<?php echo $edata["lastname"]; ?>">
           </div>
+        </div>
+        <div class="control-group form-inline">
+          <label class="control-label" for="phone">Phone</label>
+          <div class="controls">
+            <input type="tel" class="input-medium" name="phone" id="phone" placeholder="Phone" value="<?php echo $edata["phone"]; ?>">
+            <label class="checkbox">
+              <input type="checkbox" name="mobileCarrier" <?php echo $edata["mobileCarrier"] ? "checked" : ""?>> Mobile phone
+            </label>
+          </div>
+        </div>
+        <div class="control-group form-inline">
+          <label class="control-label" for="grade">Grade</label>
+          <div class="controls">
+            <div style="width: 220px; float: left; margin-right: 4px;">
+              <input type="text" class="input-small" name="grade" id="grade" placeholder="Grade" value="<?php echo $edata["grade"]; ?>">
+              <label for="dob" style="float: right; padding-top: 5px; margin-right: 16px;">Birthdate</label>
+            </div>
+            <div>
+              <input type="text" class="input-small" name="dob" id="dob" placeholder="YYYY-MM-DD" value="<?php echo $edata["dob"]; ?>"> <?php echo $agestr ?>
+            </div>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="activity">Activity</label>
+          <div class="controls">
+            <select name="activity" id="activity">
+              <?php
+                echo (is_null($edata["activity"]) ? "<option disabled selected>Activity</option>\n" : "");
+                $query = "SELECT id, name FROM activities;";
+                $result = pg_query($connection, $query) or
+                    die("Error in query: $query." . pg_last_error($connection));
+                while ($data = pg_fetch_assoc($result)) {
+                  echo "<option value=\"{$data["id"]}\"" . ($data["id"] == $edata["activity"] ? " selected" : "") . ">{$data["name"]}</option>\n";
+                }
+                pg_free_result($result);
+              ?>
+            </select>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="room">Room</label>
+          <div class="controls">
+            <select name="room" id="room">
+              <?php
+                echo (is_null($edata["room"]) ? "<option disabled selected>Room</option>\n" : "");
+                $query = "SELECT id, name FROM rooms;";
+                $result = pg_query($connection, $query) or
+                  die("Error in query: $query." . pg_last_error($connection));
+                while ($data = pg_fetch_assoc($result)) {
+                  echo "<option value=\"{$data["id"]}\"" . ($data["id"] == $edata["room"] ? " selected" : "") . ">{$data["name"]}</option>\n";
+                }
+                pg_free_result($result);
+              ?>
+            </select>
+          </div>
+        </div>
+        <div class="control-group form-inline">
+          <label class="control-label" for="p1_name">Medical Info</label>
+          <div class="controls">
+            <input type="text" class="input" name="medical" id="medical" placeholder="Medical" value="<?php echo $edata["medical"]; ?>">
+          </div>
+        </div>
+        <div class="control-group form-inline">
+          <label class="control-label" for="p1_name">Parent 1</label>
+          <div class="controls">
+            <input type="text" class="input" name="parent1" id="parent1" placeholder="Name" value="<?php echo $edata["parent1"]; ?>">
+          </div>
+        </div>
+        <div class="control-group form-inline">
+          <label class="control-label" for="p2_name">Parent 2</label>
+          <div class="controls">
+            <input type="text" class="input" name="parent2" id="parent2" placeholder="Name" value="<?php echo $edata["parent2"]; ?>">
+          </div>
+        </div>
+        <div class="control-group form-inline">
+          <label class="control-label" for="p1_name">Parent's Email</label>
+          <div class="controls">
+            <input type="text" class="input" name="parent_email" id="parent_email" placeholder="Email" 
+              value="<?php echo $edata["parentEmail"]; ?>">
+              <button class="btn" type="button" onClick="parent.location='mailto:<?php echo $edata["parentEmail"]; ?>'">
+              <i class="icon-envelope"></i></button>
+          </div>
+        </div>
+        <div class="control-group form-inline">
+          <label class="control-label" for="notes">Notes</label>
+          <div class="controls">
+            <textarea name="notes" id="notes" placeholder="Notes" style="width: 434px;"><?php echo $edata["notes"]; ?></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <input type="submit" class="btn btn-primary" value="Save changes" />
+          <button class="btn">Cancel</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
 <?php
   require_once "template/footer.php" ;
   pg_close($connection);

@@ -3,6 +3,12 @@
 
     $connection = pg_connect ("host=$dbhost dbname=$dbname 
                               user=$dbuser password=$dbpass");
+    
+    require_once "template/header.php";
+?>
+
+<div class="span9 well" style="overflow-x: auto;">
+<?php
 
     $filterstr = "";
     if (array_key_exists("activity", $_GET) or array_key_exists("room", $_GET)) {
@@ -22,4 +28,12 @@
          print_r($row);
          echo "<br/>\n";
     } 
+    
+    pg_free_result($result);
 ?> 
+
+</div>
+<?php
+  require_once "template/footer.php" ;
+  pg_close($connection);
+?>

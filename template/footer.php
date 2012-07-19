@@ -1,5 +1,3 @@
-          <!-- /search form -->
-        </div>
       </div>
     </div> <!-- /container -->
 

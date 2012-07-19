@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <!-- vim: tabstop=2:softtabstop=2 -->
-<?php require_once "template/header.php"; ?>
+<?php
+	$page_title = "Search";
+	require_once "template/header.php";
+?>
 					<!-- sidebar -->
           <div class="span3">
             <div class="well sidebar-nav">

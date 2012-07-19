@@ -38,12 +38,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">Taxídí</a>
+          <a class="brand" href="index.php">Taxídí</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li><a href="#">Home</a></li>
+              <li><a href="index.php">Home</a></li>
               <li<?php echo (basename($_SERVER['PHP_SELF']) == "search.php" ? " class=\"active\"" : "");?>><a href="search.php">Search</a></li>
-              <li><a href="#register">Register</a></li>
+              <li><a href="register.php">Register</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>

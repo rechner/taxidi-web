@@ -61,13 +61,4 @@
                 <li><a href="search.php"><i class="icon-search"></i>Search</a></li>
                 <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
                 <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
-                <li class="nav-header">Actions</li>
-                <li><a href="print.php?id=<?php echo $_GET["id"]; ?>" target="_blank"><i class="icon-print"></i>Print details</a></li>
-                <li><a data-toggle="modal" href="#downloadModal"><i class="icon-download"></i>Download details</a></li>
-                <li><a href="#"><i class="icon-bullhorn"></i>Create incident report</a></li>
-                <li><a data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i>Delete record</a></li>
-              </ul>
-            </div><!--/.well -->
-          </div><!--/span-->
-         <!-- /sidebar -->
 

@@ -20,7 +20,7 @@
               $result = pg_query($connection, $query) or
                 die("Error in query: $query." . pg_last_error($connection));
               while ($data = pg_fetch_assoc($result)) {
-                echo "<option value=\"{$data["id"]}\">{$data["name"]}</option>\n";
+                echo "<option value=\"{$data["id"]}\"" . ($data["id"] == $_GET["activity"] ? " selected" : "") . ">{$data["name"]}</option>\n";
               }
               pg_free_result($result);
             ?>
@@ -37,7 +37,7 @@
               $result = pg_query($connection, $query) or
                 die("Error in query: $query." . pg_last_error($connection));
               while ($data = pg_fetch_assoc($result)) {
-                echo "<option value=\"{$data["id"]}\">{$data["name"]}</option>\n";
+                echo "<option value=\"{$data["id"]}\"" . ($data["id"] == $_GET["room"] ? " selected" : "") . ">{$data["name"]}</option>\n";
               }
               pg_free_result($result);
             ?>

@@ -83,51 +83,53 @@
 
   require_once "template/header.php";
 ?> 
+<!-- sidebar -->
 <div class="span3">
-  <div class="well sidebar-nav">
-    <ul class="nav nav-list">
-      <li class="nav-header">Search</li>
-      <li><a href="search.php"><i class="icon-search"></i>Search</a></li>
-      <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
-      <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
-      <li class="nav-header">Actions</li>
-      <li><a href="print.php?id=<?php echo $_GET["id"]; ?>" target="_blank"><i class="icon-print"></i>Print details</a></li>
-      <li><a data-toggle="modal" href="#downloadModal"><i class="icon-download"></i>Download details</a></li>
-      <li><a href="#"><i class="icon-bullhorn"></i>Create incident report</a></li>
-      <li><a data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i>Delete record</a></li>
-    </ul>
-  </div><!--/.well -->
-</div><!--/span-->
+	<div class="well sidebar-nav">
+	  <ul class="nav nav-list">
+	    <li class="nav-header">Search</li>
+	    <li><a href="search.php"><i class="icon-search"></i>Search</a></li>
+	    <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
+	    <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
+	    <li class="nav-header">Actions</li>
+	    <li><a href="print.php?id=<?php echo $_GET["id"]; ?>" target="_blank"><i class="icon-print"></i>Print details</a></li>
+	    <li><a data-toggle="modal" href="#downloadModal"><i class="icon-download"></i>Download details</a></li>
+	    <li><a href="#"><i class="icon-bullhorn"></i>Create incident report</a></li>
+	    <li><a data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i>Delete record</a></li>
+	  </ul>
+	</div>
+</div>
+<!-- /sidebar -->
 
 <div id="downloadModal" class="modal hide fade">
 	<div class="modal-header">
-	  <button type="button" class="close" data-dismiss="modal">&times;</button>
-	  <h3>Download Record Data</h3>
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h3>Download Record Data</h3>
 	</div>
 	<div class="modal-body">
-	  <h4>Download format</h4>
-	  <form class="form-horizontal">
-	    <fieldset>	
-	      <div class="control-group">
-	        <label class="control-label" for="inlineCheckboxes">Select Format:</label>
-	        <div class="controls">
-	          <label class="radio inline">
-	            <input type="radio" name="format" id="inlineCheckbox1" value="option1" checked> csv
-	          </label>
-	          <label class="radio inline">
-	            <input type="radio" name="format" id="inlineCheckbox2" value="option2"> xml
-	          </label>
-	          <label class="radio inline">
-	            <input type="radio" name="format" id="inlineCheckbox3" value="option3"> yaml
-	          </label>
-	        </div>        
-	      </div>
-	    </fieldset>
-	  </form>
+		<h4>Download format</h4>
+		<form class="form-horizontal">
+		  <fieldset>	
+		    <div class="control-group">
+		      <label class="control-label" for="inlineCheckboxes">Select Format:</label>
+		      <div class="controls">
+		        <label class="radio inline">
+		          <input type="radio" name="format" id="inlineCheckbox1" value="option1" checked> csv
+		        </label>
+		        <label class="radio inline">
+		          <input type="radio" name="format" id="inlineCheckbox2" value="option2"> xml
+		        </label>
+		        <label class="radio inline">
+		          <input type="radio" name="format" id="inlineCheckbox3" value="option3"> yaml
+		        </label>
+		      </div>        
+		    </div>
+		  </fieldset>
+		</form>
 	</div>
 	<div class="modal-footer">
-	  <a href="#" class="btn" data-dismiss="modal" >Close</a>
-	  <a href="#" class="btn btn-primary">Download</a>
+		<a href="#" class="btn" data-dismiss="modal" >Close</a>
+		<a href="#" class="btn btn-primary">Download</a>
 	</div>
 </div>
 
@@ -143,11 +145,11 @@
 	<div class="modal-footer">
 		<a href="#" class="btn" data-dismiss="modal" >Close</a>
 		<a href="delete.php?id=<?php 
-				    if ($query != '') {
-				      echo $id . "&query=" . $search;
-				    } else {
-				      echo $id;
-				    } ?>" class="btn btn-danger">Delete</a>
+					  if ($query != '') {
+					    echo $id . "&query=" . $search;
+					  } else {
+					    echo $id;
+					  } ?>" class="btn btn-danger">Delete</a>
 	</div>
 </div>
 

@@ -4,7 +4,7 @@
     $connection = pg_connect ("host=$dbhost dbname=$dbname 
                               user=$dbuser password=$dbpass");
                               
-    $page_title = "Statistics"
+    $page_title = "Statistics";
     
     require_once "template/header.php";
 ?>
@@ -14,6 +14,7 @@
       useMode:2,
       target:"date",
       dateFormat:"%Y-%m-%d",
+      <?php echo ($_GET["datef"] == "single" ? "selectedDate: new Date(Date.parse(\"{$_GET["date"]}\")),\n" : ""); ?>
       cellColorScheme:"beige",
       imgPath:"resources/img/datepicker"
       /* weekStartDay:1*/

@@ -70,15 +70,15 @@
   
   $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "") . ";" ;
   $stats = array(
-    "Total"      => "                                         WHERE true",
-    "Members"    => "JOIN data ON data.id = statistics.person WHERE data.visitor = FALSE",
-    "Visitors"   => "JOIN data ON data.id = statistics.person WHERE ( data.visitor = TRUE or data.visitor IS NULL )",
-    "Volunteers" => "                                         WHERE volunteer > 1",
+    "Total"      => "WHERE true",
+    "Members"    => "WHERE data.visitor = FALSE",
+    "Visitors"   => "WHERE (data.visitor = TRUE or data.visitor IS NULL)",
+    "Volunteers" => "WHERE volunteer > 1",
   );
   
   foreach ($stats as $name => $querymain) {
-    $query = "SELECT count(person) FROM statistics " . $querymain . $queryend;
-    echo $query . "<br/>\n";
+    $query = "SELECT count(person) FROM statistics JOIN data ON data.id = statistics.person " . $querymain . $queryend;
+    //echo $query . "<br/>\n";
     $result = pg_query($connection, $query) or 
       die("Error in query: $query." . pg_last_error($connection));
     $row = pg_fetch_assoc($result);

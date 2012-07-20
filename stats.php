@@ -94,36 +94,32 @@
         <label class="control-label" >Statistics</label>
         <div class="controls">
 <?php
-
-    $filters = array();
-    if (is_numeric($_GET["service"]) and $_GET["service"] >= 1) {
-      $filters[] = "service LIKE '$service'";
+  $filters = array();
+  foreach (array("service", "activity", "room") as $filter) {
+    if (is_numeric($_GET[$filter]) and $_GET[$filter] >= 1) {
+      $filters[] = "statistics.$filter LIKE '{$$filter}'";
     }
-    if (is_numeric($_GET["activity"]) and $_GET["activity"] >= 1) {
-      $filters[] = "activity LIKE '$activity'";
-    }
-    if (is_numeric($_GET["room"]) and $_GET["room"] >= 1) {
-      $filters[] = "room LIKE '$room'";
-    }
-    if ($_GET["datef"] == "single") {
-      $filters[] = "date = DATE '{$_GET["date"]}'";
-    }
-    
-    $query = "SELECT count(*) FROM statistics" . (count($filters) > 0 ? " WHERE " . implode(" and ", $filters) : "") . ";";
+  }
+  if ($_GET["datef"] == "single") {
+    $filters[] = "statistics.date = DATE '{$_GET["date"]}'";
+  }
+  
+  $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "") . ";" ;
+  $stats = array(
+    "Total"      => "                                         WHERE true",
+    "Members"    => "JOIN data ON data.id = statistics.person WHERE data.visitor = FALSE",
+    "Visitors"   => "JOIN data ON data.id = statistics.person WHERE data.visitor = TRUE or data.visitor IS NULL",
+    "Volunteers" => "                                         WHERE volunteer > 1",
+  );
+  
+  foreach ($stats as $name => $querymain) {
+    $query = "SELECT count(person) FROM statistics " . $querybase . $querymain;
     $result = pg_query($connection, $query) or 
       die("Error in query: $query." . pg_last_error($connection));
     $row = pg_fetch_assoc($result);
-    echo "Total: " . $row["count"] . "<br/>";
+    echo "$name: {$row["count"]}<br/>";
     pg_free_result($result);
-    
-    $query = "SELECT count(*) FROM statistics WHERE volunteer > 1" . (count($filters) > 0 ? " and " . implode(" and ", $filters) : "") . ";";
-    $result = pg_query($connection, $query) or 
-      die("Error in query: $query." . pg_last_error($connection));
-    $row = pg_fetch_assoc($result);
-    echo "Volunteers: " . $row["count"] . "<br/>";
-    pg_free_result($result);
-    
-    print_r($entries);
+  }
 ?> 
         </div>
       </div>

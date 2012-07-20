@@ -3,6 +3,8 @@
 
     $connection = pg_connect ("host=$dbhost dbname=$dbname 
                               user=$dbuser password=$dbpass");
+                              
+    $page_title = "Statistics"
     
     require_once "template/header.php";
 ?>

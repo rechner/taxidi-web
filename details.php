@@ -3,12 +3,8 @@
 <?php
 /* vim: tabstop=2:expandtab:softtabstop=2 */
   /* TODO list
-		* Successful update notification?
     * Phone mask
-    * DOB mask
     * Proper error message for bad id
-    *
-    * Changes: Added a few info displays, removed explicit script reference
   */
   
   //get input:
@@ -84,6 +80,7 @@
 
   require_once "template/header.php";
 ?> 
+
 <!-- sidebar -->
 <div class="span3">
 	<div class="well sidebar-nav">
@@ -153,6 +150,18 @@
 					  } ?>" class="btn btn-danger">Delete</a>
 	</div>
 </div>
+
+<script type="text/javascript">
+  window.onload = function(){
+    new JsDatePick({
+      useMode:2,
+      target:"dob",
+      dateFormat:"%Y-%m-%d",
+      imgPath:"resources/img/datepicker"
+      /* weekStartDay:1*/
+    });
+  };
+</script>
 
 <?php
 	if ($modifysuccess) {

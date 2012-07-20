@@ -7,7 +7,8 @@
     require_once "template/header.php";
 ?>
 
-<div class="span9 well" style="overflow-x: auto;">
+<div class="span12 well">
+  <h2>Count</h2>
   <form class="form-horizontal" action="" method="get">
     <fieldset>
       <div class="control-group">

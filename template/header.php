@@ -23,18 +23,6 @@
     <!-- CSS & Javascript for datepicker -->
     <link rel="stylesheet" type="text/css" media="all" href="resources/css/jsDatePick_ltr.css" />
     <script type="text/javascript" src="resources/js/jsDatePick.full.1.3.js"></script>
-    <script type="text/javascript">
-        window.onload = function(){
-            new JsDatePick({
-                useMode:2,
-                target:"date",
-                dateFormat:"%Y-%m-%d",
-                cellColorScheme:"beige",
-                imgPath:"resources/img/datepicker"
-                /* weekStartDay:1*/
-            });
-        };
-    </script>
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="bootstrap/ico/favicon.ico">

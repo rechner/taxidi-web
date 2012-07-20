@@ -18,6 +18,11 @@
       imgPath:"resources/img/datepicker"
       /* weekStartDay:1*/
     });
+    var dp1_oldof = document.getElementById("date").onfocus;
+    document.getElementById("date").onfocus = function() {
+      dp1_oldof.call(this);
+      document.getElementById("datef_single").checked = true;
+    }
   };
 </script>
 
@@ -58,12 +63,12 @@
         <label class="control-label" for="date">Date</label>
         <div class="controls">
 	        <label class="radio inline">
-	          <input type="radio" style="margin-bottom: 9px;" name="datef" value="any" checked>
+	          <input type="radio" id="datef_any" style="margin-bottom: 9px;" name="datef" value="any" checked>
 	        </label>
           Any date
           <br/>
 	        <label class="radio inline">
-	          <input type="radio" name="datef" value="single"<?php echo ($_GET["datef"] == "single" ? "checked" : ""); ?>>
+	          <input type="radio" name="datef" id="datef_single" value="single"<?php echo ($_GET["datef"] == "single" ? "checked" : ""); ?>>
 	        </label>
           <input type="text" class="input-small" style="height: 28px;" name="date" id="date" value="<?php echo $_GET["datef"] == "single" ? $_GET["date"] : date("Y-m-d"); ?>">
         </div>

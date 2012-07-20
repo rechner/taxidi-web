@@ -10,11 +10,10 @@
 ?>
 <script type="text/javascript">
   window.onload = function(){
-    var dp1 = new JsDatePick({
+    new JsDatePick({
       useMode:2,
       target:"date",
       dateFormat:"%Y-%m-%d",
-      cellColorScheme:"beige",
       imgPath:"resources/img/datepicker"
       /* weekStartDay:1*/
     });

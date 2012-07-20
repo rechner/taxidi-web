@@ -40,6 +40,7 @@
       $result = pg_query($connection, $query) or 
         die("Error in query: $query." . pg_last_error($connection));
       pg_free_result($result);
+			$modifysuccess = true;
     }
                               
     ///*
@@ -153,6 +154,22 @@
 	</div>
 </div>
 
+<?php
+	if ($modifysuccess) {
+		echo "<div class=\"span9 well\" style=\"overflow-x: auto;\">
+						<div class=\"form-horizontal\">
+							<fieldset>
+								<div class=\"control-group\">
+								  <div class=\"controls\" style=\"font-weight: bold; font-size: 110%;\">
+										Changes successfully saved.
+									</div>
+								</div>
+							</fieldset>
+						</div>
+					</div>";
+	}
+?>
+
 <div class="span9 well" style="overflow-x: auto;">
 	<ul class="thumbnails">
 		<li class="span3">
@@ -174,7 +191,7 @@
 		  </div>
 		</li>
 	</ul>   
-    <form class="form-horizontal" action="" method="post" name="details">
+    <form class="form-horizontal" action="" method="post">
       <fieldset>
         <div class="control-group">
           <label class="control-label" for="name">Name</label>

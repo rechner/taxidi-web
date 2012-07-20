@@ -74,12 +74,13 @@
   $stats = array(
     "Total"      => "                                         WHERE true",
     "Members"    => "JOIN data ON data.id = statistics.person WHERE data.visitor = FALSE",
-    "Visitors"   => "JOIN data ON data.id = statistics.person WHERE data.visitor = TRUE or data.visitor IS NULL",
+    "Visitors"   => "JOIN data ON data.id = statistics.person WHERE (data.visitor = TRUE or data.visitor IS NULL)",
     "Volunteers" => "                                         WHERE volunteer > 1",
   );
   
   foreach ($stats as $name => $querymain) {
-    $query = "SELECT count(person) FROM statistics " . $querymain . $queryend;
+    $query = "SELECT count(DISTINCT person) FROM statistics " . $querymain . $queryend;
+    //echo $query . "<br/>\n";
     $result = pg_query($connection, $query) or 
       die("Error in query: $query." . pg_last_error($connection));
     $row = pg_fetch_assoc($result);

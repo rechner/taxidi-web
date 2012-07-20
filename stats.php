@@ -10,11 +10,10 @@
 ?>
 <script type="text/javascript">
   window.onload = function(){
-    new JsDatePick({
+    var dp1 = new JsDatePick({
       useMode:2,
       target:"date",
       dateFormat:"%Y-%m-%d",
-      <?php echo ($_GET["datef"] == "single" ? "selectedDate: new Date(Date.parse(\"{$_GET["date"]}\")),\n" : ""); ?>
       cellColorScheme:"beige",
       imgPath:"resources/img/datepicker"
       /* weekStartDay:1*/
@@ -66,7 +65,7 @@
 	        <label class="radio inline">
 	          <input type="radio" name="datef" value="single"<?php echo ($_GET["datef"] == "single" ? "checked" : ""); ?>>
 	        </label>
-          <input type="text" class="input-small" style="height: 28px;" name="date" id="date" value="<?php echo date("Y-m-d"); ?>">
+          <input type="text" class="input-small" style="height: 28px;" name="date" id="date" value="<?php echo $_GET["datef"] == "single" ? $_GET["date"] : date("Y-m-d"); ?>">
         </div>
       </div>
       <div class="control-group form-inline">
@@ -86,8 +85,8 @@
   $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "") . ";" ;
   $stats = array(
     "Total"      => "                                         WHERE true",
-    "Members"    => "JOIN data ON data.id = statistics.person WHERE data.visitor = FALSE",
-    "Visitors"   => "JOIN data ON data.id = statistics.person WHERE (data.visitor = TRUE or data.visitor IS NULL)",
+    "Members"    => "JOIN data ON data.id = statistics.person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
+    "Visitors"   => "JOIN data ON data.id = statistics.person WHERE data.visitor = TRUE",
     "Volunteers" => "                                         WHERE volunteer > 1",
   );
   

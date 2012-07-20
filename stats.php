@@ -6,6 +6,18 @@
     
     require_once "template/header.php";
 ?>
+<script type="text/javascript">
+  window.onload = function(){
+    new JsDatePick({
+      useMode:2,
+      target:"date",
+      dateFormat:"%Y-%m-%d",
+      cellColorScheme:"beige",
+      imgPath:"resources/img/datepicker"
+      /* weekStartDay:1*/
+    });
+  };
+</script>
 
 <div class="span12 well">
   <h2>Count</h2>

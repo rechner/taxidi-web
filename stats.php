@@ -11,72 +11,35 @@
   <h2>Count</h2>
   <form class="form-horizontal" action="" method="get">
     <fieldset>
-      <div class="control-group">
-        <label class="control-label" for="activity">Services</label>
-        <div class="controls">
-          <select name="service" id="service">
-            <option value="any" selected> -- Any -- </option>
-            <?php
-              $query = "SELECT id, name FROM services;";
-              $result = pg_query($connection, $query) or
-                die("Error in query: $query." . pg_last_error($connection));
-              while ($data = pg_fetch_assoc($result)) {
-                echo "<option value=\"{$data["id"]}\"";
-                if ( $data["id"] == $_GET["service"] ) {
-                  echo " selected";
-                  $service = $data["name"];
-                }
-                echo ">{$data["name"]}</option>\n";
-              }
-              pg_free_result($result);
-            ?>
-          </select>
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="activity">Activity</label>
-        <div class="controls">
-          <select name="activity" id="activity">
-            <option value="any" selected> -- Any -- </option>
-            <?php
-              $query = "SELECT id, name FROM activities;";
-              $result = pg_query($connection, $query) or
-                die("Error in query: $query." . pg_last_error($connection));
-              while ($data = pg_fetch_assoc($result)) {
-                echo "<option value=\"{$data["id"]}\"";
-                if ( $data["id"] == $_GET["activity"] ) {
-                  echo" selected";
-                  $activity = $data["name"];
-                }
-                echo ">{$data["name"]}</option>\n";
-              }
-              pg_free_result($result);
-            ?>
-          </select>
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="room">Room</label>
-        <div class="controls">
-          <select name="room" id="room">
-            <option value="any" selected> -- Any -- </option>
-            <?php
-              $query = "SELECT id, name FROM rooms;";
-              $result = pg_query($connection, $query) or
-                die("Error in query: $query." . pg_last_error($connection));
-              while ($data = pg_fetch_assoc($result)) {
-                echo "<option value=\"{$data["id"]}\"";
-                if ( $data["id"] == $_GET["room"] ) {
-                  echo" selected";
-                  $room = $data["name"];
-                }
-                echo ">{$data["name"]}</option>\n";
-              }
-              pg_free_result($result);
-            ?>
-          </select>
-        </div>
-      </div>
+<?php
+  $selectfilters = array(
+  // human label         http+php    postgres
+    "Service"  => array("service" , "services"  ),
+    "Activity" => array("activity", "activities"),
+    "Room"     => array("room"    , "rooms"),
+  );
+  
+  foreach ($selectfilters as $label => $sysname) {
+    echo "<div class=\"control-group\">
+          <label class=\"control-label\" for=\"{$sysname[0]}\">$label</label>
+          <div class=\"controls\">
+          <select name=\"{$sysname[0]}\" id=\"{$sysname[0]}\">
+          <option value=\"any\" selected> -- Any -- </option>";
+    $query = "SELECT id, name FROM {$sysname[1]};";
+    $result = pg_query($connection, $query) or
+      die("Error in query: $query." . pg_last_error($connection));
+    while ($data = pg_fetch_assoc($result)) {
+      echo "<option value=\"{$data["id"]}\"";
+      if ( $data["id"] == $_GET[$sysname[0]] ) {
+        echo " selected";
+        $$sysname[0] = $data["name"];
+      }
+      echo ">{$data["name"]}</option>\n";
+    }
+    pg_free_result($result);
+    echo "</select></div></div>";
+  }
+?>
       <div class="control-group form-inline">
         <label class="control-label" for="date">Date</label>
         <div class="controls">
@@ -95,36 +58,32 @@
         <label class="control-label" >Statistics</label>
         <div class="controls">
 <?php
-
-    $filters = array();
-    if (is_numeric($_GET["service"]) and $_GET["service"] >= 1) {
-      $filters[] = "service LIKE '$service'";
+  $filters = array();
+  foreach (array("service", "activity", "room") as $filter) {
+    if (is_numeric($_GET[$filter]) and $_GET[$filter] >= 1) {
+      $filters[] = "statistics.$filter LIKE '{$$filter}'";
     }
-    if (is_numeric($_GET["activity"]) and $_GET["activity"] >= 1) {
-      $filters[] = "activity LIKE '$activity'";
-    }
-    if (is_numeric($_GET["room"]) and $_GET["room"] >= 1) {
-      $filters[] = "room LIKE '$room'";
-    }
-    if ($_GET["datef"] == "single") {
-      $filters[] = "date = DATE '{$_GET["date"]}'";
-    }
-    
-    $query = "SELECT count(*) FROM statistics" . (count($filters) > 0 ? " WHERE " . implode(" and ", $filters) : "") . ";";
+  }
+  if ($_GET["datef"] == "single") {
+    $filters[] = "statistics.date = DATE '{$_GET["date"]}'";
+  }
+  
+  $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "") . ";" ;
+  $stats = array(
+    "Total"      => "                                         WHERE true",
+    "Members"    => "JOIN data ON data.id = statistics.person WHERE data.visitor = FALSE",
+    "Visitors"   => "JOIN data ON data.id = statistics.person WHERE data.visitor = TRUE or data.visitor IS NULL",
+    "Volunteers" => "                                         WHERE volunteer > 1",
+  );
+  
+  foreach ($stats as $name => $querymain) {
+    $query = "SELECT count(person) FROM statistics " . $querymain . $queryend;
     $result = pg_query($connection, $query) or 
       die("Error in query: $query." . pg_last_error($connection));
     $row = pg_fetch_assoc($result);
-    echo "Total: " . $row["count"] . "<br/>";
+    echo "$name: {$row["count"]}<br/>";
     pg_free_result($result);
-    
-    $query = "SELECT count(*) FROM statistics WHERE volunteer > 1" . (count($filters) > 0 ? " and " . implode(" and ", $filters) : "") . ";";
-    $result = pg_query($connection, $query) or 
-      die("Error in query: $query." . pg_last_error($connection));
-    $row = pg_fetch_assoc($result);
-    echo "Volunteers: " . $row["count"] . "<br/>";
-    pg_free_result($result);
-    
-    print_r($entries);
+  }
 ?> 
         </div>
       </div>

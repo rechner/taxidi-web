@@ -8,6 +8,21 @@
     
     require_once "template/header.php";
 ?>
+
+<!-- sidebar -->
+<div class="span3">
+  <div class="well sidebar-nav">
+    <ul class="nav nav-list">
+      <li class="nav-header">Search</li>
+      <li><a href="search.php"><i class="icon-search"></i>Search</a></li>
+      <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
+      <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
+      <li class="nav-header">Actions</li>
+    </ul>
+  </div>
+</div>
+<!-- /sidebar -->
+
 <script type="text/javascript">
   window.onload = function(){
     new JsDatePick({
@@ -25,7 +40,7 @@
   };
 </script>
 
-<div class="span12 well">
+<div class="span9 well">
   <h2>Count</h2>
   <form class="form-horizontal" action="" method="get">
     <fieldset>

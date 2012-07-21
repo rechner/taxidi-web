@@ -23,7 +23,7 @@
 </div>
 <!-- /sidebar -->
 
-<script type="text/javascript">
+<script>
   window.onload = function(){
     new JsDatePick({
       useMode:2,
@@ -42,7 +42,7 @@
 
 <div class="span9 well">
   <h2>Count</h2>
-  <form class="form-horizontal" action="" method="get">
+  <form class="form-horizontal" method="get">
     <fieldset>
 <?php
   $selectfilters = array(
@@ -76,19 +76,18 @@
       <div class="control-group form-inline">
         <label class="control-label" for="date">Date</label>
         <div class="controls">
-	        <label class="radio inline">
-	          <input type="radio" id="datef_any" style="margin-bottom: 9px;" name="datef" value="any" checked>
-	        </label>
-          Any date
-          <br/>
-	        <label class="radio inline">
-	          <input type="radio" name="datef" id="datef_single" value="single"<?php echo ($_GET["datef"] == "single" ? "checked" : ""); ?>>
-	        </label>
+          <label class="radio inline">
+            <input type="radio" id="datef_any" style="margin-bottom: 9px;" name="datef" value="any" checked>
+          </label>
+          Any date <br/>
+          <label class="radio inline">
+            <input type="radio" name="datef" id="datef_single" value="single"<?php echo ($_GET["datef"] == "single" ? "checked" : ""); ?>>
+          </label>
           <input type="text" class="input-small" style="height: 28px;" name="date" id="date" value="<?php echo $_GET["datef"] == "single" ? $_GET["date"] : date("Y-m-d"); ?>">
         </div>
       </div>
       <div class="control-group form-inline">
-        <label class="control-label" >Statistics</label>
+        <label class="control-label">Statistics</label>
         <div class="controls">
 <?php
   $filters = array();
@@ -103,12 +102,11 @@
   
   $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "") . ";" ;
   $stats = array(
-    "Total"      => "                                         WHERE true",
-    "Members"    => "LEFT JOIN data ON data.id = statistics.person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
-    "Visitors"   => "LEFT JOIN data ON data.id = statistics.person WHERE data.visitor = TRUE",
-    "Volunteers" => "                                         WHERE volunteer > 1",
+    "Total"      => "WHERE true",
+    "Members"    => "LEFT JOIN data ON data.id = person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
+    "Visitors"   => "LEFT JOIN data ON data.id = person WHERE data.visitor = TRUE",
+    "Volunteers" => "WHERE volunteer > 1",
   );
-  
   
   foreach ($stats as $name => $querymain) {
     $query = "SELECT count(person) FROM statistics " . $querymain . $queryend;

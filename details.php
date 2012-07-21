@@ -186,8 +186,7 @@
 	<ul class="thumbnails">
 		<li class="span3">
 		  <a href="#" class="thumbnail">
-		    <!--<img src="http://placehold.it/480x480" alt="">-->
-		     <img src="photo.php<?php echo "?id=" . $edata["picture"] ?>"/>
+		  	<img src="photo.php<?php echo "?id=" . $edata["picture"] ?>"/>
 		  </a>
 		</li>
 		<li class="span6">

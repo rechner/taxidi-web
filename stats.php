@@ -104,13 +104,14 @@
   $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "") . ";" ;
   $stats = array(
     "Total"      => "                                         WHERE true",
-    "Members"    => "JOIN data ON data.id = statistics.person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
-    "Visitors"   => "JOIN data ON data.id = statistics.person WHERE data.visitor = TRUE",
+    "Members"    => "LEFT JOIN data ON data.id = statistics.person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
+    "Visitors"   => "LEFT JOIN data ON data.id = statistics.person WHERE data.visitor = TRUE",
     "Volunteers" => "                                         WHERE volunteer > 1",
   );
   
+  
   foreach ($stats as $name => $querymain) {
-    $query = "SELECT count(DISTINCT person) FROM statistics " . $querymain . $queryend;
+    $query = "SELECT count(person) FROM statistics " . $querymain . $queryend;
     //echo $query . "<br/>\n";
     $result = pg_query($connection, $query) or 
       die("Error in query: $query." . pg_last_error($connection));

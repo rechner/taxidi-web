@@ -3,12 +3,17 @@
 <?php
 /* vim: tabstop=2:expandtab:softtabstop=2 */
   /* TODO list
+<<<<<<< HEAD
 		* Successful update notification?
     * Phone mask
     * DOB mask
     * Proper error message for bad id
     *
     * Changes: Added a few info displays, removed explicit script reference
+=======
+    * Phone mask
+    * Proper error message for bad id
+>>>>>>> 504372f9a1f08ca08795f106eaec9ed0e497da6e
   */
   
   //get input:
@@ -153,6 +158,18 @@
 					  } ?>" class="btn btn-danger">Delete</a>
 	</div>
 </div>
+
+<script type="text/javascript">
+  window.onload = function(){
+    new JsDatePick({
+      useMode:2,
+      target:"dob",
+      dateFormat:"%Y-%m-%d",
+      imgPath:"resources/img/datepicker"
+      /* weekStartDay:1*/
+    });
+  };
+</script>
 
 <?php
 	if ($modifysuccess) {

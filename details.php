@@ -171,28 +171,22 @@
   };
 </script>
 
+<div class="span9">
+
 <?php
 	if ($modifysuccess) {
-		echo "<div class=\"span9 well\" style=\"overflow-x: auto;\">
-						<div class=\"form-horizontal\">
-							<fieldset>
-								<div class=\"control-group\">
-								  <div class=\"controls\" style=\"font-weight: bold; font-size: 110%;\">
-										Changes successfully saved.
-									</div>
-								</div>
-							</fieldset>
-						</div>
+		echo "<div class=\"alert\">
+						<h4 class=\"alert-heading\">
+							Changes successfully saved.
+						</h4>
 					</div>";
 	}
 ?>
-
-<div class="span9 well" style="overflow-x: auto;">
+<div class="well" style="overflow-x: auto;">
 	<ul class="thumbnails">
 		<li class="span3">
 		  <a href="#" class="thumbnail">
-		    <!--<img src="http://placehold.it/480x480" alt="">-->
-		     <img src="photo.php<?php echo "?id=" . $edata["picture"] ?>"/>
+		  	<img src="photo.php<?php echo "?id=" . $edata["picture"] ?>"/>
 		  </a>
 		</li>
 		<li class="span6">
@@ -312,6 +306,7 @@
       </fieldset>
     </form>
   </div>
+</div>
 </div>
 <?php
   require_once "template/footer.php" ;

@@ -683,11 +683,9 @@ JsDatePick.prototype.populateMainBox = function(aMainBox){
 				return;
 			}
 			if (parseInt(this.getAttribute("isToday")) == 1){
-				gRef.setC(this, "dayOverToday");
-				this.style.background = "url(" + gRef.oConfiguration.imgPath + currentColorScheme + "_dayOver.gif) left top no-repeat";
+				gRef.setC(this, "dayOverToday " + currentColorScheme);
 			} else {
-				gRef.setC(this, "dayOver");
-				this.style.background = "url(" + gRef.oConfiguration.imgPath + currentColorScheme + "_dayOver.gif) left top no-repeat";
+				gRef.setC(this, "dayOver " + currentColorScheme);
 			}
 		};
 		
@@ -702,11 +700,9 @@ JsDatePick.prototype.populateMainBox = function(aMainBox){
 				return;
 			}
 			if (parseInt(this.getAttribute("isToday")) == 1){
-				gRef.setC(this, "dayNormalToday");
-				this.style.background = "url(" + gRef.oConfiguration.imgPath + currentColorScheme + "_dayNormal.gif) left top no-repeat";
+				gRef.setC(this, "dayNormalToday " + currentColorScheme);
 			} else {
-				gRef.setC(this, "dayNormal");
-				this.style.background = "url(" + gRef.oConfiguration.imgPath + currentColorScheme + "_dayNormal.gif) left top no-repeat";
+				gRef.setC(this, "dayNormal " + currentColorScheme);
 			}
 		};
 		
@@ -721,11 +717,9 @@ JsDatePick.prototype.populateMainBox = function(aMainBox){
 				return;
 			}
 			if (parseInt(this.getAttribute("isToday")) == 1){
-				gRef.setC(this, "dayDownToday");
-				this.style.background = "url(" + gRef.oConfiguration.imgPath + currentColorScheme + "_dayDown.gif) left top no-repeat";
+				gRef.setC(this, "dayDownToday " + currentColorScheme);
 			} else {
-				gRef.setC(this, "dayDown");
-				this.style.background = "url(" + gRef.oConfiguration.imgPath + currentColorScheme + "_dayDown.gif) left top no-repeat";
+				gRef.setC(this, "dayDown " + currentColorScheme);
 			}
 		};
 		
@@ -737,11 +731,9 @@ JsDatePick.prototype.populateMainBox = function(aMainBox){
 				return;
 			}
 			if (parseInt(this.getAttribute("isToday")) == 1){
-				gRef.setC(this, "dayNormalToday");
-				this.style.background = "url(" + gRef.oConfiguration.imgPath + currentColorScheme + "_dayNormal.gif) left top no-repeat";
+				gRef.setC(this, "dayNormalToday " + currentColorScheme);
 			} else {
-				gRef.setC(this, "dayNormal");
-				this.style.background = "url(" + gRef.oConfiguration.imgPath + currentColorScheme + "_dayNormal.gif) left top no-repeat";
+				gRef.setC(this, "dayNormal " + currentColorScheme);
 			}
 			
 			gRef.setDaySelection(this);
@@ -754,11 +746,9 @@ JsDatePick.prototype.populateMainBox = function(aMainBox){
 			this.lastMarkedDayObject = aDayDiv;
 			
 			if (parseInt(aDayDiv.getAttribute("isToday")) == 1){
-				this.setC(aDayDiv, "dayDownToday");
-				aDayDiv.style.background = "url(" + this.oConfiguration.imgPath + this.oConfiguration.cellColorScheme + "_dayDown.gif) left top no-repeat";
+				this.setC(aDayDiv, "dayDownToday " + currentColorScheme);
 			} else {
-				this.setC(aDayDiv, "dayDown");
-				aDayDiv.style.background = "url(" + this.oConfiguration.imgPath + this.oConfiguration.cellColorScheme + "_dayDown.gif) left top no-repeat";
+				this.setC(aDayDiv, "dayDown " + currentColorScheme);
 			}	
 			
 		} else {
@@ -766,19 +756,15 @@ JsDatePick.prototype.populateMainBox = function(aMainBox){
 			
 			if (parseInt(aDayDiv.getAttribute("isToday")) == 1){
 				if (disabledDayFlag){
-					this.setC(aDayDiv, "dayDisabled");
-					aDayDiv.style.background = "url(" + this.oConfiguration.imgPath + this.oConfiguration.cellColorScheme + "_dayNormal.gif) left top no-repeat";
+					this.setC(aDayDiv, "dayDisabled " + currentColorScheme);
 				} else {
-					this.setC(aDayDiv, "dayNormalToday");
-					aDayDiv.style.background = "url(" + this.oConfiguration.imgPath + this.oConfiguration.cellColorScheme + "_dayNormal.gif) left top no-repeat";
+					this.setC(aDayDiv, "dayNormalToday " + currentColorScheme);
 				}
 			} else {
 				if (disabledDayFlag){
-					this.setC(aDayDiv, "dayDisabled");
-					aDayDiv.style.background = "url(" + this.oConfiguration.imgPath + this.oConfiguration.cellColorScheme + "_dayNormal.gif) left top no-repeat";
+					this.setC(aDayDiv, "dayDisabled " + currentColorScheme);
 				} else {
-					this.setC(aDayDiv, "dayNormal");
-					aDayDiv.style.background = "url(" + this.oConfiguration.imgPath + this.oConfiguration.cellColorScheme + "_dayNormal.gif) left top no-repeat";
+					this.setC(aDayDiv, "dayNormal " + currentColorScheme);
 				}
 			}
 		}
@@ -867,11 +853,9 @@ JsDatePick.prototype.setDaySelection = function(anElement){
 		this.lastMarkedDayObject.setAttribute("isSelected",0);
 		
 		if (parseInt(this.lastMarkedDayObject.getAttribute("isToday")) == 1){
-			this.setC(this.lastMarkedDayObject, "dayNormalToday");
-			this.lastMarkedDayObject.style.background = "url(" + this.oConfiguration.imgPath + currentColorScheme + "_dayNormal.gif) left top no-repeat";
+			this.setC(this.lastMarkedDayObject, "dayNormalToday " + currentColorScheme);
 		} else {
-			this.setC(this.lastMarkedDayObject, "dayNormal");
-			this.lastMarkedDayObject.style.background = "url(" + this.oConfiguration.imgPath + currentColorScheme + "_dayNormal.gif) left top no-repeat";
+			this.setC(this.lastMarkedDayObject, "dayNormal " + currentColorScheme);
 		}
 	}
 	
@@ -886,11 +870,9 @@ JsDatePick.prototype.setDaySelection = function(anElement){
 	anElement.setAttribute("isSelected",1);
 	
 	if (parseInt(anElement.getAttribute("isToday")) == 1){
-		this.setC(anElement, "dayDownToday");
-		anElement.style.background = "url(" + this.oConfiguration.imgPath + currentColorScheme + "_dayDown.gif) left top no-repeat";
+		this.setC(anElement, "dayDownToday " + currentColorScheme);
 	} else {
-		this.setC(anElement, "dayDown");
-		anElement.style.background = "url(" + this.oConfiguration.imgPath + currentColorScheme + "_dayDown.gif) left top no-repeat";
+		this.setC(anElement, "dayDown " + currentColorScheme);
 	}
 };
 

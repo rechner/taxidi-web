@@ -1,8 +1,8 @@
 /*
-
 	Copyright 2009 Itamar Arjuan
 	jsDatePick is distributed under the terms of the GNU General Public License.
-
+	
+	Modified by Nathan Lex 2012
 */
 
 .JsDatePickBox { position:relative; width:212px; font-family:Arial; }
@@ -56,13 +56,27 @@
 .JsDatePickBox .boxMainInner .yearBackwardButtonDown { overflow:hidden; cursor:pointer; width:20px; height:20px; position:absolute; top:0px; left:0px; background:url(../../resources/img/datepicker/yearBackward_down.gif) left top no-repeat; }
 
 .JsDatePickBox .boxMainInner .skipDay { cursor:default; overflow:hidden; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; }
-.JsDatePickBox .boxMainInner .dayNormal { -khtml-user-select: none; font-size:12px; cursor:pointer; overflow:hidden; color:#4c4c4c; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px; /*background:url(../../resources/img/datepicker/dayNormal.gif) left top no-repeat;*/ }
-.JsDatePickBox .boxMainInner .dayNormalToday { -khtml-user-select: none; font-size:12px; cursor:pointer; overflow:hidden; color:#f40f0f; font-weight:bold; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px; /*background:url(../../resources/img/datepicker/dayNormal.gif) left top no-repeat;*/ }
+.JsDatePickBox .boxMainInner .dayNormal { -khtml-user-select: none; font-size:12px; cursor:pointer; overflow:hidden; color:#4c4c4c; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px; }
+.JsDatePickBox .boxMainInner .dayNormalToday { -khtml-user-select: none; font-size:12px; cursor:pointer; overflow:hidden; color:#f40f0f; font-weight:bold; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px;  }
 
-.JsDatePickBox .boxMainInner .dayDisabled { -khtml-user-select: none; cursor:default; font-size:12px; overflow:hidden; color:#999999; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px; /*background:url(../../resources/img/datepicker/dayNormal.gif) left top no-repeat;*/ }
+.JsDatePickBox .boxMainInner .dayDisabled { -khtml-user-select: none; cursor:default; font-size:12px; overflow:hidden; color:#999999; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px;  }
 
-.JsDatePickBox .boxMainInner .dayOver { -khtml-user-select: none; cursor:pointer; font-size:12px; overflow:hidden; color:#4c4c4c; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px; /*background:url(../../resources/img/datepicker/dayOver.gif) left top no-repeat;*/ }
-.JsDatePickBox .boxMainInner .dayOverToday { -khtml-user-select: none; cursor:pointer; font-size:12px; overflow:hidden; font-weight:bold; color:#f40f0f; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px; /*background:url(../../resources/img/datepicker/dayOver.gif) left top no-repeat;*/ }
+.JsDatePickBox .boxMainInner .dayOver { -khtml-user-select: none; cursor:pointer; font-size:12px; overflow:hidden; color:#4c4c4c; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px;  }
+.JsDatePickBox .boxMainInner .dayOverToday { -khtml-user-select: none; cursor:pointer; font-size:12px; overflow:hidden; font-weight:bold; color:#f40f0f; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px;  }
 
-.JsDatePickBox .boxMainInner .dayDown { -khtml-user-select: none; cursor:pointer; font-size:12px; overflow:hidden; color:#F9F9F9; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px; /*background:url(../../resources/img/datepicker/dayDown.gif) left top no-repeat; */ }
-.JsDatePickBox .boxMainInner .dayDownToday { -khtml-user-select: none; cursor:pointer; font-size:12px; overflow:hidden; color:#f40f0f; font-weight:bold; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px; /* background:url(../../resources/img/datepicker/dayDown.gif) left top no-repeat;*/ }
+.JsDatePickBox .boxMainInner .dayDown { -khtml-user-select: none; cursor:pointer; font-size:12px; overflow:hidden; color:#F9F9F9; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px;  }
+.JsDatePickBox .boxMainInner .dayDownToday { -khtml-user-select: none; cursor:pointer; font-size:12px; overflow:hidden; color:#f40f0f; font-weight:bold; width:24px; height:25px; float:left; margin:4px 5px 0 0; padding:0; text-align:center; line-height:25px;  }
+
+.dayNormal, .dayNormalToday, .dayOver, .dayOverToday, .dayDown, .dayDownToday {
+	border-radius: 5px;
+}
+
+.dayNormal.ocean_blue, .dayNormalToday.ocean_blue {
+	background-color: #b6d1ee;
+}
+.dayOver.ocean_blue, .dayOverToday.ocean_blue {
+	background-color: #65a7ed;
+}
+.dayDown.ocean_blue, .dayDownToday.ocean_blue {
+	background-color: #096fdb;
+}

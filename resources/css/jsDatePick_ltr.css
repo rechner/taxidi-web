@@ -36,7 +36,7 @@
 .JsDatePickBox .boxMain {
 	float:left;
 	margin:0 7px;
-	padding:13px 0 5px;
+	padding:12px 0 5px;
 }
 .JsDatePickBox .boxMainStripped { background:#ffffff; border:none; }
 .JsDatePickBox .tooltip { height:12px; line-height:11px; overflow:hidden; font-size:10px; color:#666666; text-align:left; padding:0px; margin:2px 0 2px 0; }

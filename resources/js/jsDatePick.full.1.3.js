@@ -236,17 +236,12 @@ JsDatePick.prototype.setConfiguration = function(aConf){
 };
 
 JsDatePick.prototype.resizeCalendar = function(){
-	this.leftWallStrechedElement.style.height = "0px";
-	this.rightWallStrechedElement.style.height = "0px";
-	
 	var totalHeight = this.JsDatePickBox.offsetHeight, newStrechedHeight = totalHeight-16;	
 	
 	if (newStrechedHeight < 0){
 		return;
 	}
-	
-	this.leftWallStrechedElement.style.height = newStrechedHeight+"px";
-	this.rightWallStrechedElement.style.height = newStrechedHeight+"px";
+
 	return true;
 };
 
@@ -307,65 +302,11 @@ JsDatePick.prototype.makeCalendar = function(){
 	
 	this.JsDatePickBox = JsDatePickBox;
 	
-	leftWall  	= d.createElement("div");
-	rightWall 	= d.createElement("div");
-	topWall		= d.createElement("div");
-	bottomWall	= d.createElement("div");
-	
-	this.setC(topWall, "topWall");
-	this.setC(bottomWall, "bottomWall");
-	
-	if (this.isie && this.iever == 6){
-		bottomWall.style.bottom = "-2px";
-	}
-	
-	topCorner	 = d.createElement("div");
-	bottomCorner = d.createElement("div");
-	wall		 = d.createElement("div");
-	
-	this.setC(topCorner, "leftTopCorner");
-	this.setC(bottomCorner, "leftBottomCorner");
-	this.setC(wall, "leftWall");
-	
-	this.leftWallStrechedElement = wall;
-	this.leftWall  = leftWall;
-	this.rightWall = rightWall;
-	
-	leftWall.appendChild(topCorner);
-	leftWall.appendChild(wall);
-	leftWall.appendChild(bottomCorner);
-	
-	topCorner	 = d.createElement("div");
-	bottomCorner = d.createElement("div");
-	wall		 = d.createElement("div");
-	
-	this.setC(topCorner, "rightTopCorner");
-	this.setC(bottomCorner, "rightBottomCorner");
-	this.setC(wall, "rightWall");
-	
-	this.rightWallStrechedElement = wall;
-	
-	rightWall.appendChild(topCorner);
-	rightWall.appendChild(wall);
-	rightWall.appendChild(bottomCorner);
-	
-	if (this.oConfiguration.isStripped){
-		this.setC(leftWall, "hiddenBoxLeftWall");
-		this.setC(rightWall, "hiddenBoxRightWall");				
-	} else {
-		this.setC(leftWall, "boxLeftWall");
-		this.setC(rightWall, "boxRightWall");
-	}
-	
-	JsDatePickBox.appendChild(leftWall);
 	JsDatePickBox.appendChild(this.getDOMCalendarStripped());
-	JsDatePickBox.appendChild(rightWall);
 	JsDatePickBox.appendChild(clearfix);
 	
 	if (!this.oConfiguration.isStripped){
 		JsDatePickBox.appendChild(closeButton);
-		JsDatePickBox.appendChild(topWall);
-		JsDatePickBox.appendChild(bottomWall);
 	}
 	
 	if (this.oConfiguration.useMode == 2){

@@ -7,6 +7,7 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
+    <link rel="shortcut icon" href="resources/img/favicon.ico" />
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
     <style>
       body {

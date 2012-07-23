@@ -57,14 +57,15 @@
 	
 */
 // The language array - change these values to your language to better fit your needs!
-g_l = [];
-g_l["MONTHS"] = ["Janaury","February","March","April","May","June","July","August","September","October","November","December"];
-g_l["DAYS_3"] = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-g_l["MONTH_FWD"] = "Move a month forward";
-g_l["MONTH_BCK"] = "Move a month backward";
-g_l["YEAR_FWD"] = "Move a year forward";
-g_l["YEAR_BCK"] = "Move a year backward";
-g_l["CLOSE"] = "Close the calendar";
+g_l = {
+	"MONTHS"    : ["Janaury","February","March","April","May","June","July","August","September","October","November","December"],
+	"DAYS_3"    : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
+	"MONTH_FWD" : "Move a month forward",
+	"MONTH_BCK" : "Move a month backward",
+	"YEAR_FWD"  : "Move a year forward",
+	"YEAR_BCK"  : "Move a year backward",
+	"CLOSE"     : "Close the calendar"
+}
 g_l["ERROR_2"] = g_l["ERROR_1"] = "Date object invalid!";
 g_l["ERROR_4"] = g_l["ERROR_3"] = "Target invalid";
 
@@ -226,13 +227,13 @@ JsDatePick.prototype.setConfiguration = function(aConf){
 	this.oConfiguration.isStripped 		= (aConf["isStripped"] != null) ? aConf["isStripped"] : false;
 	this.oConfiguration.useMode    		= (aConf["useMode"] != null) ? aConf["useMode"] : 1;
 	this.oConfiguration.selectedDate   	= (aConf["selectedDate"] != null) ? aConf["selectedDate"] : null;
-	this.oConfiguration.target			= (aConf["target"] != null) ? aConf["target"] : null;
+	this.oConfiguration.target		= (aConf["target"] != null) ? aConf["target"] : null;
 	this.oConfiguration.yearsRange		= (aConf["yearsRange"] != null) ? aConf["yearsRange"] : [1971,2100];
 	this.oConfiguration.limitToToday	= (aConf["limitToToday"] != null) ? aConf["limitToToday"] : false;
-	this.oConfiguration.field			= (aConf["field"] != null) ? aConf["field"] : false;
-	this.oConfiguration.cellColorScheme = (aConf["cellColorScheme"] != null) ? aConf["cellColorScheme"] : "ocean_blue";
+	this.oConfiguration.field		= (aConf["field"] != null) ? aConf["field"] : false;
+	this.oConfiguration.cellColorScheme	= (aConf["cellColorScheme"] != null) ? aConf["cellColorScheme"] : "ocean_blue";
 	this.oConfiguration.dateFormat		= (aConf["dateFormat"] != null) ? aConf["dateFormat"] : "%m-%d-%Y";
-	this.oConfiguration.imgPath			= (g_jsDatePickImagePath.length != null) ? g_jsDatePickImagePath : "img/";
+	this.oConfiguration.imgPath		= (g_jsDatePickImagePath.length != null) ? g_jsDatePickImagePath : "img/";
 	this.oConfiguration.weekStartDay   	= (aConf["weekStartDay"] != null) ? aConf["weekStartDay"] : 1;
 	
 	this.selectedDayObject = {};

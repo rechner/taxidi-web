@@ -1,6 +1,8 @@
 /*
 	Copyright 2009 Itamar Arjuan
 	jsDatePick is distributed under the terms of the GNU General Public License.
+	
+	Modified by Nathan Lex 2012
 */
 /*
 	Configuration settings documentation:
@@ -72,8 +74,8 @@ g_l["ERROR_4"] = g_l["ERROR_3"] = "Target invalid";
 	safety steps must take place!
 	
 	CSS as a rule-of-thumb is always looking for relative image paths to where the CSS
-	file resides. Meaning , if we place the css document of JsDatePick somewhere else
-	Since some of the elements inside the CSS have  background:url(img/someimage.png);
+	file resides. Meaning, if we place the css document of JsDatePick somewhere else
+	Since some of the elements inside the CSS have background:url(img/someimage.png);
 	
 	The system will try to look for a file under the same folder where the CSS file is.
 	So pay careful attention when moving the CSS file somewhere else as the images folder
@@ -132,6 +134,16 @@ JsDatePick = function(configurationObject){
 	g_arrayOfUsedJsDatePickCals[this.globalNumber] = this;
 	
 	this.setConfiguration(configurationObject);
+	
+	var imgs = ["closeButton", "monthBackward", "monthForward", "yearBackward", "yearForward"];
+	var imgms = ["normal", "over", "down"];
+	for (var i in imgs) {
+		for (var m in imgms) {
+			var img= new Image(50, 50)
+			img.src = this.oConfiguration.imgPath + imgs[i] + "_" + imgms[m] + ".gif";
+		}
+	}
+	
 	this.makeCalendar();
 };
 

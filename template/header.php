@@ -7,7 +7,6 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link rel="shortcut icon" href="resources/img/favicon.ico" />
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
     <style>
       body {
@@ -26,11 +25,11 @@
     <script type="text/javascript" src="resources/js/jsDatePick.full.1.3.js"></script>
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="bootstrap/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="resources/img/favicon.ico">
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png"> -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png"> -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png"> -->
+    <link rel="apple-touch-icon-precomposed" href="resources/img/apple-touch-icon-57-optimized.png">
   </head>
 
   <body>

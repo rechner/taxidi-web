@@ -22,7 +22,7 @@
 
     <!-- CSS & Javascript for datepicker -->
     <link rel="stylesheet" type="text/css" media="all" href="resources/css/jsDatePick_ltr.css" />
-    <script type="text/javascript" src="resources/js/jsDatePick.full.1.3.js"></script>
+    <script type="text/javascript" src="resources/js/jsDatePick.js"></script>
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="resources/img/favicon.ico">

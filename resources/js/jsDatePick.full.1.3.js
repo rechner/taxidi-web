@@ -136,14 +136,9 @@ JsDatePick = function(configurationObject){
 	
 	this.setConfiguration(configurationObject);
 	
-	var imgs = ["closeButton", "monthBackward", "monthForward", "yearBackward", "yearForward"];
-	var imgms = ["normal", "over", "down"];
-	for (var i in imgs) {
-		for (var m in imgms) {
-			var img= new Image(50, 50)
-			img.src = this.oConfiguration.imgPath + imgs[i] + "_" + imgms[m] + ".gif";
-		}
-	}
+	var img = new Image();
+	img.src = this.oConfiguration.imgPath + "closebutton.png";
+	img.src = this.oConfiguration.imgPath + "datebuttons.png";
 	
 	this.makeCalendar();
 };
@@ -290,31 +285,31 @@ JsDatePick.prototype.makeCalendar = function(){
 	
 	this.setC(JsDatePickBox, "JsDatePickBox");
 	this.setC(clearfix, "clearfix");
-	this.setC(closeButton, "jsDatePickCloseButton");
+	this.setC(closeButton, "jsDatePickCloseButton Norm");
 	closeButton.setAttribute("globalNumber",this.globalNumber);
 	
 	closeButton.onmouseover = function(){
 		var gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["CLOSE"]);
-		gRef.setC(this, "jsDatePickCloseButtonOver");
+		gRef.setC(this, "jsDatePickCloseButton Over");
 	};
 	
 	closeButton.onmouseout = function(){
 		var gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText('');
-		gRef.setC(this, "jsDatePickCloseButton");
+		gRef.setC(this, "jsDatePickCloseButton Norm");
 	};
 	
 	closeButton.onmousedown = function(){
 		var gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["CLOSE"]);
-		gRef.setC(this, "jsDatePickCloseButtonDown");
+		gRef.setC(this, "jsDatePickCloseButton Down");
 	};
 	
 	closeButton.onmouseup = function(){
 		var gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText('');
-		gRef.setC(this, "jsDatePickCloseButton");
+		gRef.setC(this, "jsDatePickCloseButton Norm");
 		gRef.closeCalendar();
 	};
 	
@@ -932,10 +927,10 @@ JsDatePick.prototype.getDOMControlBar = function(){
 	controlsBarText			= d.createElement("div");
 	
 	this.setC(controlsBar, "controlsBar");
-	this.setC(monthForwardButton, "monthForwardButton");
-	this.setC(monthBackwardButton, "monthBackwardButton");
-	this.setC(yearForwardButton, "yearForwardButton");
-	this.setC(yearBackwardButton, "yearBackwardButton");
+	this.setC(monthForwardButton, "monthForwardButton Norm");
+	this.setC(monthBackwardButton, "monthBackwardButton Norm");
+	this.setC(yearForwardButton, "yearForwardButton Norm");
+	this.setC(yearBackwardButton, "yearBackwardButton Norm");
 	this.setC(controlsBarText, "controlsBarText");
 		
 	controlsBar.setAttribute("globalNumber",this.globalNumber);
@@ -963,7 +958,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["MONTH_FWD"]);
-		gRef.setC(this, "monthForwardButtonOver");
+		gRef.setC(this, "monthForwardButton Over");
 	};
 	
 	monthForwardButton.onmouseout = function(){
@@ -977,7 +972,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText('');
-		gRef.setC(this, "monthForwardButton");
+		gRef.setC(this, "monthForwardButton Norm");
 	};
 	
 	monthForwardButton.onmousedown = function(){
@@ -991,7 +986,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}		
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["MONTH_FWD"]);
-		gRef.setC(this, "monthForwardButtonDown");
+		gRef.setC(this, "monthForwardButton Down");
 	};
 	
 	monthForwardButton.onmouseup = function(){
@@ -1005,7 +1000,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["MONTH_FWD"]);
-		gRef.setC(this, "monthForwardButton");
+		gRef.setC(this, "monthForwardButton Norm");
 		gRef.moveForwardOneMonth();
 	};
 	
@@ -1022,7 +1017,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["MONTH_BCK"]);
-		gRef.setC(this, "monthBackwardButtonOver");
+		gRef.setC(this, "monthBackwardButton Over");
 	};
 	
 	monthBackwardButton.onmouseout = function(){
@@ -1036,7 +1031,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText('');
-		gRef.setC(this, "monthBackwardButton");
+		gRef.setC(this, "monthBackwardButton Norm");
 	};
 	
 	monthBackwardButton.onmousedown = function(){
@@ -1050,7 +1045,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["MONTH_BCK"]);
-		gRef.setC(this, "monthBackwardButtonDown");
+		gRef.setC(this, "monthBackwardButton Down");
 	};
 	
 	monthBackwardButton.onmouseup = function(){
@@ -1064,7 +1059,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["MONTH_BCK"]);
-		gRef.setC(this, "monthBackwardButton");
+		gRef.setC(this, "monthBackwardButton Norm");
 		gRef.moveBackOneMonth();
 	};
 	
@@ -1081,7 +1076,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["YEAR_FWD"]);
-		gRef.setC(this, "yearForwardButtonOver");
+		gRef.setC(this, "yearForwardButton Over");
 	};
 	
 	yearForwardButton.onmouseout = function(){
@@ -1095,7 +1090,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText('');
-		gRef.setC(this, "yearForwardButton");
+		gRef.setC(this, "yearForwardButton Norm");
 	};
 	
 	yearForwardButton.onmousedown = function(){
@@ -1109,7 +1104,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["YEAR_FWD"]);
-		gRef.setC(this, "yearForwardButtonDown");
+		gRef.setC(this, "yearForwardButton Down");
 	};
 	
 	yearForwardButton.onmouseup = function(){
@@ -1123,7 +1118,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["YEAR_FWD"]);
-		gRef.setC(this, "yearForwardButton");
+		gRef.setC(this, "yearForwardButton Norm");
 		gRef.moveForwardOneYear();
 	};
 	
@@ -1140,7 +1135,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["YEAR_BCK"]);
-		gRef.setC(this, "yearBackwardButtonOver");
+		gRef.setC(this, "yearBackwardButton Over");
 	};
 	
 	yearBackwardButton.onmouseout = function(){
@@ -1154,7 +1149,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText('');
-		gRef.setC(this, "yearBackwardButton");
+		gRef.setC(this, "yearBackwardButton Norm");
 	};
 	
 	yearBackwardButton.onmousedown = function(){
@@ -1168,7 +1163,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["YEAR_BCK"]);
-		gRef.setC(this, "yearBackwardButtonDown");
+		gRef.setC(this, "yearBackwardButton Down");
 	};
 	
 	yearBackwardButton.onmouseup = function(){
@@ -1182,7 +1177,7 @@ JsDatePick.prototype.getDOMControlBar = function(){
 		}		
 		gRef = JsDatePick.getCalInstanceById(this.getAttribute("globalNumber"));
 		gRef.setTooltipText(g_l["YEAR_BCK"]);
-		gRef.setC(this, "yearBackwardButton");
+		gRef.setC(this, "yearBackwardButton Norm");
 		gRef.moveBackOneYear();
 	};
 	

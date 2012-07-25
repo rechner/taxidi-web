@@ -30,26 +30,9 @@
 </div>
 <!-- /sidebar -->
 
-<script>
-  window.onload = function(){
-    new JsDatePick({
-      useMode:2,
-      target:"date",
-      dateFormat:"%Y-%m-%d",
-      imgPath:"resources/img/datepicker"
-      /* weekStartDay:1*/
-    });
-    var dp1_oldof = document.getElementById("date").onfocus;
-    document.getElementById("date").onfocus = function() {
-      dp1_oldof.call(this);
-      document.getElementById("datef_single").checked = true;
-    }
-  };
-</script>
-
-<div class="span9 well">
-  <h2>Count</h2>
-  <form class="form-horizontal" method="get">
+<div class="span9">
+  <form class="form-horizontal well" method="get">
+    <h2>Count</h2>
     <fieldset>
 <?php
   $selectfilters = array(
@@ -103,21 +86,20 @@
   if ($_GET["datef"] == "single") {
     $filters[] = "statistics.date = DATE '{$_GET["date"]}'";
   }
-
-  $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "") . ";" ;
-  $stats = array(
-    "Total"      => "WHERE true",
-    "Members"    => "LEFT JOIN data ON data.id = person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
-    "Visitors"   => "LEFT JOIN data ON data.id = person WHERE data.visitor = TRUE",
-    "Volunteers" => "WHERE volunteer > 1",
-  );
+  $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "");
     
   if ($_GET["mode"] != "full") {
+    $stats = array(
+      "Total"      => "WHERE true",
+      "Members"    => "LEFT JOIN data ON data.id = person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
+      "Visitors"   => "LEFT JOIN data ON data.id = person WHERE data.visitor = TRUE",
+      "Volunteers" => "WHERE volunteer > 1",
+    );
     echo "<div class=\"control-group form-inline\">
         <label class=\"control-label\">Statistics</label>
         <div class=\"controls\">";
     foreach ($stats as $name => $querymain) {
-      $query = "SELECT count(person) FROM statistics " . $querymain . $queryend;
+      $query = "SELECT count(person) FROM statistics " . $querymain . $queryend . ";" ;
       $result = pg_query($connection, $query) or 
         die("Error in query: $query." . pg_last_error($connection));
       $row = pg_fetch_assoc($result);
@@ -137,7 +119,55 @@
       </div>
     </fieldset>
   </form>
+  <?php
+    if ($_GET["mode"] == "full") {
+      echo "<table class=\"table\" style=\"font-size: small;\">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Activity</th>
+              <th>Room</th>
+              <th>Paging</th>
+              <th>Security<br/>Code</th>
+            </tr>
+          </thead>
+        <tbody>";
+      $query = "SELECT DISTINCT person, data.name, lastname, statistics.activity, data.room, paging, code
+                  FROM data
+                  LEFT JOIN statistics ON data.id = person
+                  LEFT JOIN activities ON data.activity=activities.id
+                  LEFT JOIN rooms ON data.room = rooms.id
+                  WHERE true $queryend
+                  ORDER BY person;";
+      $result = pg_query($connection, $query) or 
+        die("Error in query: $query." . pg_last_error($connection));
+      while ($row = pg_fetch_assoc($result)) {
+        echo "<tr><td>";
+        echo "{$row["person"]}</td><td>{$row["name"]} {$row["lastname"]}</td><td>{$row["activity"]}</td><td>{$row["room"]}</td><td>{$row["paging"]}</td><td>{$row["code"]}";
+        echo "</td></tr>";
+      }
+      pg_free_result($result);
+      echo "</tbody></table>";
+    }
+  ?>
 </div>
+<script>
+  window.onload = function(){
+    new JsDatePick({
+      useMode:2,
+      target:"date",
+      dateFormat:"%Y-%m-%d",
+      imgPath:"resources/img/datepicker"
+      /* weekStartDay:1*/
+    });
+    var dp1_oldof = document.getElementById("date").onfocus;
+    document.getElementById("date").onfocus = function() {
+      dp1_oldof.call(this);
+      document.getElementById("datef_single").checked = true;
+    }
+  };
+</script>
 <?php
   require_once "template/footer.php" ;
   pg_close($connection);

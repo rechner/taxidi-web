@@ -133,18 +133,23 @@
             </tr>
           </thead>
         <tbody>";
-      $query = "SELECT DISTINCT person, data.name, lastname, statistics.activity, data.room, paging, code
+      $query = "
+                  SELECT DISTINCT person, data.name, lastname, statistics.activity, (
+                    SELECT rooms.name FROM rooms WHERE id = data.room
+                  ) AS roomname, paging, code
                   FROM data
                   LEFT JOIN statistics ON data.id = person
                   LEFT JOIN activities ON data.activity=activities.id
                   LEFT JOIN rooms ON data.room = rooms.id
                   WHERE true $queryend
                   ORDER BY person;";
+      //echo $query;
       $result = pg_query($connection, $query) or 
         die("Error in query: $query." . pg_last_error($connection));
       while ($row = pg_fetch_assoc($result)) {
         echo "<tr><td>";
-        echo "{$row["person"]}</td><td>{$row["name"]} {$row["lastname"]}</td><td>{$row["activity"]}</td><td>{$row["room"]}</td><td>{$row["paging"]}</td><td>{$row["code"]}";
+        echo "{$row["person"]}</td><td>{$row["name"]} {$row["lastname"]}</td><td>{$row["activity"]}</td><td>{$row["roomname"]}</td><td>{$row["paging"]}</td><td>{$row["code"]}";
+        //echo print_r($row);
         echo "</td></tr>";
       }
       pg_free_result($result);

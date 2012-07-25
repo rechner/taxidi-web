@@ -18,6 +18,13 @@
       <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
       <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
       <li class="nav-header">Actions</li>
+      <?php
+        parse_str($_SERVER['QUERY_STRING'], $query);
+        $query["mode"] = "stats";
+        echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Summary</a></li>";
+        $query["mode"] = "full";
+        echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Attendance</a></li>";
+      ?>
     </ul>
   </div>
 </div>
@@ -86,9 +93,6 @@
           <input type="text" class="input-small" style="height: 28px;" name="date" id="date" value="<?php echo $_GET["datef"] == "single" ? $_GET["date"] : date("Y-m-d"); ?>">
         </div>
       </div>
-      <div class="control-group form-inline">
-        <label class="control-label">Statistics</label>
-        <div class="controls">
 <?php
   $filters = array();
   foreach (array("service", "activity", "room") as $filter) {
@@ -99,7 +103,7 @@
   if ($_GET["datef"] == "single") {
     $filters[] = "statistics.date = DATE '{$_GET["date"]}'";
   }
-  
+
   $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "") . ";" ;
   $stats = array(
     "Total"      => "WHERE true",
@@ -107,20 +111,28 @@
     "Visitors"   => "LEFT JOIN data ON data.id = person WHERE data.visitor = TRUE",
     "Volunteers" => "WHERE volunteer > 1",
   );
-  
-  foreach ($stats as $name => $querymain) {
-    $query = "SELECT count(person) FROM statistics " . $querymain . $queryend;
-    //echo $query . "<br/>\n";
-    $result = pg_query($connection, $query) or 
-      die("Error in query: $query." . pg_last_error($connection));
-    $row = pg_fetch_assoc($result);
-    echo "$name: {$row["count"]}<br/>";
-    pg_free_result($result);
+    
+  if ($_GET["mode"] != "full") {
+    echo "<div class=\"control-group form-inline\">
+        <label class=\"control-label\">Statistics</label>
+        <div class=\"controls\">";
+    foreach ($stats as $name => $querymain) {
+      $query = "SELECT count(person) FROM statistics " . $querymain . $queryend;
+      $result = pg_query($connection, $query) or 
+        die("Error in query: $query." . pg_last_error($connection));
+      $row = pg_fetch_assoc($result);
+      echo "$name: {$row["count"]}<br/>";
+      pg_free_result($result);
+    }
+    echo "</div></div>";
   }
-?> 
-        </div>
-      </div>
+?>
       <div class="form-actions">
+        <?php
+          if(array_key_exists("mode",$_GET)) {
+            echo "<input type=\"hidden\" name=\"mode\" value=\"" . $_GET["mode"] . "\"/>";
+          }
+        ?>
         <input type="submit" class="btn btn-primary" value="Filter" />
       </div>
     </fieldset>

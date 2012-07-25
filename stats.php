@@ -24,6 +24,8 @@
         echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Summary &amp; Count</a></li>";
         $query["mode"] = "full";
         echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Attendance</a></li>";
+        $query["mode"] = "medical";
+        echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Medical</a></li>";
       ?>
     </ul>
   </div>
@@ -88,7 +90,7 @@
   }
   $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "");
     
-  if ($_GET["mode"] != "full") {
+  if (!array_key_exists("mode",$_GET) or $_GET["mode"] == "stats") {
     $stats = array(
       "<b>Total</b>"      => "WHERE true",
       "Members"    => "LEFT JOIN data ON data.id = person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
@@ -124,7 +126,6 @@
       echo "<table class=\"table\" style=\"font-size: small;\">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Name</th>
               <th>Activity</th>
               <th>Room</th>
@@ -148,7 +149,8 @@
         die("Error in query: $query." . pg_last_error($connection));
       while ($row = pg_fetch_assoc($result)) {
         echo "<tr><td>";
-        echo "{$row["person"]}</td><td>{$row["name"]} {$row["lastname"]}</td><td>{$row["activity"]}</td><td>{$row["roomname"]}</td><td>{$row["paging"]}</td><td>{$row["code"]}";
+        //echo "{$row["person"]}</td><td>";
+        echo "{$row["name"]} {$row["lastname"]}</td><td>{$row["activity"]}</td><td>{$row["roomname"]}</td><td>{$row["paging"]}</td><td>{$row["code"]}";
         //echo print_r($row);
         echo "</td></tr>";
       }

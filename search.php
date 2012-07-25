@@ -26,7 +26,7 @@
           <div class="span9">
             <!-- Search form -->
             <form class="well form-search" name="search" action="search.php" method="post">
-              <input type="text" class="input-medium search-query" name="search" placeholder="Search…">
+              <input type="text" class="input-medium search-query" name="search" placeholder="Search…" autofocus>
               <button type="submit" class="btn">Search</button>
             </form>
             
@@ -120,7 +120,4 @@
             
           </div>
 			</div>
-<script>
-	document.forms["search"].elements["search"].focus();
-</script>
 <?php require_once "template/footer.php" ; ?>

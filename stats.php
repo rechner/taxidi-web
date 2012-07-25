@@ -17,11 +17,11 @@
       <li><a href="search.php"><i class="icon-search"></i>Search</a></li>
       <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
       <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
-      <li class="nav-header">Actions</li>
+      <li class="nav-header">Reporting</li>
       <?php
         parse_str($_SERVER['QUERY_STRING'], $query);
         $query["mode"] = "stats";
-        echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Summary</a></li>";
+        echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Summary &amp; Count</a></li>";
         $query["mode"] = "full";
         echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Attendance</a></li>";
       ?>
@@ -90,7 +90,7 @@
     
   if ($_GET["mode"] != "full") {
     $stats = array(
-      "Total"      => "WHERE true",
+      "<b>Total</b>"      => "WHERE true",
       "Members"    => "LEFT JOIN data ON data.id = person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
       "Visitors"   => "LEFT JOIN data ON data.id = person WHERE data.visitor = TRUE",
       "Volunteers" => "WHERE volunteer > 1",

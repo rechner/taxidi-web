@@ -120,5 +120,7 @@
             
           </div>
 			</div>
-
+<script>
+	document.forms["search"].elements["search"].focus();
+</script>
 <?php require_once "template/footer.php" ; ?>

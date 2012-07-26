@@ -21,11 +21,11 @@
       <?php
         parse_str($_SERVER['QUERY_STRING'], $query);
         $query["mode"] = "stats";
-        echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Summary &amp; Count</a></li>";
+        echo "<li" . ($_GET["mode"] == "stats" ? " class=\"active\"" : "") . "><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Summary &amp; Count</a></li>";
         $query["mode"] = "full";
-        echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Attendance</a></li>";
+        echo "<li" . ($_GET["mode"] == "full" ? " class=\"active\"" : "") . "><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Attendance</a></li>";
         $query["mode"] = "medical";
-        echo "<li><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Medical</a></li>";
+        echo "<li" . ($_GET["mode"] == "medical" ? " class=\"active\"" : "") . "><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Medical</a></li>";
       ?>
     </ul>
   </div>

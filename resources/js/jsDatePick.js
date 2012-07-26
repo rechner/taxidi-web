@@ -136,9 +136,10 @@ JsDatePick = function(configurationObject){
 	
 	this.setConfiguration(configurationObject);
 	
-	var img = new Image();
-	img.src = this.oConfiguration.imgPath + "closebutton.png";
-	img.src = this.oConfiguration.imgPath + "datebuttons.png";
+	var img1 = new Image();
+	img1.src = this.oConfiguration.imgPath + "closebutton.png";
+	var img2 = new Image();
+	img2.src = this.oConfiguration.imgPath + "datebuttons.png";
 	
 	this.makeCalendar();
 };

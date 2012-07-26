@@ -122,35 +122,39 @@
     </fieldset>
   </form>
   <?php
-    if ($_GET["mode"] == "full") {
-      echo "<table class=\"table\" style=\"font-size: small;\">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Activity</th>
-              <th>Room</th>
-              <th>Paging</th>
-              <th>Security<br/>Code</th>
-            </tr>
-          </thead>
-        <tbody>";
-      $query = "
-                  SELECT DISTINCT person, data.name, lastname, statistics.activity, (
-                    SELECT rooms.name FROM rooms WHERE id = data.room
-                  ) AS roomname, paging, code
-                  FROM data
-                  LEFT JOIN statistics ON data.id = person
-                  LEFT JOIN activities ON data.activity=activities.id
-                  LEFT JOIN rooms ON data.room = rooms.id
-                  WHERE true $queryend
-                  ORDER BY person;";
+    if ($_GET["mode"] == "full" or $_GET["mode"] == "medical") {
+      echo "<table class=\"table\" style=\"font-size: small;\"><thead><tr><th>Name</th>";
+      if ($_GET["mode"] == "full") {
+        echo "<th>Activity</th><th>Room</th><th>Paging</th><th>Security<br/>Code</th>";
+        $query = "SELECT DISTINCT person, data.name, lastname, statistics.activity, (
+            SELECT rooms.name FROM rooms WHERE id = data.room
+          ) AS roomname, paging, code
+          FROM data
+          LEFT JOIN statistics ON data.id = person
+          LEFT JOIN activities ON data.activity=activities.id
+          LEFT JOIN rooms ON data.room = rooms.id
+          WHERE true $queryend
+          ORDER BY person;";
+      } elseif ($_GET["mode"] == "medical") {
+        echo "<th>Birthday</th><th>Allergies</th>";
+        $query = "SELECT DISTINCT person, data.name, lastname, dob
+          FROM data
+          LEFT JOIN statistics ON data.id = person
+          WHERE true $queryend
+          ORDER BY person;";
+      }
+      echo "</tr></thead><tbody>";
       //echo $query;
       $result = pg_query($connection, $query) or 
         die("Error in query: $query." . pg_last_error($connection));
       while ($row = pg_fetch_assoc($result)) {
         echo "<tr><td>";
         //echo "{$row["person"]}</td><td>";
-        echo "{$row["name"]} {$row["lastname"]}</td><td>{$row["activity"]}</td><td>{$row["roomname"]}</td><td>{$row["paging"]}</td><td>{$row["code"]}";
+        if ($_GET["mode"] == "full") {
+          echo "{$row["name"]} {$row["lastname"]}</td><td>{$row["activity"]}</td><td>{$row["roomname"]}</td><td>{$row["paging"]}</td><td>{$row["code"]}";
+        } elseif ($_GET["mode"] == "medical") {
+          echo "{$row["name"]} {$row["lastname"]}</td><td>{$row["dob"]}</td><td>{$row["medical"]}";
+        }
         //echo print_r($row);
         echo "</td></tr>";
       }

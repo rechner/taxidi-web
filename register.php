@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
   /* vim: tabstop=2:expandtab:softtabstop=2 */
   require_once 'config.php';
@@ -8,8 +7,7 @@
                               
   $register = FALSE; // placeholder to show success message
 
-  if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    
+  if ($_SERVER['REQUEST_METHOD'] == "POST" and array_key_exists('activity', $_POST))  {
     $result = pg_query($connection, "SELECT prefix FROM activities WHERE id = '".$_POST["activity"]."';") or
         die("Error in query: $query." . pg_last_error($connection));
     
@@ -68,6 +66,7 @@
         <li class="nav-header">Actions</li>
         <li class="active"><a href="#"><i class="icon-plus-sign"></i>Register</a></li>
         <li><a href="#"><i class="icon-user"></i>Register Visitor</a></li>
+      </ul>
     </div>
   </div>
   <!-- /sidebar -->
@@ -76,7 +75,7 @@
     <ul class="thumbnails">
       <li class="span6">
         <div class="page-header">
-          <h1>Registration</h2>
+          <h1>Registration</h1>
         </div>
       </li>
     </ul>   
@@ -92,7 +91,7 @@
       }
     ?>
     
-    <form class="form-horizontal" action="" method="post" name="details">
+    <form class="form-horizontal" method="post" name="details">
       <fieldset>
         <div class="control-group">
           <label class="control-label" for="name">Name</label>
@@ -157,25 +156,25 @@
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="p1_name">Medical</label>
+          <label class="control-label" for="medical">Medical</label>
           <div class="controls">
             <input type="text" class="input" name="medical" id="medical" placeholder="Medical" value="<?php echo $edata["medical"]; ?>">
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="p1_name">Parent 1</label>
+          <label class="control-label" for="parent1">Parent 1</label>
           <div class="controls">
             <input type="text" class="input" name="parent1" id="parent1" placeholder="Name" value="<?php echo $edata["parent1"]; ?>">
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="p2_name">Parent 2</label>
+          <label class="control-label" for="parent2">Parent 2</label>
           <div class="controls">
             <input type="text" class="input" name="parent2" id="parent2" placeholder="Name" value="<?php echo $edata["parent2"]; ?>">
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="p1_name">Parent's Email</label>
+          <label class="control-label" for="parent_email">Parent's Email</label>
           <div class="controls">
             <input type="text" class="input" name="parent_email" id="parent_email" placeholder="Email" 
               value="<?php echo $edata["parentEmail"]; ?>">
@@ -196,6 +195,7 @@
       </fieldset>
     </form>
   </div>
+</div>
 
 
 <?php

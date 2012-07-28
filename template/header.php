@@ -1,6 +1,7 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title><?php echo $page_title; ?> · Taxídí</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Web interface for Taxidi check-in system">
@@ -8,7 +9,7 @@
 
     <!-- Le styles -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
-    <style>
+    <style type="text/css">
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
@@ -21,11 +22,11 @@
     <![endif]-->
 
     <!-- CSS & Javascript for datepicker -->
-    <link rel="stylesheet" type="text/css" media="all" href="resources/css/jsDatePick_ltr.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="resources/css/jsDatePick_ltr.css">
     <script type="text/javascript" src="resources/js/jsDatePick.js"></script>
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="resources/img/favicon.ico">
+    <link rel="shortcut icon" href="resources/img/favicon.ico" />
     <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png"> -->
     <!--<link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png"> -->
     <!--<link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png"> -->
@@ -43,12 +44,28 @@
             <span class="icon-bar"></span>
           </a>
           <a class="brand" href="index.php">Taxídí</a>
+            <div class="btn-group pull-right">
+              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="icon-user"></i> Username
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Profile</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Sign Out</a></li>
+              </ul>
+            </div>
           <div class="nav-collapse">
             <ul class="nav">
-              <li><a href="index.php">Home</a></li>
+              <li<?php echo (basename($_SERVER['PHP_SELF']) == "index.php" ? " class=\"active\"" : "");?>><a href="index.php">Home</a></li>
               <li<?php echo (basename($_SERVER['PHP_SELF']) == "search.php" ? " class=\"active\"" : "");?>><a href="search.php">Search</a></li>
-              <li><a href="register.php">Register</a></li>
+              <li<?php echo (basename($_SERVER['PHP_SELF']) == "register.php" ? " class=\"active\"" : "");?>><a href="register.php">Register</a></li>
+              <li<?php echo (basename($_SERVER['PHP_SELF']) == "stats.php" ? " class=\"active\"" : "");?>><a href="stats.php">Statistics</a></li>
+              <li class="divider-vertical"></li>
             </ul>
+            <form class="navbar-search pull-left" action="search.php" method="post">
+                <input name="search" type="text" class="search-query input-medium" placeholder="Search">
+              </form>
           </div><!--/.nav-collapse -->
         </div>
       </div>

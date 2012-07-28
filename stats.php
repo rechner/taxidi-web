@@ -162,6 +162,7 @@
       echo "</tbody></table>";
     }
   ?>
+  </div>
 </div>
 <script>
   window.onload = function(){

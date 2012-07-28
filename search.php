@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<!-- vim: tabstop=2:softtabstop=2 -->
 <?php
 	$page_title = "Search";
 	require_once "template/header.php";
@@ -15,10 +13,11 @@
               </ul>
               <ul class="nav nav-list">
                 <li class="nav-header">Actions</li>
-                <li><a href="#"><i class="icon-plus-sign"></i>Register</a></li>
+                <li><a href="register.php"><i class="icon-plus-sign"></i>Register</a></li>
                 <li><a href="#"><i class="icon-user"></i>Register Visitor</a></li>
                 <li><a href="#"><i class="icon-print"></i>Print Search</a></li>
                 <li><a href="#"><i class="icon-download-alt"></i>Download Results</a></li>
+              </ul>
             </div>
           </div>
           <!-- /sidebar -->

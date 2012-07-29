@@ -5,6 +5,10 @@
 
 	$page_title = "Advanced Search";
 	require_once "template/header.php";
+	
+	function getvar($vname) {
+		return (array_key_exists($vname, $_POST) ? $_POST[$vname] : $_GET[$vname]);
+	}
 ?>
 					<!-- sidebar -->
           <div class="span3">
@@ -32,19 +36,26 @@
 								<div class="control-group">
 									<label class="control-label" for="name">Name contains</label>
 									<div class="controls">
-										<input type="text" class="input" name="name" id="name" placeholder="Name">
+										<input type="text" class="input" name="name" id="name" placeholder="Name" value="<?php echo getvar("name"); ?>">
 									</div>
 								</div>
 								<div class="control-group">
 									<label class="control-label" for="room">and room is</label>
 									<div class="controls">
-										<input type="text" class="input" name="room" id="room" placeholder="Name">
+										<input type="text" class="input" name="room" id="room" placeholder="Room" value="<?php echo getvar("room"); ?>">
 									</div>
 								</div>
 								<div class="control-group">
 									<label class="control-label" for="medical">and medical contains</label>
 									<div class="controls">
-										<input type="text" class="input" name="medical" id="medical" placeholder="Name">
+										<input type="text" class="input" name="medical" id="medical" placeholder="Medical" value="<?php echo getvar("medical"); ?>">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="medical">and was born</label>
+									<div class="controls">
+										after <input type="text" class="input-small" name="date1" id="date1" value="<?php echo getvar("date1"); ?>">
+										and before <input type="text" class="input-small" name="date2" id="date2" value="<?php $foo = getvar("date2"); echo (empty($foo) ? date("Y-m-d") : $foo)?>">
 									</div>
 								</div>
 								<div class="form-actions">
@@ -53,9 +64,6 @@
 							</fieldset>
             </form>
 						<?php
-							function getvar($vname) {
-								return (array_key_exists($vname, $_POST) ? $_POST[$vname] : $_GET[$vname]);
-							}
 							if (!empty($_GET)) {
 								$connection = pg_connect ("host=$dbhost dbname=$dbname 
                                           user=$dbuser password=$dbpass");
@@ -63,6 +71,8 @@
 									"name"    => "data.name || ' ' || data.lastname ILIKE '%" . getvar("name") . "%'",
 									"room"    => "rooms.name ILIKE '%" . getvar("room") . "%'",
 									"medical" => "data.medical ILIKE '%" . getvar("medical") . "%'",
+									"date1"   => "data.dob > '" . getvar("date1") . "'",
+									"date2"   => "data.dob < '" . getvar("date2") . "'",
 								);
 								$wherequery = array();
 								foreach ($searchfilters as $n => $q) {
@@ -120,4 +130,15 @@
 						?>
           </div>
 			</div>
+			<script>
+				window.onload = function(){
+					new JsDatePick({
+						useMode:2,
+						target:"date1",
+						dateFormat:"%Y-%m-%d",
+						imgPath:"resources/img/datepicker"
+						/* weekStartDay:1*/
+					});
+				};
+			</script>
 <?php require_once "template/footer.php" ; ?>

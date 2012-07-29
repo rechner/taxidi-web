@@ -60,6 +60,7 @@
 								</div>
 								<div class="form-actions">
 								  <input type="submit" class="btn btn-primary" value="Search" />
+									<input type="reset" class="btn" value="Reset">
 								</div>
 							</fieldset>
             </form>

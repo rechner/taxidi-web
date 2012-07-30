@@ -9,6 +9,9 @@
 	function getvar($vname) {
 		return (array_key_exists($vname, $_POST) ? $_POST[$vname] : $_GET[$vname]);
 	}
+	
+	$connection = pg_connect ("host=$dbhost dbname=$dbname 
+                            user=$dbuser password=$dbpass");
 ?>
 					<!-- sidebar -->
           <div class="span3">
@@ -42,20 +45,66 @@
 								<div class="control-group">
 									<label class="control-label" for="room">and room is</label>
 									<div class="controls">
-										<input type="text" class="input" name="room" id="room" placeholder="Room" value="<?php echo getvar("room"); ?>">
+										<select name="room" id="room">
+											<option value="" selected>Any Room</option>
+								      <?php
+												$rooms = array();
+								        $query = "SELECT id, name FROM rooms;";
+								        $result = pg_query($connection, $query) or
+								          die("Error in query: $query." . pg_last_error($connection));
+								        while ($data = pg_fetch_assoc($result)) {
+								          echo "<option value=\"{$data["id"]}\"" . ($data["id"] == getvar("room") ? " selected" : "") . ">{$data["name"]}</option>\n";
+													$rooms[$data["id"]] = $data["name"];
+								        }
+								        pg_free_result($result);
+								      ?>
+								    </select>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="medical">and medical contains</label>
+									<label class="control-label" for="room">and activity is</label>
 									<div class="controls">
-										<input type="text" class="input" name="medical" id="medical" placeholder="Medical" value="<?php echo getvar("medical"); ?>">
+										<select name="activity" id="activity">
+											<option value="" selected>Any Activity</option>
+								      <?php
+												$activities = array();
+								        $query = "SELECT id, name FROM activities;";
+								        $result = pg_query($connection, $query) or
+								          die("Error in query: $query." . pg_last_error($connection));
+								        while ($data = pg_fetch_assoc($result)) {
+								          echo "<option value=\"{$data["id"]}\"" . ($data["id"] == getvar("room") ? " selected" : "") . ">{$data["name"]}</option>\n";
+													$activities[$data["id"]] = $data["name"];
+								        }
+								        pg_free_result($result);
+								      ?>
+								    </select>
 									</div>
 								</div>
 								<div class="control-group">
 									<label class="control-label" for="medical">and was born</label>
 									<div class="controls">
 										after <input type="text" class="input-small" name="date1" id="date1" value="<?php echo getvar("date1"); ?>">
-										and before <input type="text" class="input-small" name="date2" id="date2" value="<?php $foo = getvar("date2"); echo (empty($foo) ? date("Y-m-d") : $foo)?>">
+										and before <input type="text" class="input-small" name="date2" id="date2" value="<?php echo getvar("date2"); ?>">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="medical">and joined</label>
+									<div class="controls">
+										after <input type="text" class="input-small" name="date3" id="date3" value="<?php echo getvar("date3"); ?>">
+										and before <input type="text" class="input-small" name="date4" id="date4" value="<?php echo getvar("date4"); ?>">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="medical">and last seen</label>
+									<div class="controls">
+										after <input type="text" class="input-small" name="date5" id="date5" value="<?php echo getvar("date5"); ?>">
+										and before <input type="text" class="input-small" name="date6" id="date6" value="<?php echo getvar("date6"); ?>">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="medical">Invert query</label>
+									<div class="controls">
+										<input type="checkbox" name="invert" id="invert" <?php echo (getvar("invert") == "on" ? "checked" : ""); ?>>
 									</div>
 								</div>
 								<div class="form-actions">
@@ -66,14 +115,16 @@
             </form>
 						<?php
 							if (!empty($_GET)) {
-								$connection = pg_connect ("host=$dbhost dbname=$dbname 
-                                          user=$dbuser password=$dbpass");
 								$searchfilters = array( 
-									"name"    => "data.name || ' ' || data.lastname ILIKE '%" . getvar("name") . "%'",
-									"room"    => "rooms.name ILIKE '%" . getvar("room") . "%'",
-									"medical" => "data.medical ILIKE '%" . getvar("medical") . "%'",
-									"date1"   => "data.dob > '" . getvar("date1") . "'",
-									"date2"   => "data.dob < '" . getvar("date2") . "'",
+									"name"     => "data.name || ' ' || data.lastname ILIKE '%" . getvar("name") . "%'",
+									"room"     => "data.room = " . getvar("room"),
+									"activity" => "data.activity = " . getvar("activity"),
+									"date1"    => "data.dob > '" . getvar("date1") . "'",
+									"date2"    => "data.dob < '" . getvar("date2") . "'",
+									"date3"    => "data.\"joinDate\" > '" . getvar("date3") . "'",
+									"date4"    => "data.\"joinDate\" < '" . getvar("date4") . "'",
+									"date5"    => "data.\"lastSeen\" > '" . getvar("date5") . "'",
+									"date6"    => "data.\"lastSeen\" < '" . getvar("date6") . "'",
 								);
 								$wherequery = array();
 								foreach ($searchfilters as $n => $q) {
@@ -87,7 +138,7 @@
 													LEFT JOIN rooms ON data.room = rooms.id
 													LEFT JOIN activities ON data.activity = activities.id";
 								if (count($wherequery) > 0) {
-									$query .= " WHERE " . implode(" and ", $wherequery); 
+									$query .= " WHERE " . (getvar("invert") == "on" ? " NOT " : "") . "(" . implode(" and ", $wherequery) . ")"; 
 								}
 								$query .= ";";
 								$result = pg_query($connection, $query) or 
@@ -133,13 +184,15 @@
 			</div>
 			<script>
 				window.onload = function(){
-					new JsDatePick({
-						useMode:2,
-						target:"date1",
-						dateFormat:"%Y-%m-%d",
-						imgPath:"resources/img/datepicker"
-						/* weekStartDay:1*/
-					});
+					for(i = 1; i <= 6; i++) {
+						new JsDatePick({
+							useMode:2,
+							target:("date" + i),
+							dateFormat:"%Y-%m-%d",
+							imgPath:"resources/img/datepicker"
+							/* weekStartDay:1*/
+						});
+					}
 				};
 			</script>
 <?php require_once "template/footer.php" ; ?>

@@ -72,7 +72,7 @@
 								        $result = pg_query($connection, $query) or
 								          die("Error in query: $query." . pg_last_error($connection));
 								        while ($data = pg_fetch_assoc($result)) {
-								          echo "<option value=\"{$data["id"]}\"" . ($data["id"] == getvar("room") ? " selected" : "") . ">{$data["name"]}</option>\n";
+								          echo "<option value=\"{$data["id"]}\"" . ($data["id"] == getvar("activity") ? " selected" : "") . ">{$data["name"]}</option>\n";
 													$activities[$data["id"]] = $data["name"];
 								        }
 								        pg_free_result($result);

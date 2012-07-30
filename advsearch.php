@@ -133,14 +133,12 @@
 										$wherequery[] = $q;
 									}
 								}
-                $query = "SELECT DISTINCT data.id, data.name, lastname, activities.name AS aname, rooms.name AS rname, paging
-                          FROM data
-													LEFT JOIN rooms ON data.room = rooms.id
-													LEFT JOIN activities ON data.activity = activities.id";
+                $query = "SELECT DISTINCT data.id, data.name, lastname, paging, room, activity
+                          FROM data";
 								if (count($wherequery) > 0) {
 									$query .= " WHERE " . (getvar("invert") == "on" ? " NOT " : "") . "(" . implode(" and ", $wherequery) . ")"; 
 								}
-								$query .= ";";
+								$query .= " ORDER BY lastname;";
 								$result = pg_query($connection, $query) or 
                   die("Error in query: $query." . pg_last_error($connection));
 								
@@ -171,8 +169,8 @@
 									while ($row = pg_fetch_assoc($result)) {
                     echo '<tr><td style="width:30px"><input type="checkbox" name="foo"></td>';
                     echo "<td><a href=\"details.php?id={$row["id"]}\">{$row["name"]} {$row["lastname"]}</a></td>";
-                    echo '<td>' . $row["aname"] . '</td>';
-                    echo '<td>' . $row["rname"] . '</td>';
+                    echo '<td>' . $activities[$row["activity"]] . '</td>';
+                    echo '<td>' . $room[$row["room"]] . '</td>';
                     echo '<td>' . $row["paging"] . '</td>';
                     echo '</tr>';
                   }
@@ -190,7 +188,6 @@
 							target:("date" + i),
 							dateFormat:"%Y-%m-%d",
 							imgPath:"resources/img/datepicker"
-							/* weekStartDay:1*/
 						});
 					}
 				};

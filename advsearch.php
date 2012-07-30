@@ -170,7 +170,7 @@
                     echo '<tr><td style="width:30px"><input type="checkbox" name="foo"></td>';
                     echo "<td><a href=\"details.php?id={$row["id"]}\">{$row["name"]} {$row["lastname"]}</a></td>";
                     echo '<td>' . $activities[$row["activity"]] . '</td>';
-                    echo '<td>' . $room[$row["room"]] . '</td>';
+                    echo '<td>' . $rooms[$row["room"]] . '</td>';
                     echo '<td>' . $row["paging"] . '</td>';
                     echo '</tr>';
                   }

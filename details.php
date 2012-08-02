@@ -201,9 +201,20 @@
 		    ?>
 		  </div>
 		</li>
+		<ul class="nav nav-tabs span9" style="margin-top: -18px;">
+		  <li id="tabselect_main" class="<?php echo ($_POST["tab"] != "extended" ? "active" : ""); ?>">
+		  	<a href="javascript:selecttab('main');">Main</a>
+		  </li>
+		  <li id="tabselect_extended" class="<?php echo ($_POST["tab"] == "extended" ? "active" : ""); ?>">
+				<a href="javascript:selecttab('extended');">Extended</a>
+			</li>
+    </ul>
 	</ul>   
     <form class="form-horizontal" action="" method="post">
-      <fieldset>
+			<fieldset id="tabpane_extended" style="display:<?php echo ($_POST["tab"] == "extended" ? "block" : "none"); ?>;">
+				Hello! This is the extended tab!
+			</fieldset>
+      <fieldset id="tabpane_main" style="display:<?php echo ($_POST["tab"] != "extended" ? "block" : "none"); ?>;">
         <div class="control-group">
           <label class="control-label" for="name">Name</label>
           <div class="controls">
@@ -299,15 +310,32 @@
             <textarea name="notes" id="notes" placeholder="Notes" style="width: 434px;"><?php echo $edata["notes"]; ?></textarea>
           </div>
         </div>
-        <div class="form-actions">
-          <input type="submit" class="btn btn-primary" value="Save changes" />
-          <button class="btn">Cancel</button>
-        </div>
       </fieldset>
+      <div class="form-actions">
+        <input id="tabinput" name="tab" type="hidden" value="main" />
+        <input type="submit" class="btn btn-primary" value="Save changes" />
+        <button class="btn">Cancel</button>
+      </div>
     </form>
   </div>
 </div>
 </div>
+<script>
+	selecttab = function(tab) {
+		var tabs = ["main", "extended"];
+		for (var t in tabs) {
+			var ct = tabs[t];
+			if (ct == tab) {
+				document.getElementById("tabselect_" + ct).setAttribute("class", "active");
+				document.getElementById("tabpane_" + ct).style.display = "block";
+			} else {
+				document.getElementById("tabselect_" + ct).setAttribute("class", "");
+				document.getElementById("tabpane_" + ct).style.display = "none";
+			}
+		}
+		document.getElementById("tabinput").value = tab;
+	}
+</script>
 <?php
   require_once "template/footer.php" ;
   pg_close($connection);

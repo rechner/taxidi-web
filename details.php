@@ -212,7 +212,30 @@
 	</ul>   
     <form class="form-horizontal" action="" method="post">
 			<fieldset id="tabpane_extended" style="display:<?php echo ($_POST["tab"] == "extended" ? "block" : "none"); ?>;">
-				Hello! This is the extended tab!
+				<div class="control-group">
+          <label class="control-label" for="street">Street</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" name="street" id="street" placeholder="Street Address" value="">
+          </div>
+        </div>
+				<div class="control-group">
+          <label class="control-label" for="city">City</label>
+          <div class="controls">
+            <input type="text" class="input" name="city" id="city" placeholder="City" value="">
+          </div>
+        </div>
+				<div class="control-group">
+          <label class="control-label" for="state">State</label>
+          <div class="controls">
+            <input type="text" class="input-small" name="state" id="state" placeholder="State" value="">
+          </div>
+        </div> 
+				<div class="control-group">
+          <label class="control-label" for="zip">ZIP</label>
+          <div class="controls">
+            <input type="text" class="input-small" name="zip" id="zip" placeholder="ZIP" value="">
+          </div>
+        </div> 
 			</fieldset>
       <fieldset id="tabpane_main" style="display:<?php echo ($_POST["tab"] != "extended" ? "block" : "none"); ?>;">
         <div class="control-group">

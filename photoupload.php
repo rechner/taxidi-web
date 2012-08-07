@@ -6,8 +6,8 @@ $target_path = "uploads/" . $_POST["id"];
 
 /* JSON RESPONSE FIELDS
   success       bool    true if the next get request will return the correct photo
-  oldphotoid    string  may be null if there was no photo previously
   newphotoid    string  new photo id
+  modified      string  last modified date
   errorid       int     error code, see below
   filetype      string  the mime type of the given file
   filesize_old  string  the original size of the given file
@@ -35,34 +35,13 @@ $output = array(
   "errorid" => 0,
 );
 
-if ($_FILES["photo"]["type"] == "image/png" or $_FILES["photo"]["type"] == "image/jpeg") {
-  if ($_FILES["photo"]["size"] < $photo_maxsize) {
-    $connection = pg_connect ("host=$dbhost dbname=$dbname 
-                              user=$dbuser password=$dbpass");
-    $query = "SELECT picture FROM data WHERE id = {$_POST["id"]};";
-    $result = pg_query($connection, $query) or 
-      die("Error in query: $query." . pg_last_error($connection));
-    $rdata = pg_fetch_assoc($result);
-    pg_free_result($result);
-    
-    /*if (is_numeric($rdata["picture"])) {
-      //TODO remove all other possible pictures.
-      $filebase = $photo_path . str_pad($rdata["picture"], 6, "0", 0);
-      $files = glob($filebase . "*");
-      if (unlink($files[0])) {
-        $parts = explode("/", $_FILES["photo"]["type"]);
-        $target_path = $filebase . "." . $parts[1];
-        echo $target_path;
-        if (move_uploaded_file($_FILES["photo"]['tmp_name'], $target_path)) {
-          echo "SUCCESS";
-        } else {
-          echo "Cannot move new photo";
-        }
-      } else {
-        echo "Cannot remove old photo";
-      }
-    } else {*/
-      $result = pg_query($connection, "SELECT max(picture) FROM data;") or 
+if (array_key_exists("photo", $_FILES)) {
+  if ($_FILES["photo"]["type"] == "image/png" or $_FILES["photo"]["type"] == "image/jpeg") {
+    if ($_FILES["photo"]["size"] < $photo_maxsize) {
+      $connection = pg_connect ("host=$dbhost dbname=$dbname 
+                                user=$dbuser password=$dbpass");
+      $query = "SELECT picture FROM data WHERE id = {$_POST["id"]};";
+      $result = pg_query($connection, $query) or 
         die("Error in query: $query." . pg_last_error($connection));
       $rdata = pg_fetch_assoc($result);
       pg_free_result($result);
@@ -70,9 +49,14 @@ if ($_FILES["photo"]["type"] == "image/png" or $_FILES["photo"]["type"] == "imag
       //TODO remove all other possible pictures.
       //TODO check for error with deleting
       if (is_numeric($rdata["picture"])) {
-        $files = glob($photo_path . str_pad(intval($rdata["max"]), 6, "0", 0) . "*");
+        $files = glob($photo_path . str_pad(intval($rdata["picture"]), 6, "0", 0) . "*");
         unlink($files[0]);
       }
+
+      $result = pg_query($connection, "SELECT max(picture) FROM data;") or 
+        die("Error in query: $query." . pg_last_error($connection));
+      $rdata = pg_fetch_assoc($result);
+      pg_free_result($result);
       
       $parts = explode("/", $_FILES["photo"]["type"]);
       $filen = intval($rdata["max"]) + 1;
@@ -86,18 +70,22 @@ if ($_FILES["photo"]["type"] == "image/png" or $_FILES["photo"]["type"] == "imag
       }
       
       //TODO make a new method of getting a new id that doesn't fill up
-      $query = "UPDATE data SET picture = '$filen' WHERE id = {$_POST["id"]};";
+      $lastmodified = date("Y-m-d H:i:s.u", $_SERVER["REQUEST_TIME"]);
+      $query = "UPDATE data SET picture = '$filen', \"lastModified\" = '" . $lastmodified . "' WHERE id = {$_POST["id"]};";
       $result = pg_query($connection, $query) or 
         die("Error in query: $query." . pg_last_error($connection));
       pg_free_result($result);
-    //}
+      $output["modified"] = $lastmodified;
     
-    pg_close($connection);
+      pg_close($connection);
+    } else {
+      echo "File too large";
+    }
   } else {
-    echo "File too large";
+    echo "File type not supported.";
   }
 } else {
-  echo "File type not supported.";
+  
 }
 
 echo json_encode($output);

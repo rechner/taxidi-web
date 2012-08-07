@@ -172,7 +172,6 @@
 		<h3>Upload New Photo</h3>
 	</div>
 	<div class="modal-body">
-		<h4>DURRRR I can't design a simple modal correctly for the life of me, please help!</h4> </br>
 		<p>Uploads are limited to <?php echo formatByteSize($photo_maxsize); ?> and must be in jpeg or png format</p>
 		<div>
 			<div class="thumbnail" style="width: 175px; margin: 0 auto;">
@@ -292,8 +291,6 @@
 					window.photoupload.addEventListener("load",  function() {
 						//TODO redo this entire method
 						$("body").css("cursor", "default");
-						//$("#fileselecterror").text("SUCCESS! At this point this modal will close and the photo will update. TODO!!!");
-						//$("#fileselecterror").css("display", "block");
 						$("#photodndbox div.input-append").css("display", "table");
 						$("#photodndbox div.progress").css("display", "none");
 						$("#photoupload_progressbar").css("width", "0%");
@@ -302,8 +299,12 @@
 						if (response.success) {
 							$("#photomain").attr("src", "photo.php?id=" + response.newphotoid);
 							$('#photouploadModal').modal("hide");
+							//TODO update last modified
+							console.log(response.modified);
 						} else {
-							
+							//TODO server side error!
+							//$("#fileselecterror").text("ERROR TODO!!!");
+							//$("#fileselecterror").css("display", "block");
 						}
 					}, false);
 					window.photoupload.addEventListener("error", function() {

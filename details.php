@@ -4,9 +4,7 @@
 /* vim: tabstop=2:expandtab:softtabstop=2 */
   /* TODO list
 <<<<<<< HEAD
-		* Successful update notification?
     * Phone mask
-    * DOB mask
     * Proper error message for bad id
     *
     * Changes: Added a few info displays, removed explicit script reference
@@ -87,6 +85,15 @@
     die("Missing or malformed ID parameter");
   }
 
+	function formatByteSize($bytes) {
+		if(!empty($bytes)) {
+			$s = array('bytes', 'kiB', 'MiB', 'GiB', 'TiB', 'PiB');
+			$e = floor(log($bytes) / log(1024));
+
+			return round($bytes / pow(1024, floor($e)), 2) .$s[$e];
+		}
+	}
+
   require_once "template/header.php";
 ?> 
 <!-- sidebar -->
@@ -155,11 +162,52 @@
 					    echo $id . "&query=" . $search;
 					  } else {
 					    echo $id;
-					  } ?>" class="btn btn-danger">Delete</a>
+					  } ?>" class="btn btn-danger">Upload</a>
+	</div>
+</div>
+
+<div id="photouploadModal" class="modal hide fade">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h3>Upload New Photo</h3>
+	</div>
+	<div class="modal-body">
+		<h4>DURRRR I can't design a simple modal correctly for the life of me, please help!</h4> </br>
+		<p>Uploads are limited to <?php echo formatByteSize($photo_maxsize); ?> and must be in jpeg or png format</p>
+		<div>
+			<div class="thumbnail" style="width: 175px; margin: 0 auto;">
+				<img id="photopreview" style="width: 175px;" src="photo.php<?php echo "?id=" . $edata["picture"] ?>">
+			</div>
+		</div>
+		<br>
+		<div id="fileselecterror" class="alert alert-error" style="display: none;">
+			Error: File type not supported.
+		</div>
+		<div class="well" id="photodndbox">
+			<input id="realfileinput" type="file" style="display: none;">
+			<div class="progress progress-striped active" style="display: none; margin: 6px 0 9px;">
+      	<div id="photoupload_progressbar" style="width: 0%" class="bar"></div>
+    	</div>
+			<div class="input-append" style="display: table; width: 100%; height: 100%;">
+				<input style="cursor: pointer; cursor: hand;" id="fakefileinput" class="input-xlarge" type="text" onclick="document.getElementById('realfileinput').click();" readonly>
+				<a class="btn" style="margin-left: -4px; border-radius: 0 3px 3px 0; cursor: pointer; cursor: hand;" onclick="document.getElementById('realfileinput').click();">Browse</a>
+				<div style="display: table-cell; vertical-align: middle; text-align: right;">
+					Or drop file here.
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<a class="btn" data-dismiss="modal" >Close</a>
+		<a id="uploadphoto" class="btn btn-primary">Upload Photo</a>
 	</div>
 </div>
 
 <script type="text/javascript">
+	// GLOBAL VARIABLES
+	// window.photoupload = currently running photo upload request.
+	// window.tempphoto = currently selected photo for upload.
+	
   window.onload = function(){
     new JsDatePick({
       useMode:2,
@@ -167,6 +215,131 @@
       dateFormat:"%Y-%m-%d",
       imgPath:"resources/img/datepicker"
       /* weekStartDay:1*/
+    });
+		photoselecterror = function(err) {
+			document.getElementById("fakefileinput").value = "";
+			document.getElementById("fileselecterror").innerHTML = err;
+			document.getElementById("fileselecterror").style.display = "block";
+		}
+		previewphoto = function(files) {
+			var file = files[0];
+			if (file.type == "image/png" || file.type == "image/jpeg") {
+				if (file.size < <?php echo $photo_maxsize; ?>) {
+					window.tempphoto = file;
+					document.getElementById("fileselecterror").style.display = "none";
+					document.getElementById("fakefileinput").value = file.name;
+					var fileurl = window.URL.createObjectURL(file);
+					document.getElementById("photopreview").src = fileurl;
+				} else {
+					photoselecterror("Error: file too large.");
+				}
+			} else {
+				photoselecterror("Error: file type not supported.");
+			}
+		}
+		noop = function(e) {
+				e.stopPropagation();
+				e.preventDefault();
+		}
+		photodndbox = document.getElementById("photodndbox");
+		photodndbox.addEventListener("dragenter", function(e) {
+				noop(e);
+				this.style.backgroundColor = "#5F5F5F"; //TODO: switch to css class
+				$(this).children("div.input-append").css("visibility", "hidden");
+			} , false);
+		photodndbox.addEventListener("dragover", function(e) {
+				noop(e);
+			} , false);
+		photodndbox.addEventListener("dragleave", function(e) {
+				noop(e);
+				this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
+				$(this).children("div.input-append").css("visibility", "visible");
+			} , false);
+		photodndbox.addEventListener("dragend", function(e) {
+				noop(e);
+				this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
+				$(this).children("div.input-append").css("visibility", "visible");
+			} , false);
+		photodndbox.addEventListener("drop", function drop(e) {
+				noop(e);
+				this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
+				$(this).children("div.input-append").css("visibility", "visible");
+				previewphoto(e.dataTransfer.files);
+			}, false);
+		document.getElementById("realfileinput").onchange = function() {
+			previewphoto(this.files);
+		};
+		document.getElementById("uploadphoto").onclick = function() {
+			var file = window.tempphoto;
+			if (file.type == "image/png" || file.type == "image/jpeg") {
+				if (file.size < <?php echo $photo_maxsize; ?>) {
+					$("#photodndbox div.input-append").css("display", "none");
+					$("#photodndbox div.progress").css("display", "block");
+					
+					var fd = new FormData();
+					fd.append("id", /[\\?&]id=([^&#]*)/.exec(window.location.search)[1].replace(/\+/g, " "));
+					fd.append("photo", file);
+			
+					window.photoupload = new XMLHttpRequest();
+					window.photoupload.upload.addEventListener("progress", function(evt) {
+						$("body").css("cursor", "progress");
+						if (evt.lengthComputable) {
+							$("#photoupload_progressbar").css("width", Math.round(evt.loaded * 100 / evt.total) + "%");
+						} else {
+							$("#photoupload_progressbar").css("width", "10%");
+						}
+					}, false);
+					window.photoupload.addEventListener("load",  function() {
+						//TODO redo this entire method
+						//1) parse request at server 2) send back response 3) parse response 4) do not do style changes, just close modal.
+						$("body").css("cursor", "default");
+						$("#fileselecterror").text("SUCCESS! At this point this modal will close and the photo will update. TODO!!!");
+						$("#fileselecterror").css("display", "block");
+						$("#photodndbox div.input-append").css("display", "table");
+						$("#photodndbox div.progress").css("display", "none");
+						$("#photoupload_progressbar").css("width", "0%");
+						window.tempphoto = null;
+					}, false);
+					window.photoupload.addEventListener("error", function() {
+						$("body").css("cursor", "default");
+						$("#fileselecterror").text("Error: Unknown client side upload failure.");
+						$("#fileselecterror").css("display", "block");
+						$("#photodndbox div.input-append").css("display", "table");
+						$("#photodndbox div.progress").css("display", "none");
+						$("#photoupload_progressbar").css("width", "0%");
+					}, false);
+					window.photoupload.addEventListener("abort", function() {
+						$("body").css("cursor", "default");
+						$("#fileselecterror").text("Error: Upload aborted.");
+						$("#fileselecterror").css("display", "block");
+						$("#photodndbox div.input-append").css("display", "table");
+						$("#photodndbox div.progress").css("display", "none");
+						$("#photoupload_progressbar").css("width", "0%");
+					}, false);
+					window.photoupload.open("POST", "photoupload.php");
+					window.photoupload.send(fd);
+				} else {
+					photoselecterror("Error: file too large.");
+				}
+			} else {
+				photoselecterror("Error: file type not supported.");
+			}
+		};
+		
+		$("#photouploadModal").on("hide", function() {
+			try {
+				window.photoupload.abort();
+				window.photoupload = null;
+			} catch (err) {}
+		});
+		$("#photouploadModal").on("hidden", function() {
+			$("#fileselecterror").css("display", "none");
+			$("#fakefileinput").val("");
+			$("#photopreview").attr("src", $("#photomain").attr("src"));
+			$("#photodndbox div.input-append").css("display", "table");
+			$("#photodndbox div.progress").css("display", "none");
+			$("#photoupload_progressbar").css("width", "0%");
+			window.tempphoto = null;
     });
   };
 </script>
@@ -184,10 +357,11 @@
 ?>
 <div class="well" style="overflow-x: auto;">
 	<ul class="thumbnails">
-		<li class="span3">
+		<li class="span3" style="text-align: center;">
 		  <a href="#" class="thumbnail">
-		  	<img src="photo.php<?php echo "?id=" . $edata["picture"] ?>"/>
+		  	<img id="photomain" src="photo.php<?php echo "?id=" . $edata["picture"] ?>"/>
 		  </a>
+			<a href="#photouploadModal" data-toggle="modal">Upload new photo</a>
 		</li>
 		<li class="span6">
 		  <div class="page-header">

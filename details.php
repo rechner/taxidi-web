@@ -291,14 +291,20 @@
 					}, false);
 					window.photoupload.addEventListener("load",  function() {
 						//TODO redo this entire method
-						//1) parse request at server 2) send back response 3) parse response 4) do not do style changes, just close modal.
 						$("body").css("cursor", "default");
-						$("#fileselecterror").text("SUCCESS! At this point this modal will close and the photo will update. TODO!!!");
-						$("#fileselecterror").css("display", "block");
+						//$("#fileselecterror").text("SUCCESS! At this point this modal will close and the photo will update. TODO!!!");
+						//$("#fileselecterror").css("display", "block");
 						$("#photodndbox div.input-append").css("display", "table");
 						$("#photodndbox div.progress").css("display", "none");
 						$("#photoupload_progressbar").css("width", "0%");
 						window.tempphoto = null;
+						var response = JSON.parse(this.responseText);
+						if (response.success) {
+							$("#photomain").attr("src", "photo.php?id=" + response.newphotoid);
+							$('#photouploadModal').modal("hide");
+						} else {
+							
+						}
 					}, false);
 					window.photoupload.addEventListener("error", function() {
 						$("body").css("cursor", "default");

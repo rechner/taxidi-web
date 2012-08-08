@@ -309,7 +309,7 @@ $(function(){
 						$('#photouploadModal').modal("hide");
 						var date1 = response.modified.split(".")[0].split(" ");
 						var date2 = new Date(date1[0]);
-						$("#lastmodified").text(date2.getUTCDate() + " " + (new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[date2.getUTCMonth()]) + " " + date2.getUTCFullYear() + " " + date1[1]);
+						$("#lastmodified").text("Modified: " + date2.getUTCDate() + " " + (new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[date2.getUTCMonth()]) + " " + date2.getUTCFullYear() + " " + date1[1]);
 					} else {
 						//TODO server side error!
 						//$("#fileselecterror").text("ERROR TODO!!!");

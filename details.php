@@ -182,7 +182,7 @@
 		<div id="fileselecterror" class="alert alert-error" style="display: none;">
 			Error: File type not supported.
 		</div>
-		<div class="well" id="photodndbox">
+		<div class="well" id="photodndbox" style="height: 33px">
 			<input id="realfileinput" type="file" style="display: none;">
 			<div class="progress progress-striped active" style="display: none; margin: 6px 0 9px;">
       	<div id="photoupload_progressbar" style="width: 0%" class="bar"></div>
@@ -203,152 +203,161 @@
 </div>
 
 <script type="text/javascript">
-	// GLOBAL VARIABLES
-	// window.photoupload = currently running photo upload request.
-	// window.tempphoto = currently selected photo for upload.
+$(function(){
+  new JsDatePick({
+    useMode:2,
+    target:"dob",
+    dateFormat:"%Y-%m-%d",
+    imgPath:"resources/img/datepicker"
+    /* weekStartDay:1*/
+  });
 	
-  window.onload = function(){
-    new JsDatePick({
-      useMode:2,
-      target:"dob",
-      dateFormat:"%Y-%m-%d",
-      imgPath:"resources/img/datepicker"
-      /* weekStartDay:1*/
-    });
-		photoselecterror = function(err) {
-			document.getElementById("fakefileinput").value = "";
-			document.getElementById("fileselecterror").innerHTML = err;
-			document.getElementById("fileselecterror").style.display = "block";
-		}
-		previewphoto = function(files) {
-			var file = files[0];
-			if (file.type == "image/png" || file.type == "image/jpeg") {
-				if (file.size < <?php echo $photo_maxsize; ?>) {
-					window.tempphoto = file;
-					document.getElementById("fileselecterror").style.display = "none";
-					document.getElementById("fakefileinput").value = file.name;
-					var fileurl = window.URL.createObjectURL(file);
-					document.getElementById("photopreview").src = fileurl;
-				} else {
-					photoselecterror("Error: file too large.");
-				}
-			} else {
-				photoselecterror("Error: file type not supported.");
-			}
-		}
-		noop = function(e) {
-				e.stopPropagation();
-				e.preventDefault();
-		}
-		photodndbox = document.getElementById("photodndbox");
-		photodndbox.addEventListener("dragenter", function(e) {
-				noop(e);
-				this.style.backgroundColor = "#5F5F5F"; //TODO: switch to css class
-				$(this).children("div.input-append").css("visibility", "hidden");
-			} , false);
-		photodndbox.addEventListener("dragover", function(e) {
-				noop(e);
-			} , false);
-		photodndbox.addEventListener("dragleave", function(e) {
-				noop(e);
-				this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
-				$(this).children("div.input-append").css("visibility", "visible");
-			} , false);
-		photodndbox.addEventListener("dragend", function(e) {
-				noop(e);
-				this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
-				$(this).children("div.input-append").css("visibility", "visible");
-			} , false);
-		photodndbox.addEventListener("drop", function drop(e) {
-				noop(e);
-				this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
-				$(this).children("div.input-append").css("visibility", "visible");
-				previewphoto(e.dataTransfer.files);
-			}, false);
-		document.getElementById("realfileinput").onchange = function() {
-			previewphoto(this.files);
-		};
-		document.getElementById("uploadphoto").onclick = function() {
-			var file = window.tempphoto;
-			if (file.type == "image/png" || file.type == "image/jpeg") {
-				if (file.size < <?php echo $photo_maxsize; ?>) {
-					$("#photodndbox div.input-append").css("display", "none");
-					$("#photodndbox div.progress").css("display", "block");
-					
-					var fd = new FormData();
-					fd.append("id", /[\\?&]id=([^&#]*)/.exec(window.location.search)[1].replace(/\+/g, " "));
-					fd.append("photo", file);
-			
-					window.photoupload = new XMLHttpRequest();
-					window.photoupload.upload.addEventListener("progress", function(evt) {
-						$("body").css("cursor", "progress");
-						if (evt.lengthComputable) {
-							$("#photoupload_progressbar").css("width", Math.round(evt.loaded * 100 / evt.total) + "%");
-						} else {
-							$("#photoupload_progressbar").css("width", "10%");
-						}
-					}, false);
-					window.photoupload.addEventListener("load",  function() {
-						//TODO redo this entire method
-						$("body").css("cursor", "default");
-						$("#photodndbox div.input-append").css("display", "table");
-						$("#photodndbox div.progress").css("display", "none");
-						$("#photoupload_progressbar").css("width", "0%");
-						window.tempphoto = null;
-						var response = JSON.parse(this.responseText);
-						if (response.success) {
-							$("#photomain").attr("src", "photo.php?id=" + response.newphotoid);
-							$('#photouploadModal').modal("hide");
-							//TODO update last modified
-							console.log(response.modified);
-						} else {
-							//TODO server side error!
-							//$("#fileselecterror").text("ERROR TODO!!!");
-							//$("#fileselecterror").css("display", "block");
-						}
-					}, false);
-					window.photoupload.addEventListener("error", function() {
-						$("body").css("cursor", "default");
-						$("#fileselecterror").text("Error: Unknown client side upload failure.");
-						$("#fileselecterror").css("display", "block");
-						$("#photodndbox div.input-append").css("display", "table");
-						$("#photodndbox div.progress").css("display", "none");
-						$("#photoupload_progressbar").css("width", "0%");
-					}, false);
-					window.photoupload.addEventListener("abort", function() {
-						$("body").css("cursor", "default");
-						$("#fileselecterror").text("Error: Upload aborted.");
-						$("#fileselecterror").css("display", "block");
-						$("#photodndbox div.input-append").css("display", "table");
-						$("#photodndbox div.progress").css("display", "none");
-						$("#photoupload_progressbar").css("width", "0%");
-					}, false);
-					window.photoupload.open("POST", "photoupload.php");
-					window.photoupload.send(fd);
-				} else {
-					photoselecterror("Error: file too large.");
-				}
-			} else {
-				photoselecterror("Error: file type not supported.");
-			}
-		};
-		
-		$("#photouploadModal").on("hide", function() {
-			try {
-				window.photoupload.abort();
-				window.photoupload = null;
-			} catch (err) {}
-		});
-		$("#photouploadModal").on("hidden", function() {
-			$("#fileselecterror").css("display", "none");
+	var tempphoto = null;		// photo user has selected
+	var photoupload = null; // photo upload xhr request
+	var uploadphoto = {
+		"showerror" : function (errmsg) {
 			$("#fakefileinput").val("");
-			$("#photopreview").attr("src", $("#photomain").attr("src"));
-			$("#photodndbox div.input-append").css("display", "table");
-			$("#photodndbox div.progress").css("display", "none");
-			$("#photoupload_progressbar").css("width", "0%");
-			window.tempphoto = null;
-    });
-  };
+			$("#fileselecterror").html(errmsg).show();
+		}, 
+		"hideerror" : function () {
+			$("#fileselecterror").hide();
+		},
+		"state" : function (state) {
+			//TODO
+			// 0	
+		}
+	};
+
+	previewphoto = function(files) {
+		var file = files[0];
+		if (file.type == "image/png" || file.type == "image/jpeg") {
+			if (file.size < <?php echo $photo_maxsize; ?>) {
+				tempphoto = file;
+				uploadphoto.hideerror();
+				document.getElementById("fakefileinput").value = file.name;
+				var fileurl = window.URL.createObjectURL(file);
+				document.getElementById("photopreview").src = fileurl;
+			} else {
+				uploadphoto.showerror("Error: file too large.");
+			}
+		} else {
+			uploadphoto.showerror("Error: file type not supported.");
+		}
+	}
+	noop = function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+	}
+	photodndbox = document.getElementById("photodndbox");
+	photodndbox.addEventListener("dragenter", function(e) {
+			noop(e);
+			this.style.backgroundColor = "#5F5F5F"; //TODO: switch to css class
+			$(this).children("div.input-append").css("visibility", "hidden");
+		} , false);
+	photodndbox.addEventListener("dragover", function(e) {
+			noop(e);
+		} , false);
+	photodndbox.addEventListener("dragleave", function(e) {
+			noop(e);
+			this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
+			$(this).children("div.input-append").css("visibility", "visible");
+		} , false);
+	photodndbox.addEventListener("dragend", function(e) {
+			noop(e);
+			this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
+			$(this).children("div.input-append").css("visibility", "visible");
+		} , false);
+	photodndbox.addEventListener("drop", function drop(e) {
+			noop(e);
+			this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
+			$(this).children("div.input-append").css("visibility", "visible");
+			previewphoto(e.dataTransfer.files);
+		}, false);
+	document.getElementById("realfileinput").onchange = function() {
+		previewphoto(this.files);
+	};
+	document.getElementById("uploadphoto").onclick = function() {
+		var file = tempphoto;
+		if (file.type == "image/png" || file.type == "image/jpeg") {
+			if (file.size < <?php echo $photo_maxsize; ?>) {
+				$("#photodndbox div.input-append").css("display", "none");
+				$("#photodndbox div.progress").css("display", "block");
+				
+				var fd = new FormData();
+				fd.append("id", /[\\?&]id=([^&#]*)/.exec(window.location.search)[1].replace(/\+/g, " "));
+				fd.append("photo", file);
+		
+				photoupload = new XMLHttpRequest();
+				photoupload.upload.addEventListener("progress", function(evt) {
+					$("body").css("cursor", "progress");
+					if (evt.lengthComputable) {
+						$("#photoupload_progressbar").css("width", Math.round(evt.loaded * 100 / evt.total) + "%");
+					} else {
+						$("#photoupload_progressbar").css("width", "10%");
+					}
+				}, false);
+				photoupload.addEventListener("load",  function() {
+					//TODO redo this entire method
+					$("body").css("cursor", "default");
+					$("#photodndbox div.input-append").css("display", "table");
+					$("#photodndbox div.progress").css("display", "none");
+					$("#photoupload_progressbar").css("width", "0%");
+					tempphoto = null;
+					var response = JSON.parse(this.responseText);
+					if (response.success) {
+						$("#photomain").attr("src", "photo.php?id=" + response.newphotoid);
+						$('#photouploadModal').modal("hide");
+						var date1 = response.modified.split(".")[0].split(" ");
+						var date2 = new Date(date1[0]);
+						$("#lastmodified").text(date2.getUTCDate() + " " + (new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[date2.getUTCMonth()]) + " " + date2.getUTCFullYear() + " " + date1[1]);
+					} else {
+						//TODO server side error!
+						//$("#fileselecterror").text("ERROR TODO!!!");
+						//$("#fileselecterror").css("display", "block");
+					}
+				}, false);
+				photoupload.addEventListener("error", function() {
+					$("body").css("cursor", "default");
+					$("#fileselecterror").text("Error: Unknown client side upload failure.");
+					$("#fileselecterror").css("display", "block");
+					$("#photodndbox div.input-append").css("display", "table");
+					$("#photodndbox div.progress").css("display", "none");
+					$("#photoupload_progressbar").css("width", "0%");
+				}, false);
+				photoupload.addEventListener("abort", function() {
+					$("body").css("cursor", "default");
+					$("#fileselecterror").text("Error: Upload aborted.");
+					$("#fileselecterror").css("display", "block");
+					$("#photodndbox div.input-append").css("display", "table");
+					$("#photodndbox div.progress").css("display", "none");
+					$("#photoupload_progressbar").css("width", "0%");
+				}, false);
+				photoupload.open("POST", "photoupload.php");
+				photoupload.send(fd);
+			} else {
+				uploadphoto.showerror("Error: file too large.");
+			}
+		} else {
+			uploadphoto.showerror("Error: file type not supported.");
+		}
+	};
+	
+	$("#photouploadModal").on("hide", function() {
+		try {
+			photoupload.abort();
+			photoupload = null;
+		} catch (err) {}
+	});
+	$("#photouploadModal").on("hidden", function() {
+		$("#fileselecterror").css("display", "none");
+		$("#fakefileinput").val("");
+		$("#photopreview").attr("src", $("#photomain").attr("src"));
+		$("#photodndbox div.input-append").css("display", "table");
+		$("#photodndbox div.progress").css("display", "none");
+		$("#photoupload_progressbar").css("width", "0%");
+		tempphoto = null;
+  });
+});
 </script>
 
 <div class="span9">
@@ -377,7 +386,7 @@
 		          echo ($edata["visitor"] == "f" ? "" : "Expiry: " . $edata["expiry"]) . "<br>";
 		          echo "Created: " . date("j M Y", strtotime($edata["joinDate"])) . "<br>";
 		          echo "Last Seen: " . date("j M Y", strtotime($edata["lastSeen"])) . "<br>";
-		          echo "Modified: " . date("j M Y H:i:s", strtotime($edata["lastModified"])) . "<br>";
+		          echo "<span id=\"lastmodified\">Modified: " . date("j M Y H:i:s", strtotime($edata["lastModified"])) . "</span><br>";
 		          echo "Count: " . $edata["count"];
 		    ?>
 		  </div>

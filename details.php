@@ -222,15 +222,36 @@ $(function(){
 		"hideerror" : function () {
 			$("#fileselecterror").hide();
 		},
-		"state" : function (state) {
-			//TODO
-			// 0	
+		"setprogress" : function(percent) {
+			$("#photoupload_progressbar").css("width", Math.round(percent) + "%");
+		},
+		"setstate" : function (state) {
+			$("body").css("cursor", "default");
+			$("#photodndbox").css("background-color", "#F5F5F5");
+			//TODO switch all of this to css classes
+			switch (state) {
+				case 0: // browse for file
+					$("#photodndbox > div.progress").hide();
+					$("#photodndbox > div.input-append").show();
+					break;
+				case 1: // drag and drop hover
+					$("#photodndbox").css("background-color", "#5F5F5F");
+					$("#photodndbox > div.input-append").hide();
+					$("#photodndbox > div.progress").hide();
+					break;
+				case 2: // progress bar
+					uploadphoto.setprogress(0);
+					$("body").css("cursor", "progress");
+					$("#photodndbox > div.input-append").hide();
+					$("#photodndbox > div.progress").show();
+					break;
+			}
 		}
 	};
 
 	previewphoto = function(files) {
 		var file = files[0];
-		if (file.type == "image/png" || file.type == "image/jpeg") {
+		if (file.type == "image/png" || file.type == "image/jpeg") { //TODO loop through accepted mime types
 			if (file.size < <?php echo $photo_maxsize; ?>) {
 				tempphoto = file;
 				uploadphoto.hideerror();
@@ -244,33 +265,29 @@ $(function(){
 			uploadphoto.showerror("Error: file type not supported.");
 		}
 	}
-	noop = function(e) {
+	var noop = function(e) {
 			e.stopPropagation();
 			e.preventDefault();
 	}
-	photodndbox = document.getElementById("photodndbox");
+	var photodndbox = document.getElementById("photodndbox");
 	photodndbox.addEventListener("dragenter", function(e) {
 			noop(e);
-			this.style.backgroundColor = "#5F5F5F"; //TODO: switch to css class
-			$(this).children("div.input-append").css("visibility", "hidden");
+			uploadphoto.setstate(1);
 		} , false);
 	photodndbox.addEventListener("dragover", function(e) {
 			noop(e);
 		} , false);
 	photodndbox.addEventListener("dragleave", function(e) {
 			noop(e);
-			this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
-			$(this).children("div.input-append").css("visibility", "visible");
+			uploadphoto.setstate(0);
 		} , false);
 	photodndbox.addEventListener("dragend", function(e) {
 			noop(e);
-			this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
-			$(this).children("div.input-append").css("visibility", "visible");
+			uploadphoto.setstate(0);
 		} , false);
 	photodndbox.addEventListener("drop", function drop(e) {
 			noop(e);
-			this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
-			$(this).children("div.input-append").css("visibility", "visible");
+			uploadphoto.setstate(0);
 			previewphoto(e.dataTransfer.files);
 		}, false);
 	document.getElementById("realfileinput").onchange = function() {
@@ -280,8 +297,7 @@ $(function(){
 		var file = tempphoto;
 		if (file.type == "image/png" || file.type == "image/jpeg") {
 			if (file.size < <?php echo $photo_maxsize; ?>) {
-				$("#photodndbox div.input-append").css("display", "none");
-				$("#photodndbox div.progress").css("display", "block");
+				uploadphoto.setstate(2);
 				
 				var fd = new FormData();
 				fd.append("id", /[\\?&]id=([^&#]*)/.exec(window.location.search)[1].replace(/\+/g, " "));
@@ -289,27 +305,23 @@ $(function(){
 		
 				photoupload = new XMLHttpRequest();
 				photoupload.upload.addEventListener("progress", function(evt) {
-					$("body").css("cursor", "progress");
 					if (evt.lengthComputable) {
-						$("#photoupload_progressbar").css("width", Math.round(evt.loaded * 100 / evt.total) + "%");
+						uploadphoto.setprogress(evt.loaded * 100 / evt.total)
 					} else {
-						$("#photoupload_progressbar").css("width", "10%");
+						uploadphoto.setprogress(0);
 					}
 				}, false);
-				photoupload.addEventListener("load",  function() {
+				photoupload.addEventListener("load",  function() { //TODO
 					//TODO redo this entire method
-					$("body").css("cursor", "default");
-					$("#photodndbox div.input-append").css("display", "table");
-					$("#photodndbox div.progress").css("display", "none");
-					$("#photoupload_progressbar").css("width", "0%");
+					uploadphoto.setstate(0);
 					tempphoto = null;
 					var response = JSON.parse(this.responseText);
 					if (response.success) {
 						$("#photomain").attr("src", "photo.php?id=" + response.newphotoid);
-						$('#photouploadModal').modal("hide");
 						var date1 = response.modified.split(".")[0].split(" ");
 						var date2 = new Date(date1[0]);
 						$("#lastmodified").text("Modified: " + date2.getUTCDate() + " " + (new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[date2.getUTCMonth()]) + " " + date2.getUTCFullYear() + " " + date1[1]);
+						$('#photouploadModal').modal("hide");
 					} else {
 						//TODO server side error!
 						//$("#fileselecterror").text("ERROR TODO!!!");
@@ -317,20 +329,12 @@ $(function(){
 					}
 				}, false);
 				photoupload.addEventListener("error", function() {
-					$("body").css("cursor", "default");
-					$("#fileselecterror").text("Error: Unknown client side upload failure.");
-					$("#fileselecterror").css("display", "block");
-					$("#photodndbox div.input-append").css("display", "table");
-					$("#photodndbox div.progress").css("display", "none");
-					$("#photoupload_progressbar").css("width", "0%");
+					uploadphoto.setstate(0);
+					uploadphoto.showerror("Error uploading file."); //TODO switch to language array
 				}, false);
 				photoupload.addEventListener("abort", function() {
-					$("body").css("cursor", "default");
-					$("#fileselecterror").text("Error: Upload aborted.");
-					$("#fileselecterror").css("display", "block");
-					$("#photodndbox div.input-append").css("display", "table");
-					$("#photodndbox div.progress").css("display", "none");
-					$("#photoupload_progressbar").css("width", "0%");
+					uploadphoto.setstate(0);
+					uploadphoto.showerror("Error: upload aborted."); //TODO switch to language array
 				}, false);
 				photoupload.open("POST", "photoupload.php");
 				photoupload.send(fd);
@@ -349,7 +353,7 @@ $(function(){
 		} catch (err) {}
 	});
 	$("#photouploadModal").on("hidden", function() {
-		$("#fileselecterror").css("display", "none");
+		uploadphoto.hideerror();
 		$("#fakefileinput").val("");
 		$("#photopreview").attr("src", $("#photomain").attr("src"));
 		$("#photodndbox div.input-append").css("display", "table");

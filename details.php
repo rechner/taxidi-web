@@ -249,8 +249,35 @@ $(function(){
 		}
 	};
 
-	previewphoto = function(files) {
-		var file = files[0];
+	var noop = function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+	}
+	$("#photodndbox").on({
+		"dragenter" : function(e) {
+			noop(e);
+			uploadphoto.setstate(1);
+		},
+		"dragover" : noop,
+		"dragleave" : function(e) {
+			noop(e);
+			uploadphoto.setstate(0);
+		},
+		"dragend" : function(e) {
+			noop(e);
+			uploadphoto.setstate(0);
+		},
+		"drop" : function(e) {
+			noop(e);
+			uploadphoto.setstate(0);
+			previewphoto(e.originalEvent.dataTransfer.files[0]);
+		}
+	});
+	$("#realfileinput").on("change", function() {
+		previewphoto(this.files[0]);
+	});
+
+	previewphoto = function(file) {
 		if (file.type == "image/png" || file.type == "image/jpeg") { //TODO loop through accepted mime types
 			if (file.size < <?php echo $photo_maxsize; ?>) {
 				tempphoto = file;
@@ -265,34 +292,7 @@ $(function(){
 			uploadphoto.showerror("Error: file type not supported.");
 		}
 	}
-	var noop = function(e) {
-			e.stopPropagation();
-			e.preventDefault();
-	}
-	var photodndbox = document.getElementById("photodndbox");
-	photodndbox.addEventListener("dragenter", function(e) {
-			noop(e);
-			uploadphoto.setstate(1);
-		} , false);
-	photodndbox.addEventListener("dragover", function(e) {
-			noop(e);
-		} , false);
-	photodndbox.addEventListener("dragleave", function(e) {
-			noop(e);
-			uploadphoto.setstate(0);
-		} , false);
-	photodndbox.addEventListener("dragend", function(e) {
-			noop(e);
-			uploadphoto.setstate(0);
-		} , false);
-	photodndbox.addEventListener("drop", function drop(e) {
-			noop(e);
-			uploadphoto.setstate(0);
-			previewphoto(e.dataTransfer.files);
-		}, false);
-	document.getElementById("realfileinput").onchange = function() {
-		previewphoto(this.files);
-	};
+	
 	document.getElementById("uploadphoto").onclick = function() {
 		var file = tempphoto;
 		if (file.type == "image/png" || file.type == "image/jpeg") {

@@ -218,10 +218,6 @@ $(function(){
     imgPath:"resources/img/datepicker"
     /* weekStartDay:1*/
   });
-
-	$.ajaxSetup({
-  	cache: true
-	});
 	
 	var tempphoto = null;		// photo user has selected
 	var photoupload = null; // photo upload xhr request
@@ -372,11 +368,25 @@ $(function(){
 			uploadphoto.setstate(0);
 			tempphoto = null;
   	},
-		"show" : function() {
-			
-		}
 	});
+	
+	//TODO implement jCrop here
 });
+
+selecttab = function(tab) {
+	var tabs = ["main", "extended"];
+	for (var t in tabs) {
+		var ct = tabs[t];
+		if (ct == tab) {
+			document.getElementById("tabselect_" + ct).setAttribute("class", "active");
+			document.getElementById("tabpane_" + ct).style.display = "block";
+		} else {
+			document.getElementById("tabselect_" + ct).setAttribute("class", "");
+			document.getElementById("tabpane_" + ct).style.display = "none";
+		}
+	}
+	document.getElementById("tabinput").value = tab;
+}
 </script>
 
 <div class="span9">
@@ -552,22 +562,8 @@ $(function(){
   </div>
 </div>
 </div>
-<script>
-	selecttab = function(tab) {
-		var tabs = ["main", "extended"];
-		for (var t in tabs) {
-			var ct = tabs[t];
-			if (ct == tab) {
-				document.getElementById("tabselect_" + ct).setAttribute("class", "active");
-				document.getElementById("tabpane_" + ct).style.display = "block";
-			} else {
-				document.getElementById("tabselect_" + ct).setAttribute("class", "");
-				document.getElementById("tabpane_" + ct).style.display = "none";
-			}
-		}
-		document.getElementById("tabinput").value = tab;
-	}
-</script>
+<script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
+<link href="https://raw.github.com/tapmodo/Jcrop/master/css/jquery.Jcrop.min.css" rel="stylesheet">
 <?php
   require_once "template/footer.php" ;
   pg_close($connection);

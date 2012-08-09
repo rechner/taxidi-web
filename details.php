@@ -218,6 +218,10 @@ $(function(){
     imgPath:"resources/img/datepicker"
     /* weekStartDay:1*/
   });
+
+	$.ajaxSetup({
+  	cache: true
+	});
 	
 	var tempphoto = null;		// photo user has selected
 	var photoupload = null; // photo upload xhr request

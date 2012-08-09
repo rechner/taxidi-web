@@ -285,7 +285,7 @@ $(function(){
 		previewphoto(this.files[0]);
 	});
 
-	previewphoto = function(file) {
+	var previewphoto = function(file) {
 		if (file.type == "image/png" || file.type == "image/jpeg") { //TODO loop through accepted mime types
 			if (file.size < <?php echo $photo_maxsize; ?>) {
 				tempphoto = file;

@@ -233,11 +233,11 @@ $(function(){
 			$("#photoupload_progressbar").css("width", Math.round(percent) + "%");
 		},
 		"setstate" : function (state) {
+			//TODO switch all of this to actual css classes
 			$("body").css("cursor", "default");
 			$("#photodndbox").css("background-color", "#F5F5F5");
 			$("#photodndbox > div.progress").hide();
 			$("#drophere").hide();
-			//TODO switch all of this to css classes
 			switch (state) {
 				case 0: // browse for file
 					$("#photodndbox > div.input-append").show();
@@ -347,10 +347,10 @@ $(function(){
 				photoupload.open("POST", "photoupload.php");
 				photoupload.send(fd);
 			} else {
-				uploadphoto.showerror("Error: file too large.");
+				uploadphoto.showerror("Error: file too large."); //TODO switch to language array
 			}
 		} else {
-			uploadphoto.showerror("Error: file type not supported.");
+			uploadphoto.showerror("Error: file type not supported."); //TODO switch to language array
 		}
 	};
 	

@@ -354,21 +354,24 @@ $(function(){
 		}
 	};
 	
-	$("#photouploadModal").on("hide", function() {
-		try {
-			photoupload.abort();
-			photoupload = null;
-		} catch (err) {}
+	$("#photouploadModal").on({
+		"hide" : function() {
+			try {
+				photoupload.abort();
+				photoupload = null;
+			} catch (err) {}
+		}, 
+		"hidden" : function() {
+			uploadphoto.hideerror();
+			$("#fakefileinput").val("");
+			$("#photopreview").attr("src", $("#photomain").attr("src"));
+			uploadphoto.setstate(0);
+			tempphoto = null;
+  	},
+		"show" : function() {
+			
+		}
 	});
-	$("#photouploadModal").on("hidden", function() {
-		uploadphoto.hideerror();
-		$("#fakefileinput").val("");
-		$("#photopreview").attr("src", $("#photomain").attr("src"));
-		$("#photodndbox div.input-append").css("display", "table");
-		$("#photodndbox div.progress").css("display", "none");
-		$("#photoupload_progressbar").css("width", "0%");
-		tempphoto = null;
-  });
 });
 </script>
 

@@ -187,6 +187,13 @@
 			<div class="progress progress-striped active" style="display: none; margin: 6px 0 9px;">
       	<div id="photoupload_progressbar" style="width: 0%" class="bar"></div>
     	</div>
+			<div id="drophere" style="width: 100%; height: 100%; display: none;">
+				<div style="width: 100%; height: 100%; display: table;">
+		    	<div style="display: table-cell; vertical-align: middle; text-align: center;">
+						Drop file here.
+					</div>
+				</div>
+    	</div>
 			<div class="input-append" style="display: table; width: 100%; height: 100%;">
 				<input style="cursor: pointer; cursor: hand;" id="fakefileinput" class="input-xlarge" type="text" onclick="document.getElementById('realfileinput').click();" readonly>
 				<a class="btn" style="margin-left: -4px; border-radius: 0 3px 3px 0; cursor: pointer; cursor: hand;" onclick="document.getElementById('realfileinput').click();">Browse</a>
@@ -228,16 +235,17 @@ $(function(){
 		"setstate" : function (state) {
 			$("body").css("cursor", "default");
 			$("#photodndbox").css("background-color", "#F5F5F5");
+			$("#photodndbox > div.progress").hide();
+			$("#drophere").hide();
 			//TODO switch all of this to css classes
 			switch (state) {
 				case 0: // browse for file
-					$("#photodndbox > div.progress").hide();
 					$("#photodndbox > div.input-append").show();
 					break;
 				case 1: // drag and drop hover
 					$("#photodndbox").css("background-color", "#5F5F5F");
 					$("#photodndbox > div.input-append").hide();
-					$("#photodndbox > div.progress").hide();
+					$("#drophere").show();
 					break;
 				case 2: // progress bar
 					uploadphoto.setprogress(0);

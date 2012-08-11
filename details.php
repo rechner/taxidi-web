@@ -177,6 +177,7 @@
 			<div class="thumbnail" style="width: 250px; margin: 0 auto;">
 				<img id="photopreview" style="width: 250px;" src="photo.php<?php echo "?id=" . $edata["picture"] ?>">
 			</div>
+			<img id="tarimg"></canvas>  
 		</div>
 		<br>
 		<div id="fileselecterror" class="alert alert-error" style="display: none;">
@@ -259,7 +260,18 @@ $(function(){
 		}, 
 		"cropimage" : function(c) {
 			//TODO
-			console.dir(c);
+			var img = new Image(); 
+			img.onload = function(){
+				var canvas = $("<canvas>")[0];
+				var size = c.x2 - c.x;
+				canvas.width = size;
+				canvas.height = size;
+				canvas.getContext("2d").drawImage(this, c.x, c.y, size, size, 0, 0, size, size);
+				$("#tarimg")[0].src = canvas.toDataURL("image/png");
+				$("#tarimg")[0].width = size;
+				$("#tarimg")[0].height = size;
+			};
+			img.src = $("#photopreview")[0].src;
 		}
 	};
 
@@ -298,6 +310,7 @@ $(function(){
 				uploadphoto.hideerror();
 				document.getElementById("fakefileinput").value = file.name;
 				var fileurl = window.URL.createObjectURL(file);
+				$("#photopreview")[0].src = fileurl;
 				uploadphoto.cropper.setImage(fileurl);
 			} else {
 				uploadphoto.showerror("Error: file too large.");

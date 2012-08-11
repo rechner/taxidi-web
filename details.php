@@ -174,8 +174,8 @@
 	<div class="modal-body">
 		<p>Uploads are limited to <?php echo formatByteSize($photo_maxsize); ?> and must be in jpeg or png format</p>
 		<div>
-			<div class="thumbnail" style="width: 175px; margin: 0 auto;">
-				<img id="photopreview" style="width: 175px;" src="photo.php<?php echo "?id=" . $edata["picture"] ?>">
+			<div class="thumbnail" style="width: 250px; margin: 0 auto;">
+				<img id="photopreview" style="width: 250px;" src="photo.php<?php echo "?id=" . $edata["picture"] ?>">
 			</div>
 		</div>
 		<br>
@@ -210,6 +210,7 @@
 </div>
 
 <script type="text/javascript">
+//TODO move this entire script block to head, after template insertion.
 $(function(){
   new JsDatePick({
     useMode:2,
@@ -222,6 +223,7 @@ $(function(){
 	var tempphoto = null;		// photo user has selected
 	var photoupload = null; // photo upload xhr request
 	var uploadphoto = {
+		cropper : null,
 		"showerror" : function (errmsg) {
 			$("#fakefileinput").val("");
 			$("#fileselecterror").html(errmsg).show();
@@ -232,7 +234,7 @@ $(function(){
 		"setprogress" : function(percent) {
 			$("#photoupload_progressbar").css("width", Math.round(percent) + "%");
 		},
-		"setstate" : function (state) {
+		"setstate" : function(state) {
 			//TODO switch all of this to actual css classes
 			$("body").css("cursor", "default");
 			$("#photodndbox").css("background-color", "#F5F5F5");
@@ -254,6 +256,10 @@ $(function(){
 					$("#photodndbox > div.progress").show();
 					break;
 			}
+		}, 
+		"cropimage" : function(c) {
+			//TODO
+			console.dir(c);
 		}
 	};
 
@@ -292,7 +298,7 @@ $(function(){
 				uploadphoto.hideerror();
 				document.getElementById("fakefileinput").value = file.name;
 				var fileurl = window.URL.createObjectURL(file);
-				document.getElementById("photopreview").src = fileurl;
+				uploadphoto.cropper.setImage(fileurl);
 			} else {
 				uploadphoto.showerror("Error: file too large.");
 			}
@@ -364,13 +370,20 @@ $(function(){
 		"hidden" : function() {
 			uploadphoto.hideerror();
 			$("#fakefileinput").val("");
-			$("#photopreview").attr("src", $("#photomain").attr("src"));
+			uploadphoto.cropper.setImage($("#photomain").attr("src"));
 			uploadphoto.setstate(0);
 			tempphoto = null;
   	},
 	});
 	
-	//TODO implement jCrop here
+	$('#photopreview').Jcrop({
+		"aspectRatio" : 1,
+		"boxWidth"    : 250,
+		"boxWidth"    : 250,
+	  "onSelect"    : uploadphoto.cropimage
+	}, function() {
+		uploadphoto.cropper = this;
+	});
 });
 
 selecttab = function(tab) {
@@ -563,7 +576,7 @@ selecttab = function(tab) {
 </div>
 </div>
 <script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
-<link href="https://raw.github.com/tapmodo/Jcrop/master/css/jquery.Jcrop.min.css" rel="stylesheet">
+<link href="resources/css/Jcrop.min.css" type="text/css" media="all" rel="stylesheet">
 <?php
   require_once "template/footer.php" ;
   pg_close($connection);

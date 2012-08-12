@@ -258,22 +258,59 @@ $(function(){
 					break;
 			}
 		}, 
-		"cropimage" : function(c) {
-			//TODO
-			var img = new Image(); 
-			img.onload = function(){
-				var canvas = $("<canvas>")[0];
-				var size = c.x2 - c.x;
-				canvas.width = size;
-				canvas.height = size;
-				canvas.getContext("2d").drawImage(this, c.x, c.y, size, size, 0, 0, size, size);
-				$("#tarimg")[0].src = canvas.toDataURL("image/png");
-				$("#tarimg")[0].width = size;
-				$("#tarimg")[0].height = size;
-			};
-			img.src = $("#photopreview")[0].src;
+		"getcroppedphoto" : function() {
+			var canvas = $("<canvas>")[0];
+			var selection = uploadphoto.cropper.tellSelect();
+			var x = Math.floor(selection.x);
+			var y = Math.floor(selection.y);
+			var s = Math.floor(selection.w);
+			if (s == 0) { //extra safety
+				var ns = uploadphoto.selectcenter();
+				x = ns[0];
+				y = ns[1];
+				s = ns[2];
+			}
+			canvas.width = s;
+			canvas.height = s;
+			canvas.getContext("2d").drawImage($("#photopreview")[0], x, y, s, s, 0, 0, s, s);
+			//TODO use https://github.com/eligrey/canvas-toBlob.js instead of this nonsense
+			if (typeof canvas.mozGetAsFile !== "undefined") { // firefox
+				return canvas.mozGetAsFile("photo.png");
+			} else if (typeof BlobBuilder !== "undefined") { // some other browsers
+				//TODO TEST THIS
+				var dataURI = canvas.toDataURL("image/png");
+				var byteString = atob(dataURI.split(',')[1]);
+				var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+				var ab = new ArrayBuffer(byteString.length);
+				var ia = new Uint8Array(ab);
+				for (var i = 0; i < byteString.length; i++) {
+				    ia[i] = byteString.charCodeAt(i);
+				}
+				var bb = new BlobBuilder();
+				bb.append(ab);
+				return bb.getBlob(mimeString);
+			} else { // sucky browsers
+				return false;
+			}
+		},
+		"selectcenter" : function() {
+			var bounds = uploadphoto.cropper.getBounds(); // [width, height]
+			var w = Math.floor(bounds[0]);
+			var h = Math.floor(bounds[1]);
+			if (w < h) { //tall image
+				var o = Math.floor((h - w) / 2);
+				return [0, o, w, o + w];
+			} else if (h < w) { // wide image
+				var o = Math.floor((w - h) / 2);
+				return [o, 0, o + h, h];
+			} else {
+				return [0, 0, w, w];
+			}
 		}
 	};
+	
+	//TODO remove this - for debug only
+	window.getphoto = uploadphoto.getcroppedphoto;
 
 	var noop = function(e) {
 			e.stopPropagation();
@@ -304,27 +341,29 @@ $(function(){
 	});
 
 	var previewphoto = function(file) {
-		if (file.type == "image/png" || file.type == "image/jpeg") { //TODO loop through accepted mime types
-			if (file.size < <?php echo $photo_maxsize; ?>) {
+		//if (file.type == "image/png" || file.type == "image/jpeg") { //TODO loop through accepted mime types
+		//	if (file.size < <?php echo $photo_maxsize; ?>) {
 				tempphoto = file;
 				uploadphoto.hideerror();
 				document.getElementById("fakefileinput").value = file.name;
 				var fileurl = window.URL.createObjectURL(file);
 				$("#photopreview")[0].src = fileurl;
-				uploadphoto.cropper.setImage(fileurl);
-			} else {
-				uploadphoto.showerror("Error: file too large.");
-			}
-		} else {
-			uploadphoto.showerror("Error: file type not supported.");
-		}
+				uploadphoto.cropper.setImage(fileurl, function() {
+					this.setSelect(uploadphoto.selectcenter());
+				});
+		//	} else {
+		//		uploadphoto.showerror("Error: file too large.");
+		//	}
+		//} else {
+		//	uploadphoto.showerror("Error: file type not supported.");
+		//}
 	}
 	
 	document.getElementById("uploadphoto").onclick = function() {
-		var file = tempphoto;
-		if (file.type == "image/png" || file.type == "image/jpeg") {
+		uploadphoto.setstate(2);
+		var file = uploadphoto.getcroppedphoto();
+		//if (file.type == "image/png" || file.type == "image/jpeg") {
 			if (file.size < <?php echo $photo_maxsize; ?>) {
-				uploadphoto.setstate(2);
 				
 				var fd = new FormData();
 				fd.append("id", /[\\?&]id=([^&#]*)/.exec(window.location.search)[1].replace(/\+/g, " "));
@@ -367,10 +406,11 @@ $(function(){
 				photoupload.send(fd);
 			} else {
 				uploadphoto.showerror("Error: file too large."); //TODO switch to language array
+				uploadphoto.setstate(0);
 			}
-		} else {
-			uploadphoto.showerror("Error: file type not supported."); //TODO switch to language array
-		}
+		//} else {
+		//	uploadphoto.showerror("Error: file type not supported."); //TODO switch to language array
+		//}
 	};
 	
 	$("#photouploadModal").on({
@@ -393,9 +433,13 @@ $(function(){
 		"aspectRatio" : 1,
 		"boxWidth"    : 250,
 		"boxWidth"    : 250,
-	  "onSelect"    : uploadphoto.cropimage
+		"onRelease"   : function() {
+			this.setSelect(uploadphoto.selectcenter());
+		},
+	  //"onSelect"    : uploadphoto.cropimage
 	}, function() {
 		uploadphoto.cropper = this;
+		this.setSelect(uploadphoto.selectcenter());
 	});
 });
 

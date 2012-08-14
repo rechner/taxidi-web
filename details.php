@@ -258,7 +258,7 @@ $(function(){
 					break;
 			}
 		}, 
-		"getcroppedphoto" : function() {
+		"getcroppedphoto" : function(callback) {
 			var canvas = $("<canvas>")[0];
 			var selection = uploadphoto.cropper.tellSelect();
 			var x = Math.floor(selection.x);
@@ -273,8 +273,7 @@ $(function(){
 			canvas.width = s;
 			canvas.height = s;
 			canvas.getContext("2d").drawImage($("#photopreview")[0], x, y, s, s, 0, 0, s, s);
-			//TODO use https://github.com/eligrey/canvas-toBlob.js instead of this nonsense
-			if (typeof canvas.mozGetAsFile !== "undefined") { // firefox
+			/*if (typeof canvas.mozGetAsFile !== "undefined") { // firefox
 				return canvas.mozGetAsFile("photo.png");
 			} else if (typeof BlobBuilder !== "undefined") { // some other browsers
 				//TODO TEST THIS
@@ -291,7 +290,8 @@ $(function(){
 				return bb.getBlob(mimeString);
 			} else { // sucky browsers
 				return false;
-			}
+			}*/
+			canvas.toBlob(callback);
 		},
 		"selectcenter" : function() {
 			var bounds = uploadphoto.cropper.getBounds(); // [width, height]
@@ -308,9 +308,6 @@ $(function(){
 			}
 		}
 	};
-	
-	//TODO remove this - for debug only
-	window.getphoto = uploadphoto.getcroppedphoto;
 
 	var noop = function(e) {
 			e.stopPropagation();
@@ -361,14 +358,13 @@ $(function(){
 	
 	document.getElementById("uploadphoto").onclick = function() {
 		uploadphoto.setstate(2);
-		var file = uploadphoto.getcroppedphoto();
-		//if (file.type == "image/png" || file.type == "image/jpeg") {
+		uploadphoto.getcroppedphoto(function(file) {
 			if (file.size < <?php echo $photo_maxsize; ?>) {
-				
+			
 				var fd = new FormData();
 				fd.append("id", /[\\?&]id=([^&#]*)/.exec(window.location.search)[1].replace(/\+/g, " "));
 				fd.append("photo", file);
-		
+	
 				photoupload = new XMLHttpRequest();
 				photoupload.upload.addEventListener("progress", function(evt) {
 					if (evt.lengthComputable) {
@@ -408,9 +404,7 @@ $(function(){
 				uploadphoto.showerror("Error: file too large."); //TODO switch to language array
 				uploadphoto.setstate(0);
 			}
-		//} else {
-		//	uploadphoto.showerror("Error: file type not supported."); //TODO switch to language array
-		//}
+		});
 	};
 	
 	$("#photouploadModal").on({
@@ -633,6 +627,7 @@ selecttab = function(tab) {
 </div>
 </div>
 <script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
+<script src="https://sites.google.com/site/nathanlexwww/javascript/canvas_toblob.js"> </script>
 <link href="resources/css/Jcrop.min.css" type="text/css" media="all" rel="stylesheet">
 <?php
   require_once "template/footer.php" ;

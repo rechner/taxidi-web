@@ -273,24 +273,6 @@ $(function(){
 			canvas.width = s;
 			canvas.height = s;
 			canvas.getContext("2d").drawImage($("#photopreview")[0], x, y, s, s, 0, 0, s, s);
-			/*if (typeof canvas.mozGetAsFile !== "undefined") { // firefox
-				return canvas.mozGetAsFile("photo.png");
-			} else if (typeof BlobBuilder !== "undefined") { // some other browsers
-				//TODO TEST THIS
-				var dataURI = canvas.toDataURL("image/png");
-				var byteString = atob(dataURI.split(',')[1]);
-				var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-				var ab = new ArrayBuffer(byteString.length);
-				var ia = new Uint8Array(ab);
-				for (var i = 0; i < byteString.length; i++) {
-				    ia[i] = byteString.charCodeAt(i);
-				}
-				var bb = new BlobBuilder();
-				bb.append(ab);
-				return bb.getBlob(mimeString);
-			} else { // sucky browsers
-				return false;
-			}*/
 			canvas.toBlob(callback);
 		},
 		"selectcenter" : function() {
@@ -338,29 +320,20 @@ $(function(){
 	});
 
 	var previewphoto = function(file) {
-		//if (file.type == "image/png" || file.type == "image/jpeg") { //TODO loop through accepted mime types
-		//	if (file.size < <?php echo $photo_maxsize; ?>) {
-				tempphoto = file;
-				uploadphoto.hideerror();
-				document.getElementById("fakefileinput").value = file.name;
-				var fileurl = window.URL.createObjectURL(file);
-				$("#photopreview")[0].src = fileurl;
-				uploadphoto.cropper.setImage(fileurl, function() {
-					this.setSelect(uploadphoto.selectcenter());
-				});
-		//	} else {
-		//		uploadphoto.showerror("Error: file too large.");
-		//	}
-		//} else {
-		//	uploadphoto.showerror("Error: file type not supported.");
-		//}
+		tempphoto = file;
+		uploadphoto.hideerror();
+		document.getElementById("fakefileinput").value = file.name;
+		var fileurl = window.URL.createObjectURL(file);
+		$("#photopreview")[0].src = fileurl;
+		uploadphoto.cropper.setImage(fileurl, function() {
+			this.setSelect(uploadphoto.selectcenter());
+		});
 	}
 	
 	document.getElementById("uploadphoto").onclick = function() {
 		uploadphoto.setstate(2);
 		uploadphoto.getcroppedphoto(function(file) {
 			if (file.size < <?php echo $photo_maxsize; ?>) {
-			
 				var fd = new FormData();
 				fd.append("id", /[\\?&]id=([^&#]*)/.exec(window.location.search)[1].replace(/\+/g, " "));
 				fd.append("photo", file);
@@ -430,7 +403,6 @@ $(function(){
 		"onRelease"   : function() {
 			this.setSelect(uploadphoto.selectcenter());
 		},
-	  //"onSelect"    : uploadphoto.cropimage
 	}, function() {
 		uploadphoto.cropper = this;
 		this.setSelect(uploadphoto.selectcenter());

@@ -111,6 +111,7 @@
 	    <li><a data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i>Delete record</a></li>
 	  </ul>
 	</div>
+	<input id="realfileinput" type="file" style="height: 0px; width: 0px;">
 </div>
 <!-- /sidebar -->
 
@@ -184,7 +185,6 @@
 			Error: File type not supported.
 		</div>
 		<div class="well" id="photodndbox" style="height: 33px">
-			<input id="realfileinput" type="file" style="display: none;">
 			<div class="progress progress-striped active" style="display: none; margin: 6px 0 9px;">
       	<div id="photoupload_progressbar" style="width: 0%" class="bar"></div>
     	</div>
@@ -599,7 +599,7 @@ selecttab = function(tab) {
 </div>
 </div>
 <script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
-<script src="https://sites.google.com/site/nathanlexwww/javascript/canvas_toblob.js"> </script>
+<script src="resources/js/canvas_toblob.js"> </script>
 <link href="resources/css/Jcrop.min.css" type="text/css" media="all" rel="stylesheet">
 <?php
   require_once "template/footer.php" ;

@@ -213,13 +213,7 @@
 <script type="text/javascript">
 //TODO move this entire script block to head, after template insertion.
 $(function(){
-  new JsDatePick({
-    useMode:2,
-    target:"dob",
-    dateFormat:"%Y-%m-%d",
-    imgPath:"resources/img/datepicker"
-    /* weekStartDay:1*/
-  });
+	$(".datepicker").datepicker();
 	
 	var tempphoto = null;		// photo user has selected
 	var photoupload = null; // photo upload xhr request
@@ -517,7 +511,7 @@ selecttab = function(tab) {
               <label for="dob" style="float: right; padding-top: 5px; margin-right: 16px;">Birthdate</label>
             </div>
             <div>
-              <input type="text" class="input-small" name="dob" id="dob" placeholder="YYYY-MM-DD" value="<?php echo $edata["dob"]; ?>"> <?php echo $agestr ?>
+              <input type="text" class="input-small datepicker" name="dob" id="dob" placeholder="YYYY-MM-DD" value="<?php echo $edata["dob"]; ?>"> <?php echo $agestr ?>
             </div>
           </div>
         </div>

@@ -111,6 +111,7 @@
 	    <li><a data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i>Delete record</a></li>
 	  </ul>
 	</div>
+	<input id="realfileinput" type="file" style="height: 0px; width: 0px;">
 </div>
 <!-- /sidebar -->
 
@@ -174,18 +175,25 @@
 	<div class="modal-body">
 		<p>Uploads are limited to <?php echo formatByteSize($photo_maxsize); ?> and must be in jpeg or png format</p>
 		<div>
-			<div class="thumbnail" style="width: 175px; margin: 0 auto;">
-				<img id="photopreview" style="width: 175px;" src="photo.php<?php echo "?id=" . $edata["picture"] ?>">
+			<div class="thumbnail" style="width: 250px; margin: 0 auto;">
+				<img id="photopreview" style="width: 250px;" src="photo.php<?php echo "?id=" . $edata["picture"] ?>">
 			</div>
+			<img id="tarimg"></canvas>  
 		</div>
 		<br>
 		<div id="fileselecterror" class="alert alert-error" style="display: none;">
 			Error: File type not supported.
 		</div>
-		<div class="well" id="photodndbox">
-			<input id="realfileinput" type="file" style="display: none;">
+		<div class="well" id="photodndbox" style="height: 33px">
 			<div class="progress progress-striped active" style="display: none; margin: 6px 0 9px;">
       	<div id="photoupload_progressbar" style="width: 0%" class="bar"></div>
+    	</div>
+			<div id="drophere" style="width: 100%; height: 100%; display: none;">
+				<div style="width: 100%; height: 100%; display: table;">
+		    	<div style="display: table-cell; vertical-align: middle; text-align: center;">
+						Drop file here.
+					</div>
+				</div>
     	</div>
 			<div class="input-append" style="display: table; width: 100%; height: 100%;">
 				<input style="cursor: pointer; cursor: hand;" id="fakefileinput" class="input-xlarge" type="text" onclick="document.getElementById('realfileinput').click();" readonly>
@@ -203,152 +211,218 @@
 </div>
 
 <script type="text/javascript">
-	// GLOBAL VARIABLES
-	// window.photoupload = currently running photo upload request.
-	// window.tempphoto = currently selected photo for upload.
+//TODO move this entire script block to head, after template insertion.
+$(function(){
+  new JsDatePick({
+    useMode:2,
+    target:"dob",
+    dateFormat:"%Y-%m-%d",
+    imgPath:"resources/img/datepicker"
+    /* weekStartDay:1*/
+  });
 	
-  window.onload = function(){
-    new JsDatePick({
-      useMode:2,
-      target:"dob",
-      dateFormat:"%Y-%m-%d",
-      imgPath:"resources/img/datepicker"
-      /* weekStartDay:1*/
-    });
-		photoselecterror = function(err) {
-			document.getElementById("fakefileinput").value = "";
-			document.getElementById("fileselecterror").innerHTML = err;
-			document.getElementById("fileselecterror").style.display = "block";
-		}
-		previewphoto = function(files) {
-			var file = files[0];
-			if (file.type == "image/png" || file.type == "image/jpeg") {
-				if (file.size < <?php echo $photo_maxsize; ?>) {
-					window.tempphoto = file;
-					document.getElementById("fileselecterror").style.display = "none";
-					document.getElementById("fakefileinput").value = file.name;
-					var fileurl = window.URL.createObjectURL(file);
-					document.getElementById("photopreview").src = fileurl;
-				} else {
-					photoselecterror("Error: file too large.");
-				}
-			} else {
-				photoselecterror("Error: file type not supported.");
-			}
-		}
-		noop = function(e) {
-				e.stopPropagation();
-				e.preventDefault();
-		}
-		photodndbox = document.getElementById("photodndbox");
-		photodndbox.addEventListener("dragenter", function(e) {
-				noop(e);
-				this.style.backgroundColor = "#5F5F5F"; //TODO: switch to css class
-				$(this).children("div.input-append").css("visibility", "hidden");
-			} , false);
-		photodndbox.addEventListener("dragover", function(e) {
-				noop(e);
-			} , false);
-		photodndbox.addEventListener("dragleave", function(e) {
-				noop(e);
-				this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
-				$(this).children("div.input-append").css("visibility", "visible");
-			} , false);
-		photodndbox.addEventListener("dragend", function(e) {
-				noop(e);
-				this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
-				$(this).children("div.input-append").css("visibility", "visible");
-			} , false);
-		photodndbox.addEventListener("drop", function drop(e) {
-				noop(e);
-				this.style.backgroundColor = "#F5F5F5"; //TODO: switch to css class
-				$(this).children("div.input-append").css("visibility", "visible");
-				previewphoto(e.dataTransfer.files);
-			}, false);
-		document.getElementById("realfileinput").onchange = function() {
-			previewphoto(this.files);
-		};
-		document.getElementById("uploadphoto").onclick = function() {
-			var file = window.tempphoto;
-			if (file.type == "image/png" || file.type == "image/jpeg") {
-				if (file.size < <?php echo $photo_maxsize; ?>) {
-					$("#photodndbox div.input-append").css("display", "none");
-					$("#photodndbox div.progress").css("display", "block");
-					
-					var fd = new FormData();
-					fd.append("id", /[\\?&]id=([^&#]*)/.exec(window.location.search)[1].replace(/\+/g, " "));
-					fd.append("photo", file);
-			
-					window.photoupload = new XMLHttpRequest();
-					window.photoupload.upload.addEventListener("progress", function(evt) {
-						$("body").css("cursor", "progress");
-						if (evt.lengthComputable) {
-							$("#photoupload_progressbar").css("width", Math.round(evt.loaded * 100 / evt.total) + "%");
-						} else {
-							$("#photoupload_progressbar").css("width", "10%");
-						}
-					}, false);
-					window.photoupload.addEventListener("load",  function() {
-						//TODO redo this entire method
-						$("body").css("cursor", "default");
-						$("#photodndbox div.input-append").css("display", "table");
-						$("#photodndbox div.progress").css("display", "none");
-						$("#photoupload_progressbar").css("width", "0%");
-						window.tempphoto = null;
-						var response = JSON.parse(this.responseText);
-						if (response.success) {
-							$("#photomain").attr("src", "photo.php?id=" + response.newphotoid);
-							$('#photouploadModal').modal("hide");
-							//TODO update last modified
-							console.log(response.modified);
-						} else {
-							//TODO server side error!
-							//$("#fileselecterror").text("ERROR TODO!!!");
-							//$("#fileselecterror").css("display", "block");
-						}
-					}, false);
-					window.photoupload.addEventListener("error", function() {
-						$("body").css("cursor", "default");
-						$("#fileselecterror").text("Error: Unknown client side upload failure.");
-						$("#fileselecterror").css("display", "block");
-						$("#photodndbox div.input-append").css("display", "table");
-						$("#photodndbox div.progress").css("display", "none");
-						$("#photoupload_progressbar").css("width", "0%");
-					}, false);
-					window.photoupload.addEventListener("abort", function() {
-						$("body").css("cursor", "default");
-						$("#fileselecterror").text("Error: Upload aborted.");
-						$("#fileselecterror").css("display", "block");
-						$("#photodndbox div.input-append").css("display", "table");
-						$("#photodndbox div.progress").css("display", "none");
-						$("#photoupload_progressbar").css("width", "0%");
-					}, false);
-					window.photoupload.open("POST", "photoupload.php");
-					window.photoupload.send(fd);
-				} else {
-					photoselecterror("Error: file too large.");
-				}
-			} else {
-				photoselecterror("Error: file type not supported.");
-			}
-		};
-		
-		$("#photouploadModal").on("hide", function() {
-			try {
-				window.photoupload.abort();
-				window.photoupload = null;
-			} catch (err) {}
-		});
-		$("#photouploadModal").on("hidden", function() {
-			$("#fileselecterror").css("display", "none");
+	var tempphoto = null;		// photo user has selected
+	var photoupload = null; // photo upload xhr request
+	var uploadphoto = {
+		cropper : null,
+		"showerror" : function (errmsg) {
 			$("#fakefileinput").val("");
-			$("#photopreview").attr("src", $("#photomain").attr("src"));
-			$("#photodndbox div.input-append").css("display", "table");
-			$("#photodndbox div.progress").css("display", "none");
-			$("#photoupload_progressbar").css("width", "0%");
-			window.tempphoto = null;
-    });
-  };
+			$("#fileselecterror").html(errmsg).show();
+		}, 
+		"hideerror" : function () {
+			$("#fileselecterror").hide();
+		},
+		"setprogress" : function(percent) {
+			$("#photoupload_progressbar").css("width", Math.round(percent) + "%");
+		},
+		"setstate" : function(state) {
+			//TODO switch all of this to actual css classes
+			$("body").css("cursor", "default");
+			$("#photodndbox").css("background-color", "#F5F5F5");
+			$("#photodndbox > div.progress").hide();
+			$("#drophere").hide();
+			switch (state) {
+				case 0: // browse for file
+					$("#photodndbox > div.input-append").show();
+					break;
+				case 1: // drag and drop hover
+					$("#photodndbox").css("background-color", "#5F5F5F");
+					$("#photodndbox > div.input-append").hide();
+					$("#drophere").show();
+					break;
+				case 2: // progress bar
+					uploadphoto.setprogress(0);
+					$("body").css("cursor", "progress");
+					$("#photodndbox > div.input-append").hide();
+					$("#photodndbox > div.progress").show();
+					break;
+			}
+		}, 
+		"getcroppedphoto" : function(callback) {
+			var canvas = $("<canvas>")[0];
+			var selection = uploadphoto.cropper.tellSelect();
+			var x = Math.floor(selection.x);
+			var y = Math.floor(selection.y);
+			var s = Math.floor(selection.w);
+			if (s == 0) { //extra safety
+				var ns = uploadphoto.selectcenter();
+				x = ns[0];
+				y = ns[1];
+				s = ns[2];
+			}
+			canvas.width = s;
+			canvas.height = s;
+			canvas.getContext("2d").drawImage($("#photopreview")[0], x, y, s, s, 0, 0, s, s);
+			canvas.toBlob(callback);
+		},
+		"selectcenter" : function() {
+			var bounds = uploadphoto.cropper.getBounds(); // [width, height]
+			var w = Math.floor(bounds[0]);
+			var h = Math.floor(bounds[1]);
+			if (w < h) { //tall image
+				var o = Math.floor((h - w) / 2);
+				return [0, o, w, o + w];
+			} else if (h < w) { // wide image
+				var o = Math.floor((w - h) / 2);
+				return [o, 0, o + h, h];
+			} else {
+				return [0, 0, w, w];
+			}
+		}
+	};
+
+	var noop = function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+	}
+	$("#photodndbox").on({
+		"dragenter" : function(e) {
+			noop(e);
+			uploadphoto.setstate(1);
+		},
+		"dragover" : noop,
+		"dragleave" : function(e) {
+			noop(e);
+			uploadphoto.setstate(0);
+		},
+		"dragend" : function(e) {
+			noop(e);
+			uploadphoto.setstate(0);
+		},
+		"drop" : function(e) {
+			noop(e);
+			uploadphoto.setstate(0);
+			previewphoto(e.originalEvent.dataTransfer.files[0]);
+		}
+	});
+	$("#realfileinput").on("change", function() {
+		previewphoto(this.files[0]);
+	});
+
+	var previewphoto = function(file) {
+		tempphoto = file;
+		uploadphoto.hideerror();
+		document.getElementById("fakefileinput").value = file.name;
+		var fileurl = window.URL.createObjectURL(file);
+		$("#photopreview")[0].src = fileurl;
+		uploadphoto.cropper.setImage(fileurl, function() {
+			this.setSelect(uploadphoto.selectcenter());
+		});
+	}
+	
+	document.getElementById("uploadphoto").onclick = function() {
+		uploadphoto.setstate(2);
+		uploadphoto.getcroppedphoto(function(file) {
+			if (file.size < <?php echo $photo_maxsize; ?>) {
+				var fd = new FormData();
+				fd.append("id", /[\\?&]id=([^&#]*)/.exec(window.location.search)[1].replace(/\+/g, " "));
+				fd.append("photo", file);
+	
+				photoupload = new XMLHttpRequest();
+				photoupload.upload.addEventListener("progress", function(evt) {
+					if (evt.lengthComputable) {
+						uploadphoto.setprogress(evt.loaded * 100 / evt.total)
+					} else {
+						uploadphoto.setprogress(0);
+					}
+				}, false);
+				photoupload.addEventListener("load",  function() { //TODO
+					//TODO redo this entire method
+					uploadphoto.setstate(0);
+					tempphoto = null;
+					var response = JSON.parse(this.responseText);
+					if (response.success) {
+						$("#photomain").attr("src", "photo.php?id=" + response.newphotoid);
+						var date1 = response.modified.split(".")[0].split(" ");
+						var date2 = new Date(date1[0]);
+						$("#lastmodified").text("Modified: " + date2.getUTCDate() + " " + (new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[date2.getUTCMonth()]) + " " + date2.getUTCFullYear() + " " + date1[1]);
+						$('#photouploadModal').modal("hide");
+					} else {
+						//TODO server side error!
+						//$("#fileselecterror").text("ERROR TODO!!!");
+						//$("#fileselecterror").css("display", "block");
+					}
+				}, false);
+				photoupload.addEventListener("error", function() {
+					uploadphoto.setstate(0);
+					uploadphoto.showerror("Error uploading file."); //TODO switch to language array
+				}, false);
+				photoupload.addEventListener("abort", function() {
+					uploadphoto.setstate(0);
+					uploadphoto.showerror("Error: upload aborted."); //TODO switch to language array
+				}, false);
+				photoupload.open("POST", "photoupload.php");
+				photoupload.send(fd);
+			} else {
+				uploadphoto.showerror("Error: file too large."); //TODO switch to language array
+				uploadphoto.setstate(0);
+			}
+		});
+	};
+	
+	$("#photouploadModal").on({
+		"hide" : function() {
+			try {
+				photoupload.abort();
+				photoupload = null;
+			} catch (err) {}
+		}, 
+		"hidden" : function() {
+			uploadphoto.hideerror();
+			$("#fakefileinput").val("");
+			uploadphoto.cropper.setImage($("#photomain").attr("src"));
+			uploadphoto.setstate(0);
+			tempphoto = null;
+  	},
+	});
+	
+	$('#photopreview').Jcrop({
+		"aspectRatio" : 1,
+		"boxWidth"    : 250,
+		"boxWidth"    : 250,
+		"onRelease"   : function() {
+			this.setSelect(uploadphoto.selectcenter());
+		},
+	}, function() {
+		uploadphoto.cropper = this;
+		this.setSelect(uploadphoto.selectcenter());
+	});
+});
+
+selecttab = function(tab) {
+	var tabs = ["main", "extended"];
+	for (var t in tabs) {
+		var ct = tabs[t];
+		if (ct == tab) {
+			document.getElementById("tabselect_" + ct).setAttribute("class", "active");
+			document.getElementById("tabpane_" + ct).style.display = "block";
+		} else {
+			document.getElementById("tabselect_" + ct).setAttribute("class", "");
+			document.getElementById("tabpane_" + ct).style.display = "none";
+		}
+	}
+	document.getElementById("tabinput").value = tab;
+}
 </script>
 
 <div class="span9">
@@ -377,7 +451,7 @@
 		          echo ($edata["visitor"] == "f" ? "" : "Expiry: " . $edata["expiry"]) . "<br>";
 		          echo "Created: " . date("j M Y", strtotime($edata["joinDate"])) . "<br>";
 		          echo "Last Seen: " . date("j M Y", strtotime($edata["lastSeen"])) . "<br>";
-		          echo "Modified: " . date("j M Y H:i:s", strtotime($edata["lastModified"])) . "<br>";
+		          echo "<span id=\"lastmodified\">Modified: " . date("j M Y H:i:s", strtotime($edata["lastModified"])) . "</span><br>";
 		          echo "Count: " . $edata["count"];
 		    ?>
 		  </div>
@@ -524,22 +598,9 @@
   </div>
 </div>
 </div>
-<script>
-	selecttab = function(tab) {
-		var tabs = ["main", "extended"];
-		for (var t in tabs) {
-			var ct = tabs[t];
-			if (ct == tab) {
-				document.getElementById("tabselect_" + ct).setAttribute("class", "active");
-				document.getElementById("tabpane_" + ct).style.display = "block";
-			} else {
-				document.getElementById("tabselect_" + ct).setAttribute("class", "");
-				document.getElementById("tabpane_" + ct).style.display = "none";
-			}
-		}
-		document.getElementById("tabinput").value = tab;
-	}
-</script>
+<script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
+<script src="resources/js/canvas_toblob.js"> </script>
+<link href="resources/css/Jcrop.min.css" type="text/css" media="all" rel="stylesheet">
 <?php
   require_once "template/footer.php" ;
   pg_close($connection);

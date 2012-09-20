@@ -17,6 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 This project incorperates the following code, under GPL v3:
   - Twitter bootstrap (http://twitter.github.com/bootstrap/)
-  - jsDatePick (http://javascriptcalendar.org/)
+  - jQuery & jQuery UI (http://jquery.com/)
 MIT License:
   - jCrop (https://github.com/tapmodo/Jcrop)

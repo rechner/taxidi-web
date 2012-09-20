@@ -18,6 +18,6 @@
     <script src="bootstrap/js/bootstrap-collapse.js"></script>
     <script src="bootstrap/js/bootstrap-carousel.js"></script>
     <script src="bootstrap/js/bootstrap-typeahead.js"></script>
-
+    <script type='text/javascript' src='resources/js/dFilter.js'></script>
   </body>
 </html>

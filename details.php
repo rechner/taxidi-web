@@ -594,7 +594,6 @@ selecttab = function(tab) {
 </div>
 <script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
 <script src="resources/js/canvas_toblob.js"> </script>
-<link href="resources/css/Jcrop.min.css" type="text/css" media="all" rel="stylesheet">
 <?php
   require_once "template/footer.php" ;
   pg_close($connection);

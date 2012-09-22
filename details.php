@@ -398,8 +398,13 @@ $(function(){
 		uploadphoto.cropper = this;
 		this.setSelect(uploadphoto.selectcenter());
 	});
+	
+	$("#cancelbutton").click(function() {
+		window.location.href = "search.php?search=" + encodeURIComponent($.getparam("query"));
+	});
 });
 
+//TODO, this function is dumb, fix it
 selecttab = function(tab) {
 	var tabs = ["main", "extended"];
 	for (var t in tabs) {
@@ -582,8 +587,8 @@ selecttab = function(tab) {
       </fieldset>
       <div class="form-actions">
         <input id="tabinput" name="tab" type="hidden" value="main" />
-        <input type="submit" class="btn btn-primary" value="Save changes" />
-        <button class="btn">Cancel</button>
+        <input type="submit" class="btn btn-primary" name="action" value="Save changes" />
+        <button id="cancelbutton" class="btn" type="button">Cancel</button>
       </div>
     </form>
   </div>
@@ -591,6 +596,7 @@ selecttab = function(tab) {
 </div>
 <script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
 <script src="resources/js/canvas_toblob.js"> </script>
+<script src="resources/js/jquery.getparams.js"> </script>
 <?php
   require_once "template/footer.php" ;
   pg_close($connection);

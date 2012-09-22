@@ -17,6 +17,16 @@
     <script src="bootstrap/js/bootstrap-collapse.js"></script>
     <script src="bootstrap/js/bootstrap-carousel.js"></script>
     <script src="bootstrap/js/bootstrap-typeahead.js"></script>
-    <script type='text/javascript' src='resources/js/dFilter.js'></script>
+
+    <script src="resources/js/jquery.ui.core.js"></script>
+    <script src="resources/js/jquery.ui.datepicker.js"></script>
+    <style type="text/css">
+      @import url("resources/css/jqueryui-themes/ui-lightness/jquery.ui.all.css");
+    </style>
+    <script>
+      $.datepicker.setDefaults({
+        "dateFormat": "yy-mm-dd",
+      });
+    </script>
   </body>
 </html>

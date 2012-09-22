@@ -3,15 +3,12 @@
 <?php
 /* vim: tabstop=2:expandtab:softtabstop=2 */
   /* TODO list
-<<<<<<< HEAD
     * Phone mask
     * Proper error message for bad id
     *
     * Changes: Added a few info displays, removed explicit script reference
-=======
     * Phone mask
     * Proper error message for bad id
->>>>>>> 504372f9a1f08ca08795f106eaec9ed0e497da6e
   */
   
   //get input:
@@ -163,7 +160,7 @@
 					    echo $id . "&query=" . $search;
 					  } else {
 					    echo $id;
-					  } ?>" class="btn btn-danger">Upload</a>
+					  } ?>" class="btn btn-danger">Delete</a>
 	</div>
 </div>
 

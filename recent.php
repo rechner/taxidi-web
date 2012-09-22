@@ -24,27 +24,30 @@
             <!-- display -->
             <div class="well">
                 <div class="btn-toolbar pull-right" style="margin: 0;">
-                <div class="btn-group">
-                <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Room: -Any-<span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Any</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">Bunnies</a></li>
-                  <li><a href="#">Foxes</a></li>
-                  <li><a href="#">Puppies</a></li>
-                </ul>
-                </div><!-- /btn-group -->
-                <div class="btn-group">
-                <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Range: Past Week<span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Past Week</a></li>
-                  <li><a href="#">Past Month</a></li>
-                  <li><a href="#">Past Year</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">Custom Range</a></li>
-                </ul>
-                </div><!-- /btn-group -->
-                </div>
+                    <div class="btn-group">
+                    <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Room: -Any-<span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">Any</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#">Bunnies</a></li>
+                      <li><a href="#">Foxes</a></li>
+                      <li><a href="#">Puppies</a></li>
+                    </ul>
+                    </div><!-- /btn-group -->
+                    <div class="btn-group">
+                    <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Range: Past Week<span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">Past Week</a></li>
+                      <li><a href="#">Past Month</a></li>
+                      <li><a href="#">Past Year</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#">Custom Range</a></li>
+                    </ul>
+                    </div><!-- /btn-group -->
+                    <div class="btn-group">
+                    <button class="btn btn-small btn-primary" type="button">Go</button>
+                    </div>
+                </div><!-- /btn-toolbar -->
                 <h3>Recent Registrations                
                 <?php 
                 //Get recent registrations

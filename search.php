@@ -57,10 +57,9 @@
                               FROM \"data\" 
                               LEFT JOIN activities ON data.activity=activities.id
                               LEFT JOIN rooms ON data.room = rooms.id WHERE
-                                data.name ILIKE '$inp'
-                                OR lastname ILIKE '$inp'
-                                OR parent1 ILIKE '$inp'
-                                OR parent2 ILIKE '$inp'
+                                data.name || ' ' || lastname ILIKE '%$inp%'
+                                OR parent1 ILIKE '%$inp%'
+                                OR parent2 ILIKE '%$inp%'
                                 OR phone LIKE '%$inp'
                                 ORDER BY lastname;";
                 }

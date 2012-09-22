@@ -23,7 +23,18 @@
           <div class="span9">
             <!-- display -->
             <div class="well">
-                <div class="btn-group pull-right">
+                <div class="btn-toolbar pull-right" style="margin: 0;">
+                <div class="btn-group">
+                <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Room: -Any-<span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Any</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Bunnies</a></li>
+                  <li><a href="#">Foxes</a></li>
+                  <li><a href="#">Puppies</a></li>
+                </ul>
+                </div><!-- /btn-group -->
+                <div class="btn-group">
                 <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Range: Past Week<span class="caret"></span></button>
                 <ul class="dropdown-menu">
                   <li><a href="#">Past Week</a></li>
@@ -33,6 +44,7 @@
                   <li><a href="#">Custom Range</a></li>
                 </ul>
                 </div><!-- /btn-group -->
+                </div>
                 <h3>Recent Registrations                
                 <?php 
                 //Get recent registrations
@@ -41,7 +53,7 @@
                                           user=$dbuser password=$dbpass");
                                           
                 $query = "SELECT DISTINCT data.id, data.name, lastname, 
-                            activities.name, rooms.name, paging
+                            activities.name, rooms.name, paging, \"joinDate\"
                             FROM \"data\" 
                             LEFT JOIN activities ON data.activity=activities.id
                             LEFT JOIN rooms ON data.room = rooms.id
@@ -57,6 +69,7 @@
                     echo '<table class="table">
                           <thead>
                             <tr>
+                              <th>Date</th>
                               <th>Name</th>
                               <th>Activity</th>
                               <th>Room</th>
@@ -68,6 +81,7 @@
                     // print each row
                     while ($row = pg_fetch_array($result)) {
                         echo '<tr>';
+                        echo '<td>' . $row[6] . '</td>';
                         echo '<td><a href="details.php?id='.$row[0].'&query='.$inp.'">' . $row[1] . ' ' . $row[2] .'</a></td>';
                         echo '<td>' . $row[3] . '</td>';
                         echo '<td>' . $row[4] . '</td>';

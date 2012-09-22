@@ -22,10 +22,13 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
+<<<<<<< HEAD
     <!-- CSS & Javascript for datepicker -->
     <link rel="stylesheet" type="text/css" media="all" href="resources/css/jsDatePick_ltr.css">
     <script type="text/javascript" src="resources/js/jsDatePick.js"></script>
 
+=======
+>>>>>>> 56b5b1bb27aca1ace107dc662ef4bac003633a65
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="resources/img/favicon.ico" />
     <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png"> -->

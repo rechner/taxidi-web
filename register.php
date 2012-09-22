@@ -103,7 +103,9 @@
         <div class="control-group form-inline">
           <label class="control-label" for="phone">Phone</label>
           <div class="controls">
-            <input type="tel" class="input-medium" name="phone" id="phone" placeholder="Phone" value="<?php echo $edata["phone"]; ?>">
+            <input type="tel" class="input-medium" name="phone" id="phone" 
+                onKeyDown="javascript:return dFilter (event.keyCode, this, '(###) ###-####');"
+                placeholder="Phone" value="<?php echo $edata["phone"]; ?>">
             <label class="checkbox">
               <input type="checkbox" name="mobileCarrier" <?php echo $edata["mobileCarrier"] ? "checked" : ""?>> Mobile phone
             </label>

@@ -6,32 +6,34 @@
 	session_start();
 
 	/* TODO
+		* Make error messages better
 		* Make sessions more secure
 		* Encrpyt passwords over http
-		* Display the different errors to the users
-		* Do not display unauthorized access modal on login error
+		* Make error box look better
 	*/
 	
 	if(!empty($_SESSION["userid"])) {
 		header("Location: index.php");
-	} elseif (!empty($_POST["username"]) || !empty($_POST["password"])) {
-		$query  = "SELECT id, \"user\", hash, salt from users WHERE \"user\" = '{$_POST["username"]}';";
-		$result = pg_query($connection, $query) or die("Error in query: $query." . pg_last_error($connection));
-		$data   = pg_fetch_assoc($result);
+	} elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
+		if (!empty($_POST["username"]) && !empty($_POST["password"])) {
+			$query  = "SELECT id, \"user\", hash, salt from users WHERE \"user\" = '{$_POST["username"]}';";
+			$result = pg_query($connection, $query) or die("Error in query: $query." . pg_last_error($connection));
+			$data   = pg_fetch_assoc($result);
 
-		if ($data) {		
-			if (hash("sha256", $_POST["password"] . $data["salt"]) == $data["hash"]) {
-				$_SESSION["userid"] = $data["id"];
-				header("Location: index.php");
+			if ($data) {		
+				if (hash("sha256", $_POST["password"] . $data["salt"]) == $data["hash"]) {
+					$_SESSION["userid"] = $data["id"];
+					header("Location: index.php");
+				} else {
+					$error = "password is incorrect";
+				}
 			} else {
-				// password is incorrect
-				echo "password is incorrect";
+				$error = "user does not exist";
 			}
 		} else {
-			// user does not exist
-			echo "user does not exist";
+			$error = "form not completed";
 		}
-	} 
+	}
 	
 ?>
 <!DOCTYPE html>
@@ -120,6 +122,7 @@
     <div class="row-fluid">
       <div class="span4"></div>
       <div class="span4">
+				<?php echo $error ? "<div class=\"alert\">$error</div>": ""; ?>
         <form class="form-horizontal" method="POST">
           <div class="control-group">
             <label class="control-label" for="username">Username</label>
@@ -147,7 +150,7 @@
     </div>
     <script>
       $(function(){
-        $("#banner").modal('show');
+        <? echo $_SERVER['REQUEST_METHOD'] != "POST" ? "$('#banner').modal('show');" : ""; ?>
         $("#banner").on("hide", function() {$("#username").focus();});
       });
     </script>

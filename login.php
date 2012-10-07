@@ -12,8 +12,9 @@
 		* Make error box look better
 	*/
 	
+	$successpage = "index.php";
 	if(!empty($_SESSION["userid"])) {
-		header("Location: index.php");
+		header("Location: $successpage");
 	} elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
 		if (!empty($_POST["username"]) && !empty($_POST["password"])) {
 			$query  = "SELECT id, \"user\", hash, salt from users WHERE \"user\" = '{$_POST["username"]}';";
@@ -23,7 +24,7 @@
 			if ($data) {		
 				if (hash("sha256", $_POST["password"] . $data["salt"]) == $data["hash"]) {
 					$_SESSION["userid"] = $data["id"];
-					header("Location: index.php");
+					header("Location: $successpage");
 				} else {
 					$error = "password is incorrect";
 				}

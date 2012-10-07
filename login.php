@@ -4,17 +4,32 @@
   $connection = pg_connect ("host=$dbhost dbname=$dbname user=$dbuser password=$dbpass");
 	
 	session_start();
+
+	/* TODO
+		* Make sessions more secure
+		* Encrpyt passwords over http
+		* Display the different errors to the users
+		* Do not display unauthorized access modal on login error
+	*/
 	
 	if(!empty($_SESSION["userid"])) {
 		header("Location: index.php");
 	} elseif (!empty($_POST["username"]) || !empty($_POST["password"])) {
-		$query  = "SELECT (id, \"user\", hash, salt) from users WHERE \"user\" = '{$_POST["username"]}';";
+		$query  = "SELECT id, \"user\", hash, salt from users WHERE \"user\" = '{$_POST["username"]}';";
 		$result = pg_query($connection, $query) or die("Error in query: $query." . pg_last_error($connection));
 		$data   = pg_fetch_assoc($result);
-		
-		if (hash("sha256", $password . $data["salt"]) == $data["hash"]) {
-			$_SESSION["userid"] = $data["id"];
-			header("Location: index.php");
+
+		if ($data) {		
+			if (hash("sha256", $_POST["password"] . $data["salt"]) == $data["hash"]) {
+				$_SESSION["userid"] = $data["id"];
+				header("Location: index.php");
+			} else {
+				// password is incorrect
+				echo "password is incorrect";
+			}
+		} else {
+			// user does not exist
+			echo "user does not exist";
 		}
 	} 
 	
@@ -130,7 +145,6 @@
         <div class="span4"></div>
       </div>
     </div>
-    
     <script>
       $(function(){
         $("#banner").modal('show');

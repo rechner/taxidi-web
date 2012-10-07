@@ -1,5 +1,10 @@
 <?php
 	// vim: tabstop=2:softtabstop=2
+	
+	if(!isset($_SERVER['HTTPS'])) {  //Force use of SSL
+	    header("location: https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+	}
+	
 	require_once 'config.php';
   $connection = pg_connect ("host=$dbhost dbname=$dbname user=$dbuser password=$dbpass");
 	
@@ -26,14 +31,15 @@
 					$_SESSION["userid"] = $data["id"];
 					header("Location: $successpage");
 				} else {
-					$error = "password is incorrect";
+					$error = "Incorrect username or password";
 				}
 			} else {
-				$error = "user does not exist";
+				$error = "Incorrect username or password";
 			}
-		} else {
+		} /*else {
+			//For some reason this pops up with the forced SSL
 			$error = "form not completed";
-		}
+		}*/
 	}
 	
 ?>
@@ -84,6 +90,18 @@
             <ul class="nav">
               <li class="active"><a href="login.php">Login</a></li>
             </ul>
+	    <ul class="nav pull-right">
+	      <li id="fat-menu" class="dropdown">
+		<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Language: <strong>English (UK)</strong><b class="caret"></b></a>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+		  <li><a tabindex="-1" href="login.php?lang=en">English</a></li>
+		  <li><a tabindex="-1" href="login.php?lang=de">Deutsch</a></li>
+		  <li><a tabindex="-1" href="login.php?lang=fr">françias</a></li>
+		  <li class="divider"></li>
+		  <li><a tabindex="-1" href="#">Translate this application</a></li>
+		</ul>
+	      </li>
+	    </ul>
           </div>
         </div>
       </div>
@@ -123,8 +141,9 @@
     <div class="row-fluid">
       <div class="span4"></div>
       <div class="span4">
-				<?php echo $error ? "<div class=\"alert\">$error</div>": ""; ?>
+	<?php echo $error ? "<div class=\"alert alert-error\">$error</div>": ""; ?>
         <form class="form-horizontal" method="POST">
+	  <legend><strong>Log in</strong></legend>
           <div class="control-group">
             <label class="control-label" for="username">Username</label>
             <div class="controls">
@@ -138,11 +157,11 @@
             </div>
           </div>
           <div class="control-group">
-            <div class="controls">
-              <label class="checkbox">
+            <div class="controls form-inline">
+	      <button type="submit" class="btn btn-primary">Sign in</button>
+              <!--<label class="checkbox pull-right">
                 <input type="checkbox"> Remember me
-              </label>
-              <button type="submit" class="btn">Sign in</button>
+              </label>-->
             </div>
           </div>
         </form>

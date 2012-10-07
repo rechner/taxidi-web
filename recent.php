@@ -25,6 +25,15 @@
             <div class="well">
                 <div class="btn-toolbar pull-right" style="margin: 0;">
                     <div class="btn-group">
+                    <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Activity: -Any-<span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">Any</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#">Outfitters</a></li>
+                      <li><a href="#">Explorers</a></li>
+                    </ul>
+                    </div><!-- /btn-group -->
+                    <div class="btn-group">
                     <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Room: -Any-<span class="caret"></span></button>
                     <ul class="dropdown-menu">
                       <li><a href="#">Any</a></li>

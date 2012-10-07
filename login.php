@@ -1,3 +1,24 @@
+<?php
+	// vim: tabstop=2:softtabstop=2
+	require_once 'config.php';
+  $connection = pg_connect ("host=$dbhost dbname=$dbname user=$dbuser password=$dbpass");
+	
+	session_start();
+	
+	if(!empty($_SESSION["userid"])) {
+		header("Location: index.php");
+	} elseif (!empty($_POST["username"]) || !empty($_POST["password"])) {
+		$query  = "SELECT (id, \"user\", hash, salt) from users WHERE \"user\" = '{$_POST["username"]}';";
+		$result = pg_query($connection, $query) or die("Error in query: $query." . pg_last_error($connection));
+		$data   = pg_fetch_assoc($result);
+		
+		if (hash("sha256", $password . $data["salt"]) == $data["hash"]) {
+			$_SESSION["userid"] = $data["id"];
+			header("Location: index.php");
+		}
+	} 
+	
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -84,17 +105,17 @@
     <div class="row-fluid">
       <div class="span4"></div>
       <div class="span4">
-        <form class="form-horizontal">
+        <form class="form-horizontal" method="POST">
           <div class="control-group">
             <label class="control-label" for="username">Username</label>
             <div class="controls">
-              <input type="text" id="username" placeholder="Username" autofocus>
+              <input type="text" id="username" name="username" placeholder="Username" autofocus>
             </div>
           </div>
           <div class="control-group">
             <label class="control-label" for="password">Password</label>
             <div class="controls">
-              <input type="password" id="password" placeholder="Password">
+              <input type="password" id="password" name="password" placeholder="Password">
             </div>
           </div>
           <div class="control-group">

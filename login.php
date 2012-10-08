@@ -31,10 +31,10 @@
 					$_SESSION["userid"] = $data["id"];
 					header("Location: $successpage");
 				} else {
-					$error = "Incorrect username or password";
+					$error = _("Incorrect username or password");
 				}
 			} else {
-				$error = "Incorrect username or password";
+				$error = _("Incorrect username or password");
 			}
 		} /*else {
 			//For some reason this pops up with the forced SSL
@@ -48,7 +48,7 @@
   <head>
     <script src="bootstrap/js/jquery.js"></script>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <title>Login · Taxídí</title>
+    <title><?php echo _('Login'); ?> · Taxídí</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Web interface for Taxidi check-in system">
     <meta name="author" content="">
@@ -88,17 +88,18 @@
           <a class="brand" href="index.php">Taxídí</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="login.php">Login</a></li>
+              <li class="active"><a href="login.php"><?php echo _('Login') ?></a></li>
             </ul>
 	    <ul class="nav pull-right">
 	      <li id="fat-menu" class="dropdown">
-		<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Language: <strong>English (UK)</strong><b class="caret"></b></a>
+		<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">
+		  <?php echo _('Language') ?>: <strong>English (UK)</strong><b class="caret"></b></a>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
 		  <li><a tabindex="-1" href="login.php?lang=en">English</a></li>
 		  <li><a tabindex="-1" href="login.php?lang=de">Deutsch</a></li>
 		  <li><a tabindex="-1" href="login.php?lang=fr">françias</a></li>
 		  <li class="divider"></li>
-		  <li><a tabindex="-1" href="#">Translate this application</a></li>
+		  <li><a tabindex="-1" href="#"><?php echo _('Translate this application') ?></a></li>
 		</ul>
 	      </li>
 	    </ul>
@@ -110,12 +111,16 @@
     <div class="modal hide fade" id="banner" tabindex="-1" role="dialog" aria-labelledby="bannerLabel" aria-hidden="true">
       <div class="modal-header" style="background-color: #850505; border-bottom-color: #600000; color: white;">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="bannerLabel"><i class="icon-warning-sign icon-white" style="margin-top: 4px;"></i> Warning / Achtung / Avertissement</h3>
+        <h3 id="bannerLabel">
+	  <i class="icon-warning-sign icon-white" style="margin-top: 4px;">
+	  </i> Warning / Achtung / Avertissement</h3>
       </div>
       <div class="modal-body" style="background-color: #800000; color: white;">
         <h2 style="text-align: center"><i class="icon-lock icon-white" style="margin-top: 6px;"></i> 
-          Private Computer System <i class="icon-lock icon-white" style="margin-top: 6px;"></i></h2><br>
-        <p style="text-align: justify">This   computer  system  including  all  related  equipment,   network  devices
+          <?php echo _('Private Computer System') ?> 
+	  <i class="icon-lock icon-white" style="margin-top: 6px;"></i></h2><br>
+        <p style="text-align: justify">
+	  This   computer  system  including  all  related  equipment,   network  devices
           (specifically including Internet access), are provided only for authorized use.
           All computer systems  may be monitored  for all  lawful purposes,  including to
           ensure  that  their  use  is  authorized,  for management  of  the  system,  to 
@@ -134,7 +139,9 @@
         L'utilisation de ce système constitue un consentement de ce contrôle.</p>
         </div>
       <div class="modal-footer" style="background-color: #850505; color: white; border-top-color: #600000; box-shadow: 0 1px 0 #700000 inset;">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Continue <i class="icon-arrow-right"></i></button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">
+	  <?php echo _('Continue'); ?> <i class="icon-arrow-right"></i>
+	</button>
       </div>
     </div>
     
@@ -143,22 +150,24 @@
       <div class="span4">
 	<?php echo $error ? "<div class=\"alert alert-error\">$error</div>": ""; ?>
         <form class="form-horizontal" method="POST">
-	  <legend><strong>Log in</strong></legend>
+	  <legend><strong><?php echo _('Login') ?></strong></legend>
           <div class="control-group">
-            <label class="control-label" for="username">Username</label>
+            <label class="control-label" for="username"><?php echo _('Username') ?></label>
             <div class="controls">
-              <input type="text" id="username" name="username" placeholder="Username" autofocus>
+              <input type="text" id="username" name="username"
+		     placeholder="<?php echo _('Username') ?>" autofocus>
             </div>
           </div>
           <div class="control-group">
-            <label class="control-label" for="password">Password</label>
+            <label class="control-label" for="password"><?php echo _('Password') ?></label>
             <div class="controls">
-              <input type="password" id="password" name="password" placeholder="Password">
+              <input type="password" id="password" name="password"
+		     placeholder="<?php echo _('Password') ?>">
             </div>
           </div>
           <div class="control-group">
             <div class="controls form-inline">
-	      <button type="submit" class="btn btn-primary">Sign in</button>
+	      <button type="submit" class="btn btn-primary"><?php echo _('Sign in') ?></button>
               <!--<label class="checkbox pull-right">
                 <input type="checkbox"> Remember me
               </label>-->

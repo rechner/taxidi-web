@@ -5,8 +5,23 @@
 	    header("location: https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
 	}
 	
+	// I18N support information here
+	if (empty($locale))
+		$language = 'en';
+	if (isset($_GET['locale']) && !empty($_GET['locale']))
+		$language = $_GET['locale'];
+	
+	putenv("LANG=$language"); 
+	setlocale(LC_ALL, $language);
+	
+	// Set the text domain as 'login'
+	$domain = 'login';
+	bindtextdomain($domain, "locale"); 
+	textdomain($domain);
+	bind_textdomain_codeset($domain, 'UTF-8');
+	
 	require_once 'config.php';
-  $connection = pg_connect ("host=$dbhost dbname=$dbname user=$dbuser password=$dbpass");
+	$connection = pg_connect ("host=$dbhost dbname=$dbname user=$dbuser password=$dbpass");
 	
 	session_start();
 
@@ -44,7 +59,7 @@
 	
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $language ?>">
   <head>
     <script src="bootstrap/js/jquery.js"></script>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -93,11 +108,16 @@
 	    <ul class="nav pull-right">
 	      <li id="fat-menu" class="dropdown">
 		<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">
-		  <?php echo _('Language') ?>: <strong>English (UK)</strong><b class="caret"></b></a>
+		  <?php echo _('Language') ?>: <strong>
+		    <?php if ($language=="en") echo "English (UK)";
+			  if ($language=="de_DE") echo "Deutsch";
+			  if ($language=="fr_FR.utf8") echo "français";
+		    ?>
+		  </strong><b class="caret"></b></a>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
-		  <li><a tabindex="-1" href="login.php?lang=en">English</a></li>
-		  <li><a tabindex="-1" href="login.php?lang=de">Deutsch</a></li>
-		  <li><a tabindex="-1" href="login.php?lang=fr">françias</a></li>
+		  <li><a tabindex="-1" href="login.php?locale=en">English</a></li>
+		  <li><a tabindex="-1" href="login.php?locale=de_DE">Deutsch</a></li>
+		  <li><a tabindex="-1" href="login.php?locale=fr_FR.utf8">françias</a></li>
 		  <li class="divider"></li>
 		  <li><a tabindex="-1" href="#"><?php echo _('Translate this application') ?></a></li>
 		</ul>
@@ -147,7 +167,7 @@
     
     <div class="row-fluid">
       <div class="span4"></div>
-      <div class="span4">
+        <div class="span4">
 	<?php echo $error ? "<div class=\"alert alert-error\">$error</div>": ""; ?>
         <form class="form-horizontal" method="POST">
 	  <legend><strong><?php echo _('Login') ?></strong></legend>
@@ -174,9 +194,7 @@
             </div>
           </div>
         </form>
-        <div class="span4"></div>
-      </div>
-    </div>
+    
     <script>
       $(function(){
         <? echo $_SERVER['REQUEST_METHOD'] != "POST" ? "$('#banner').modal('show');" : ""; ?>

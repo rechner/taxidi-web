@@ -1,0 +1,29 @@
+Note that the filename of the .mo file determines the text domain.
+Some languages, such as fr_FR require both a fr_FR domain and fr_FR.utf8.
+For UNIX systems, the php-gettext package must be installed along with
+any language packs for gettext to work.  Thus this may be difficult to
+do in an hosted environment.
+
+# Extract translatable strings and create .pot from a source file (login.php):
+xgettext -d messages -s -o locale/login.pot login.php 
+
+# Create .po from a .pot for translating into German:
+msginit -l de_DE -o login.po -i login.pot
+
+# Compile the file into a gettext binary (.mo):
+msgfmt -c -v -o login.mo login.po
+
+# Copy the file into the correct directory structure:
+mkdir -p de_DE/LC_MESSAGES/
+cp login.mo de_DE/LC_MESSAGES/
+cp login.po de_DE/LC_MESSAGES/
+
+# Make sure the system has the language packs necessary. Check output of locale -a
+locale -a
+sudo apt-get install language-pack-de-base
+sudo locale-gen de_DE.UTF-8
+
+# Test gettext output:
+export TEXTDOMAINDIR=locale
+LANG=de_DE gettext -s -d login "Password"
+

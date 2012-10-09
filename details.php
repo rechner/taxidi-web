@@ -14,6 +14,11 @@
   //get input:
   if (is_numeric($id = $_GET["id"])) { 
     require_once 'config.php';
+    
+    //internationalisation
+    $domain = "details";
+    require_once 'locale.php';
+    
 
     $connection = pg_connect ("host=$dbhost dbname=$dbname 
                               user=$dbuser password=$dbpass");
@@ -70,9 +75,9 @@
     
     $age = date_diff(new DateTime($edata["dob"]), new DateTime("now"));
     if ($age->y >= 1) {
-      $agestr = $age->format("Age: %y");
+      $agestr = $age->format( _("Age") . ": %y");
     } else {
-      $agestr = $age->format("Age: %m months");
+      $agestr = $age->format( _("Age") , ": %m " . _("months"));
     }
 
     pg_free_result($result);
@@ -87,7 +92,11 @@
 			$s = array('bytes', 'kiB', 'MiB', 'GiB', 'TiB', 'PiB');
 			$e = floor(log($bytes) / log(1024));
 
-			return round($bytes / pow(1024, floor($e)), 2) .$s[$e];
+			$rounded = round($bytes / pow(1024, floor($e)), 2);
+      global $locale_info; //from locale.php
+      return number_format($rounded, 1, 
+        $locale_info['decimal_point'],
+        $locale_info['thousands_sep']) . $s[$e];
 		}
 	}
 
@@ -97,15 +106,15 @@
 <div class="span3">
 	<div class="well sidebar-nav">
 	  <ul class="nav nav-list">
-	    <li class="nav-header">Search</li>
-	    <li><a href="search.php"><i class="icon-search"></i>Search</a></li>
-	    <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
-	    <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
-	    <li class="nav-header">Actions</li>
-	    <li><a href="print.php?id=<?php echo $_GET["id"]; ?>" target="_blank"><i class="icon-print"></i>Print details</a></li>
-	    <li><a data-toggle="modal" href="#downloadModal"><i class="icon-download"></i>Download details</a></li>
-	    <li><a href="#"><i class="icon-bullhorn"></i>Create incident report</a></li>
-	    <li><a data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i>Delete record</a></li>
+	    <li class="nav-header"><?php echo _('Search') ?></li>
+	    <li><a href="search.php"><i class="icon-search"></i><?php echo _('Search') ?></a></li>
+	    <li><a href="#"><i class="icon-filter"></i><?php echo _('Advanced') ?></a></li>
+	    <li><a href="#"><i class="icon-bookmark"></i><?php echo _('Saved Searches') ?></a></li>
+	    <li class="nav-header"><?php echo _('Actions') ?></li>
+	    <li><a href="print.php?id=<?php echo $_GET["id"]; ?>" target="_blank"><i class="icon-print"></i><?php echo _('Print details') ?></a></li>
+	    <li><a data-toggle="modal" href="#downloadModal"><i class="icon-download"></i><?php echo _('Download details') ?></a></li>
+	    <li><a href="#"><i class="icon-bullhorn"></i><?php echo _('Create incident report') ?></a></li>
+	    <li><a data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i><?php echo _('Delete record') ?></a></li>
 	  </ul>
 	</div>
 	<input id="realfileinput" type="file" style="height: 0px; width: 0px;">
@@ -115,14 +124,14 @@
 <div id="downloadModal" class="modal hide fade">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">&times;</button>
-		<h3>Download Record Data</h3>
+		<h3><?php echo _('Download Record Data') ?></h3>
 	</div>
 	<div class="modal-body">
-		<h4>Download format</h4>
+		<h4><?php echo _('Download format') ?></h4>
 		<form class="form-horizontal">
 		  <fieldset>	
 		    <div class="control-group">
-		      <label class="control-label" for="inlineCheckboxes">Select Format:</label>
+		      <label class="control-label" for="inlineCheckboxes"><?php echo _('Select Format') ?>:</label>
 		      <div class="controls">
 		        <label class="radio inline">
 		          <input type="radio" name="format" id="inlineCheckbox1" value="option1" checked> csv
@@ -139,38 +148,39 @@
 		</form>
 	</div>
 	<div class="modal-footer">
-		<a href="#" class="btn" data-dismiss="modal" >Close</a>
-		<a href="#" class="btn btn-primary">Download</a>
+		<a href="#" class="btn" data-dismiss="modal" ><?php echo _('Close') ?></a>
+		<a href="#" class="btn btn-primary"><?php echo _('Download') ?></a>
 	</div>
 </div>
 
 <div id="deleteModal" class="modal hide fade">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">&times;</button>
-		<h3>Delete Record</h3>
+		<h3><?php echo _('Delete Record') ?></h3>
 	</div>
 	<div class="modal-body">
-		<h4>Are you sure you want to delete this record?</h4>
-		<p>This action cannot be undone.</p>
+		<h4><?php echo _('Are you sure you want to delete this record?') ?></h4>
+		<p><?php echo _('This action cannot be undone.') ?></p>
 	</div>
 	<div class="modal-footer">
-		<a href="#" class="btn" data-dismiss="modal" >Close</a>
+		<a href="#" class="btn" data-dismiss="modal" ><?php echo _('Close') ?></a>
 		<a href="delete.php?id=<?php 
 					  if ($query != '') {
 					    echo $id . "&query=" . $search;
 					  } else {
 					    echo $id;
-					  } ?>" class="btn btn-danger">Delete</a>
+					  } ?>" class="btn btn-danger"><?php echo _('Delete') ?></a>
 	</div>
 </div>
 
 <div id="photouploadModal" class="modal hide fade">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">&times;</button>
-		<h3>Upload New Photo</h3>
+		<h3><?php echo _('Upload New Photo') ?></h3>
 	</div>
 	<div class="modal-body">
-		<p>Uploads are limited to <?php echo formatByteSize($photo_maxsize); ?> and must be in jpeg or png format</p>
+    <p><?php echo sprintf(_("Uploads are limited to %s and must be in ".
+              "jpeg or png format"), formatByteSize($photo_maxsize)); ?></p>
 		<div>
 			<div class="thumbnail" style="width: 250px; margin: 0 auto;">
 				<img id="photopreview" style="width: 250px;" src="photo.php<?php echo "?id=" . $edata["picture"] ?>">
@@ -179,7 +189,7 @@
 		</div>
 		<br>
 		<div id="fileselecterror" class="alert alert-error" style="display: none;">
-			Error: File type not supported.
+			<?php echo _('Error: File type not supported.') ?>
 		</div>
 		<div class="well" id="photodndbox" style="height: 33px">
 			<div class="progress progress-striped active" style="display: none; margin: 6px 0 9px;">
@@ -188,22 +198,22 @@
 			<div id="drophere" style="width: 100%; height: 100%; display: none;">
 				<div style="width: 100%; height: 100%; display: table;">
 		    	<div style="display: table-cell; vertical-align: middle; text-align: center;">
-						Drop file here.
+						<?php echo _('Drop file here.') ?>
 					</div>
 				</div>
     	</div>
 			<div class="input-append" style="display: table; width: 100%; height: 100%;">
 				<input style="cursor: pointer; cursor: hand;" id="fakefileinput" class="input-xlarge" type="text" onclick="document.getElementById('realfileinput').click();" readonly>
-				<a class="btn" style="margin-left: -4px; border-radius: 0 3px 3px 0; cursor: pointer; cursor: hand;" onclick="document.getElementById('realfileinput').click();">Browse</a>
+				<a class="btn" style="margin-left: -4px; border-radius: 0 3px 3px 0; cursor: pointer; cursor: hand;" onclick="document.getElementById('realfileinput').click();"><?php echo _('Browse') ?></a>
 				<div style="display: table-cell; vertical-align: middle; text-align: right;">
-					Or drop file here.
+					<?php echo _('Drop file here.') ?>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="modal-footer">
-		<a class="btn" data-dismiss="modal" >Close</a>
-		<a id="uploadphoto" class="btn btn-primary">Upload Photo</a>
+		<a class="btn" data-dismiss="modal" ><?php echo _('Close') ?></a>
+		<a id="uploadphoto" class="btn btn-primary"><?php echo _('Upload Photo') ?></a>
 	</div>
 </div>
 
@@ -346,7 +356,7 @@ $(function(){
 						$("#photomain").attr("src", "photo.php?id=" + response.newphotoid);
 						var date1 = response.modified.split(".")[0].split(" ");
 						var date2 = new Date(date1[0]);
-						$("#lastmodified").text("Modified: " + date2.getUTCDate() + " " + (new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[date2.getUTCMonth()]) + " " + date2.getUTCFullYear() + " " + date1[1]);
+						$("#lastmodified").text(<?php echo _("Modified") .": "; ?> + date2.getUTCDate() + " " + (new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[date2.getUTCMonth()]) + " " + date2.getUTCFullYear() + " " + date1[1]);
 						$('#photouploadModal').modal("hide");
 					} else {
 						//TODO server side error!
@@ -443,86 +453,100 @@ selecttab = function(tab) {
 		<li class="span6">
 		  <div class="page-header">
 		    <h1><?php echo "{$edata["name"]}</h1> <h2>{$edata["lastname"]}"; ?></h2>
-		    <?php echo ($edata["visitor"] == "f" ? "Member" : "Visitor") . "<br>"; 
-		          echo ($edata["visitor"] == "f" ? "" : "Expiry: " . $edata["expiry"]) . "<br>";
-		          echo "Created: " . date("j M Y", strtotime($edata["joinDate"])) . "<br>";
-		          echo "Last Seen: " . date("j M Y", strtotime($edata["lastSeen"])) . "<br>";
-		          echo "<span id=\"lastmodified\">Modified: " . date("j M Y H:i:s", strtotime($edata["lastModified"])) . "</span><br>";
-		          echo "Count: " . $edata["count"];
+		    <?php echo ($edata["visitor"] == "f" ? _("Member") : _("Visitor")) . "<br>"; 
+		          echo ($edata["visitor"] == "f" ? "" : sprintf(_("Expiry: %s"), $edata["expiry"])) . "<br>";
+		          echo sprintf(_("Created: %s"), strftime(_("%e %B %Y"), strtotime($edata["joinDate"]))) . "<br>";
+		          echo sprintf(_("Last Seen: %s"), strftime(_("%e %B %Y"), strtotime($edata["lastSeen"]))) . "<br>";
+		          echo "<span id=\"lastmodified\">" . sprintf(_("Modified: %s"),  
+                strftime(_("%e %b %Y %H:%M:%S"), strtotime($edata["lastModified"]))) . "</span><br>";
+		          echo sprintf(_("Count: %s"), $edata["count"]);
 		    ?>
 		  </div>
 		</li>
 		<ul class="nav nav-tabs span9" style="margin-top: -18px;">
 		  <li id="tabselect_main" class="<?php echo ($_POST["tab"] != "extended" ? "active" : ""); ?>">
-		  	<a href="javascript:selecttab('main');">Main</a>
+		  	<a href="javascript:selecttab('main');"><?php echo _("Main"); ?></a>
 		  </li>
 		  <li id="tabselect_extended" class="<?php echo ($_POST["tab"] == "extended" ? "active" : ""); ?>">
-				<a href="javascript:selecttab('extended');">Extended</a>
+				<a href="javascript:selecttab('extended');"><?php echo _("Extended"); ?></a>
 			</li>
     </ul>
 	</ul>   
     <form class="form-horizontal" action="" method="post">
 			<fieldset id="tabpane_extended" style="display:<?php echo ($_POST["tab"] == "extended" ? "block" : "none"); ?>;">
 				<div class="control-group">
-          <label class="control-label" for="street">Street</label>
+          <label class="control-label" for="street"><?php echo _("Street"); ?></label>
           <div class="controls">
-            <input type="text" class="input-xlarge" name="street" id="street" placeholder="Street Address" value="">
+            <input type="text" class="input-xlarge" name="street" id="street" 
+              placeholder="<?php echo _("Street Address"); ?>" value="">
           </div>
         </div>
 				<div class="control-group">
-          <label class="control-label" for="city">City</label>
+          <label class="control-label" for="city"><?php echo _("City"); ?></label>
           <div class="controls">
-            <input type="text" class="input" name="city" id="city" placeholder="City" value="">
+            <input type="text" class="input" name="city" id="city"
+              placeholder="<?php echo _("City"); ?>" value="">
           </div>
         </div>
 				<div class="control-group">
-          <label class="control-label" for="state">State</label>
+          <label class="control-label" for="state"><?php echo _("State"); ?></label>
           <div class="controls">
-            <input type="text" class="input-small" name="state" id="state" placeholder="State" value="">
+            <input type="text" class="input-small" name="state" id="state"
+              placeholder="<?php echo _("State"); ?>" value="">
           </div>
         </div> 
 				<div class="control-group">
-          <label class="control-label" for="zip">ZIP</label>
+          <label class="control-label" for="zip"><?php echo _("ZIP"); ?></label>
           <div class="controls">
-            <input type="text" class="input-small" name="zip" id="zip" placeholder="ZIP" value="">
+            <input type="text" class="input-small" name="zip" id="zip"
+              placeholder="<?php echo _("ZIP"); ?>" value="">
           </div>
         </div> 
 			</fieldset>
       <fieldset id="tabpane_main" style="display:<?php echo ($_POST["tab"] != "extended" ? "block" : "none"); ?>;">
         <div class="control-group">
-          <label class="control-label" for="name">Name</label>
+          <label class="control-label" for="name"><?php echo _("Name"); ?></label>
           <div class="controls">
-            <input type="text" class="input" name="name" id="name" placeholder="Name" value="<?php echo $edata["name"]; ?>">
-            <input type="text" class="input" name="lastname" id="lastname" placeholder="Lastname" value="<?php echo $edata["lastname"]; ?>">
+            <input type="text" class="input" name="name" id="name" 
+              placeholder="<?php echo _("Name"); ?>" value="<?php echo $edata["name"]; ?>">
+            <input type="text" class="input" name="lastname" id="lastname" 
+              placeholder="<?php echo _("Lastname"); ?>" value="<?php echo $edata["lastname"]; ?>">
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="phone">Phone</label>
+          <label class="control-label" for="phone"><?php echo _("Phone"); ?></label>
           <div class="controls">
-            <input type="tel" class="input-medium" name="phone" id="phone" placeholder="Phone" value="<?php echo $edata["phone"]; ?>">
+            <input type="tel" class="input-medium" name="phone" id="phone"
+              placeholder="<?php echo _("Phone"); ?>" value="<?php echo $edata["phone"]; ?>">
             <label class="checkbox">
-              <input type="checkbox" name="mobileCarrier" <?php echo $edata["mobileCarrier"] ? "checked" : ""?>> Mobile phone
+              <input type="checkbox" name="mobileCarrier" 
+                <?php echo $edata["mobileCarrier"] ? "checked" : ""?>>
+                <?php echo _("Mobile phone"); ?>
             </label>
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="grade">Grade</label>
+          <label class="control-label" for="grade"><?php echo _("Grade"); ?></label>
           <div class="controls">
             <div style="width: 220px; float: left; margin-right: 4px;">
-              <input type="text" class="input-small" name="grade" id="grade" placeholder="Grade" value="<?php echo $edata["grade"]; ?>">
-              <label for="dob" style="float: right; padding-top: 5px; margin-right: 16px;">Birthdate</label>
+              <input type="text" class="input-small" name="grade" id="grade"
+                placeholder="<?php echo _("Grade"); ?>" value="<?php echo $edata["grade"]; ?>">
+              <label for="dob" style="float: right; padding-top: 5px; margin-right: 16px;">
+                <?php echo _("Birthdate"); ?></label>
             </div>
             <div>
-              <input type="text" class="input-small datepicker" name="dob" id="dob" placeholder="YYYY-MM-DD" value="<?php echo $edata["dob"]; ?>"> <?php echo $agestr ?>
+              <input type="text" class="input-small datepicker" name="dob" 
+                id="dob" placeholder="YYYY-MM-DD" value="<?php echo $edata["dob"]; ?>"> <?php echo $agestr ?>
             </div>
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="activity">Activity</label>
+          <label class="control-label" for="activity"><?php echo _("Activity"); ?></label>
           <div class="controls">
             <select name="activity" id="activity">
               <?php
-                echo (is_null($edata["activity"]) ? "<option disabled selected>Activity</option>\n" : "");
+                echo (is_null($edata["activity"]) ? "<option disabled selected>" .
+                  _("Activity") . "</option>\n" : "");
                 $query = "SELECT id, name FROM activities;";
                 $result = pg_query($connection, $query) or
                     die("Error in query: $query." . pg_last_error($connection));
@@ -552,43 +576,50 @@ selecttab = function(tab) {
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="p1_name">Medical Info</label>
+          <label class="control-label" for="p1_name"><?php echo _("Medical Info"); ?></label>
           <div class="controls">
-            <input type="text" class="input" name="medical" id="medical" placeholder="Medical" value="<?php echo $edata["medical"]; ?>">
+            <input type="text" class="input" name="medical" id="medical"
+              placeholder="<?php echo _("Medical"); ?>" value="<?php echo $edata["medical"]; ?>">
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="p1_name">Parent 1</label>
+          <label class="control-label" for="p1_name"><?php echo _("Parent 1"); ?></label>
           <div class="controls">
-            <input type="text" class="input" name="parent1" id="parent1" placeholder="Name" value="<?php echo $edata["parent1"]; ?>">
+            <input type="text" class="input" name="parent1" id="parent1"
+              placeholder="<?php echo _("Name"); ?>" value="<?php echo $edata["parent1"]; ?>">
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="p2_name">Parent 2</label>
+          <label class="control-label" for="p2_name"><?php echo _("Parent 2"); ?></label>
           <div class="controls">
-            <input type="text" class="input" name="parent2" id="parent2" placeholder="Name" value="<?php echo $edata["parent2"]; ?>">
+            <input type="text" class="input" name="parent2" id="parent2"
+              placeholder="<?php echo _("Name"); ?>" value="<?php echo $edata["parent2"]; ?>">
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="p1_name">Parent's Email</label>
+          <label class="control-label" for="p1_name"><?php echo _("Parent's Email"); ?></label>
           <div class="controls">
-            <input type="text" class="input" name="parent_email" id="parent_email" placeholder="Email" 
+            <input type="text" class="input" name="parent_email" id="parent_email"
+              placeholder="<?php echo _("Email"); ?>" 
               value="<?php echo $edata["parentEmail"]; ?>">
-              <button class="btn" type="button" onClick="parent.location='mailto:<?php echo $edata["parentEmail"]; ?>'">
+              <button class="btn" type="button" 
+              onClick="parent.location='mailto:<?php echo $edata["parentEmail"]; ?>'">
               <i class="icon-envelope"></i></button>
           </div>
         </div>
         <div class="control-group form-inline">
-          <label class="control-label" for="notes">Notes</label>
+          <label class="control-label" for="notes"><?php echo _("Notes"); ?></label>
           <div class="controls">
-            <textarea name="notes" id="notes" placeholder="Notes" style="width: 434px;"><?php echo $edata["notes"]; ?></textarea>
+            <textarea name="notes" id="notes" placeholder="<?php echo _("Notes"); ?>" 
+            style="width: 434px;"><?php echo $edata["notes"]; ?></textarea>
           </div>
         </div>
       </fieldset>
       <div class="form-actions">
         <input id="tabinput" name="tab" type="hidden" value="main" />
-        <input type="submit" class="btn btn-primary" name="action" value="Save changes" />
-        <button id="cancelbutton" class="btn" type="button">Cancel</button>
+        <input type="submit" class="btn btn-primary" name="action"
+          value="<?php echo _("Save changes"); ?>" />
+        <button id="cancelbutton" class="btn" type="button"><?php echo _("Cancel"); ?></button>
       </div>
     </form>
   </div>

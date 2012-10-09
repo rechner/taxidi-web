@@ -1,20 +1,24 @@
 <?php
 	$page_title = "Home";
 	require_once "template/header.php";
+    
+    //internationalisation
+    $domain = "details";
+    require_once 'locale.php';
 ?>
 					<!-- sidebar -->
           <div class="span3">
             <div class="well sidebar-nav">
               <ul class="nav nav-list">
-                <li class="nav-header">Search</li>
-                <li class="active"><a href="#"><i class="icon-search"></i>Search</a></li>
-                <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
-                <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
+                <li class="nav-header"><?php echo _("Search") ?></li>
+                <li class="active"><a href="#"><i class="icon-search"></i><?php echo _("Search") ?></a></li>
+                <li><a href="#"><i class="icon-filter"></i><?php echo _("Advanced") ?></a></li>
+                <li><a href="#"><i class="icon-bookmark"></i><?php echo _("Saved Searches") ?></a></li>
               </ul>
               <ul class="nav nav-list">
-                <li class="nav-header">Actions</li>
-                <li><a href="register.php"><i class="icon-plus-sign"></i>Register</a></li>
-                <li><a href="#"><i class="icon-user"></i>Register Visitor</a></li>
+                <li class="nav-header"><?php echo _("Actions") ?></li>
+                <li><a href="register.php"><i class="icon-plus-sign"></i><?php echo _("Register") ?></a></li>
+                <li><a href="#"><i class="icon-user"></i><?php echo _("Register Visitor") ?></a></li>
               </ul>
             </div>
           </div>
@@ -25,18 +29,23 @@
             <div class="well">
                 <div class="btn-toolbar pull-right" style="margin: 0;">
                     <div class="btn-group">
-                    <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Activity: -Any-<span class="caret"></span></button>
+                    <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">
+                        <?php echo _("Activity") ?>: -<?php echo _("Any") ?>-<span class="caret"></span>
+                    </button>
                     <ul class="dropdown-menu">
-                      <li><a href="#">Any</a></li>
+                      <li><a href="#"><?php echo _("Any") ?></a></li>
                       <li class="divider"></li>
+                      <!-- TODO: Get this from the database -->
                       <li><a href="#">Outfitters</a></li>
                       <li><a href="#">Explorers</a></li>
                     </ul>
                     </div><!-- /btn-group -->
                     <div class="btn-group">
-                    <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Room: -Any-<span class="caret"></span></button>
+                    <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">
+                        <?php echo _("Room") ?>: -<?php echo _("Any") ?>-<span class="caret"></span>
+                    </button>
                     <ul class="dropdown-menu">
-                      <li><a href="#">Any</a></li>
+                      <li><a href="#"><?php echo _("Any") ?></a></li>
                       <li class="divider"></li>
                       <li><a href="#">Bunnies</a></li>
                       <li><a href="#">Foxes</a></li>
@@ -44,20 +53,22 @@
                     </ul>
                     </div><!-- /btn-group -->
                     <div class="btn-group">
-                    <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">Range: Past Week<span class="caret"></span></button>
+                    <button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">
+                        <?php echo _("Range") ?>: <?php echo _("Past Week") ?><span class="caret"></span>
+                    </button>
                     <ul class="dropdown-menu">
-                      <li><a href="#">Past Week</a></li>
-                      <li><a href="#">Past Month</a></li>
-                      <li><a href="#">Past Year</a></li>
+                      <li><a href="#"><?php echo _("Past Week") ?></a></li>
+                      <li><a href="#"><?php echo _("Past Month") ?></a></li>
+                      <li><a href="#"><?php echo _("Past Year") ?></a></li>
                       <li class="divider"></li>
-                      <li><a href="#">Custom Range</a></li>
+                      <li><a href="#"><?php echo _("Custom Range") ?></a></li>
                     </ul>
                     </div><!-- /btn-group -->
                     <div class="btn-group">
-                    <button class="btn btn-small btn-primary" type="button">Go</button>
+                    <button class="btn btn-small btn-primary" type="button"><?php echo _("Go") ?></button>
                     </div>
                 </div><!-- /btn-toolbar -->
-                <h3>Recent Registrations                
+                <h3><?php echo _("Recent Registrations") ?>                
                 <?php 
                 //Get recent registrations
                 require_once 'config.php';
@@ -74,18 +85,20 @@
                     die("Error in query: $query." . pg_last_error($connection));
                 
                 if (pg_num_rows($result) == 0) {
-                    echo "</h3><h4><i>No recent registrations within past 7 days.</i></h4>";
+                    echo "</h3><h4><i>" . 
+                        _("No recent registrations within past 7 days.") . 
+                        "</i></h4>";
                 } else {
                     echo ': '. pg_num_rows($result) . '</h3>';
                     //setup table
                     echo '<table class="table">
                           <thead>
                             <tr>
-                              <th>Date</th>
-                              <th>Name</th>
-                              <th>Activity</th>
-                              <th>Room</th>
-                              <th>Paging</th>
+                              <th>' . _("Date") . '</th>
+                              <th>' . _("Name") . '</th>
+                              <th>' . _("Activity") . '</th>
+                              <th>' . _("Room") . '</th>
+                              <th>' . _("Paging"). '</th>
                             </tr>
                           </thead>
                           <tbody>';

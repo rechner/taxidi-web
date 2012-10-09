@@ -4,6 +4,10 @@ require_once "config.php";
 
 $target_path = "uploads/" . $_POST["id"]; 
 
+// localisation
+$domain = "error";
+require_once "locale.php";
+
 /* JSON RESPONSE FIELDS
   success       bool    true if the next get request will return the correct photo
   newphotoid    string  new photo id
@@ -79,10 +83,10 @@ if (array_key_exists("photo", $_FILES)) {
     
       pg_close($connection);
     } else {
-      echo "File too large";
+      echo _("File too large");
     }
   } else {
-    echo "File type not supported.";
+    echo _("File type not supported.");
   }
 } else {
   

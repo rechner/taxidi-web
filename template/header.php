@@ -1,3 +1,4 @@
+<!-- Be sure to call locale.php before header.php -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -43,21 +44,21 @@
           <a class="brand" href="index.php">Taxídí</a>
             <div class="btn-group pull-right">
               <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="icon-user"></i> Username
+                <i class="icon-user"></i> <?php echo _("Username") ?>
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
-                <li><a href="#">Profile</a></li>
+                <li><a href="#"><?php echo _('Profile') ?></a></li>
                 <li class="divider"></li>
-                <li><a href="#">Sign Out</a></li>
+                <li><a href="#"><?php echo _('Sign Out') ?></a></li>
               </ul>
             </div>
           <div class="nav-collapse">
             <ul class="nav">
-              <li<?php echo (basename($_SERVER['PHP_SELF']) == "index.php" ? " class=\"active\"" : "");?>><a href="index.php">Home</a></li>
-              <li<?php echo (basename($_SERVER['PHP_SELF']) == "search.php" ? " class=\"active\"" : "");?>><a href="search.php">Search</a></li>
-              <li<?php echo (basename($_SERVER['PHP_SELF']) == "register.php" ? " class=\"active\"" : "");?>><a href="register.php">Register</a></li>
-              <li<?php echo (basename($_SERVER['PHP_SELF']) == "stats.php" ? " class=\"active\"" : "");?>><a href="stats.php">Statistics</a></li>
+              <li<?php echo (basename($_SERVER['PHP_SELF']) == "index.php" ? " class=\"active\"" : "");?>><a href="index.php"><?php echo _('Home') ?></a></li>
+              <li<?php echo (basename($_SERVER['PHP_SELF']) == "search.php" ? " class=\"active\"" : "");?>><a href="search.php"><?php echo _('Search') ?></a></li>
+              <li<?php echo (basename($_SERVER['PHP_SELF']) == "register.php" ? " class=\"active\"" : "");?>><a href="register.php"><?php echo _('Register') ?></a></li>
+              <li<?php echo (basename($_SERVER['PHP_SELF']) == "stats.php" ? " class=\"active\"" : "");?>><a href="stats.php"><?php echo _('Statistics') ?></a></li>
               <li class="divider-vertical"></li>
             </ul>
             <form class="navbar-search pull-left" action="search.php" method="post">

@@ -1,5 +1,9 @@
 <?php
     require_once 'config.php';
+    
+    //internationalisation
+    $domain = "search";
+    require_once 'locale.php';
 
     $connection = pg_connect ("host=$dbhost dbname=$dbname 
                               user=$dbuser password=$dbpass");
@@ -13,19 +17,27 @@
 <div class="span3">
   <div class="well sidebar-nav">
     <ul class="nav nav-list">
-      <li class="nav-header">Search</li>
-      <li><a href="search.php"><i class="icon-search"></i>Search</a></li>
-      <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
-      <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
-      <li class="nav-header">Reporting</li>
+      <li class="nav-header"><?php echo _("Search") ?></li>
+      <li><a href="search.php"><i class="icon-search"></i><?php echo _("Search") ?></a></li>
+      <li><a href="#"><i class="icon-filter"></i><?php echo _("Advanced") ?></a></li>
+      <li><a href="#"><i class="icon-bookmark"></i><?php echo _("Saved Searches") ?></a></li>
+      <li class="nav-header"><?php echo _("Reporting") ?></li>
       <?php
         parse_str($_SERVER['QUERY_STRING'], $query);
         $query["mode"] = "stats";
-        echo "<li" . ((!array_key_exists("mode",$_GET) or $_GET["mode"] == "stats") ? " class=\"active\"" : "") . "><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Summary &amp; Count</a></li>";
+        echo "<li" . ((!array_key_exists("mode",$_GET) or $_GET["mode"] == "stats") ? " class=\"active\"" : "") . 
+          "><a href=\"?" . http_build_query($query) . 
+          "\"><i class=\"icon-th-list\"></i>" . _("Summary &amp; Count") 
+          . "</a></li>";
         $query["mode"] = "full";
-        echo "<li" . ($_GET["mode"] == "full" ? " class=\"active\"" : "") . "><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Attendance</a></li>";
+        echo "<li" . ($_GET["mode"] == "full" ? " class=\"active\"" : "") . 
+          "><a href=\"?" . http_build_query($query) . 
+          "\"><i class=\"icon-th-list\"></i>" . _("Attendance") 
+          . "</a></li>";
         $query["mode"] = "medical";
-        echo "<li" . ($_GET["mode"] == "medical" ? " class=\"active\"" : "") . "><a href=\"?" . http_build_query($query) . "\"><i class=\"icon-th-list\"></i>Medical</a></li>";
+        echo "<li" . ($_GET["mode"] == "medical" ? " class=\"active\"" : "") . 
+        "><a href=\"?" . http_build_query($query) . 
+        "\"><i class=\"icon-th-list\"></i>" . _("Medical") . "</a></li>";
       ?>
     </ul>
   </div>
@@ -34,14 +46,14 @@
 
 <div class="span9">
   <form class="form-horizontal well" method="get">
-    <h2>Count</h2>
+    <h2><?php echo _("Count") ?></h2>
     <fieldset>
 <?php
   $selectfilters = array(
   // human label         http+php    postgres
-    "Service"  => array("service" , "services"  ),
-    "Activity" => array("activity", "activities"),
-    "Room"     => array("room"    , "rooms"),
+    _("Service")  => array("service" , "services"  ),
+    _("Activity") => array("activity", "activities"),
+    _("Room")    => array("room"    , "rooms"),
   );
   
   foreach ($selectfilters as $label => $sysname) {
@@ -49,7 +61,7 @@
           <label class=\"control-label\" for=\"{$sysname[0]}\">$label</label>
           <div class=\"controls\">
           <select name=\"{$sysname[0]}\" id=\"{$sysname[0]}\">
-          <option value=\"any\" selected> -- Any -- </option>";
+          <option value=\"any\" selected> -- " . _("Any") . " -- </option>";
     $query = "SELECT id, name FROM {$sysname[1]};";
     $result = pg_query($connection, $query) or
       die("Error in query: $query." . pg_last_error($connection));
@@ -66,16 +78,20 @@
   }
 ?>
       <div class="control-group form-inline">
-        <label class="control-label" for="date">Date</label>
+        <label class="control-label" for="date"><?php echo _("Date"); ?></label>
         <div class="controls">
           <label class="radio inline">
-            <input type="radio" id="datef_any" style="margin-bottom: 9px;" name="datef" value="any" checked>
+            <input type="radio" id="datef_any" style="margin-bottom: 9px;" 
+              name="datef" value="any" checked>
           </label>
-          Any date <br/>
+          <?php echo _("Any Date"); ?> <br/>
           <label class="radio inline">
-            <input type="radio" name="datef" id="datef_single" value="single"<?php echo ($_GET["datef"] == "single" ? "checked" : ""); ?>>
+            <input type="radio" name="datef" id="datef_single" 
+            value="single"<?php echo ($_GET["datef"] == "single" ? "checked" : ""); ?>>
           </label>
-          <input type="text" class="input-small" style="height: 28px;" name="date" id="date" value="<?php echo $_GET["datef"] == "single" ? $_GET["date"] : date("Y-m-d"); ?>">
+          <input type="text" class="input-small" style="height: 28px;" 
+            name="date" id="date"
+            value="<?php echo $_GET["datef"] == "single" ? $_GET["date"] : date("Y-m-d"); ?>">
         </div>
       </div>
 <?php
@@ -117,15 +133,18 @@
             echo "<input type=\"hidden\" name=\"mode\" value=\"" . $_GET["mode"] . "\"/>";
           }
         ?>
-        <input type="submit" class="btn btn-primary" value="Filter" />
+        <input type="submit" class="btn btn-primary" value="<?php _("Filter"); ?>" />
       </div>
     </fieldset>
   </form>
   <?php
     if ($_GET["mode"] == "full" or $_GET["mode"] == "medical") {
-      echo "<table class=\"table\" style=\"font-size: small;\"><thead><tr><th>Name</th>";
+      echo "<table class=\"table\" style=\"font-size: small;\"><thead><tr><th>" .
+        _("Name") . "</th>";
       if ($_GET["mode"] == "full") {
-        echo "<th>Activity</th><th>Room</th><th>Paging</th><th>Security<br/>Code</th>";
+        echo "<th>" . _("Activity") . "</th><th>" .
+          _("Room") . "</th><th>" . _("Paging") . "</th><th>" .
+          _("Security") . "<br/>" . _("Code"). "</th>";
         $query = "SELECT DISTINCT person, data.name, lastname, statistics.activity, (
             SELECT rooms.name FROM rooms WHERE id = data.room
           ) AS roomname, paging, code
@@ -136,7 +155,7 @@
           WHERE true $queryend
           ORDER BY person;";
       } elseif ($_GET["mode"] == "medical") {
-        echo "<th>Birthday</th><th>Allergies</th>";
+        echo "<th>" . _("Birthday") . "</th><th>" . _("Allergies") . "</th>";
         $query = "SELECT DISTINCT person, data.name, lastname, dob
           FROM data
           LEFT JOIN statistics ON data.id = person

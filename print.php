@@ -6,6 +6,9 @@
     $connection = pg_connect ("host=$dbhost dbname=$dbname 
                               user=$dbuser password=$dbpass");
                               
+    $domain = "print";
+    require_once 'locale.php';
+                              
     ///*
     $query = "SELECT data.name, lastname, dob, activities.name as activity, rooms.name as room,
                      grade, phone, \"mobileCarrier\", paging, parent1, parent2,
@@ -131,102 +134,103 @@
       <td>
           <p class="info" style="font-size: 24px"><b><?php echo $edata["lastname"] ?>,<br/>
           <?php echo $edata["name"]?></b><br/></p><p class="info">
-          Activity: <?php echo $edata["activity"]; ?><br/>
-          Room: <?php echo $edata["room"]; ?><br/>
+          <?php echo _("Activity") . ": " . $edata["activity"]; ?><br/>
+          <?php echo _("Room") . ": " . $edata["room"]; ?><br/>
           </p>
           <p class="info" style="font-size: 12px">
-              Created: <?php echo date("j M Y", strtotime($edata["joinDate"])) ?><br>
-              Last Seen: <?php echo date("j M Y", strtotime($edata["lastSeen"])) ?><br>
-              Modified: <?php echo date("j M Y H:i:s", strtotime($edata["lastModified"])) ?><br>
-              Check-in Count: <?php echo $edata["count"] ?>
+              <?php echo sprintf(_("Created: %s"), strftime(_("%e %B %Y"), strtotime($edata["joinDate"]))) ?><br>
+              <?php echo sprintf(_("Last Seen: %s"), strftime(_("%e %B %Y"), strtotime($edata["lastSeen"]))) ?><br>
+              <?php echo sprintf(_("Modified: %s"), strftime(_("%e %b %Y %H:%M:%S"), strtotime($edata["lastModified"]))) ?><br>
+              <?php echo sprintf(_("Check-in Count: %s"), $edata["count"]) ?>
           </p>
       </td>
       <td valign="top">
-          <p class="date"><?php echo date("r") ?></p>
+          <!-- keeping RFC date format for interoperability purposes-->
+          <p class="date"><?php echo date("r") ?></p> 
           <img src="resources/logo.png" width=300 style="float:right; vertical-align:top">
       </td>
       </tr></table>
   
       <table class="field" width=800px><tr>
           <td width=90px>
-              <p class="head"><b>Name</b></p>
+              <p class="head"><b><?php echo _("Name"); ?></b></p>
           </td>
           <td width=287px><p class="info"><?php echo $edata["name"]?></p></td>
-          <td width=120px><p class="head"><b>Last Name</b></p></td>
+          <td width=120px><p class="head"><b><?php echo _("Last name"); ?></b></p></td>
           <td width=287px><p class="info"><?php echo $edata["lastname"]?></p></td>
       </tr></table>
       <table class="field" width=800px height=50px><tr>
           <td width=90px>
-              <p class="head"><b>Phone</b></p>
+              <p class="head"><b><?php echo _("Phone"); ?></b></p>
           </td>
           <td width=286px><p class="info"><?php echo $edata["phone"]?></p></td>
           <td>
               <img src="resources/check-<?php echo $edata["mobileCarrier"] ? "on" : "off"?>.png" id="checkbox">
-              <p class="float">Mobile? </p>
+              <p class="float"><?php echo _("Mobile?"); ?> </p>
           </td>
       </tr></table>
   
       <table class="field" width=800px height=50px><tr>
           <td width=90px>
-              <p class="head"><b>Grade</b></p>
+              <p class="head"><b><?php echo _("Grade"); ?></b></p>
           </td>
           <td width=40px><p class="head"><?php echo $edata["grade"]?></p></td>
           <td width=140px>
-              <p class="head"><b>DOB</b> (Y/M/D)</p>
+              <p class="head"><b><?php echo _("DOB"); ?></b> <?php echo _("D/M/Y"); ?></p>
           </td>
-          <td width=140px><p class="info"><?php echo date("Y/m/d", strtotime($edata["dob"]))?></p></td>
+          <td width=140px><p class="info"><?php echo strftime(_("%d/%m/%Y"), strtotime($edata["dob"]))?></p></td>
           <td width=80px>
-              <p class="head"><b>Email</b></p>
+              <p class="head"><b><?php echo _("Email"); ?></b></p>
           </td>
           <td><p class="info"><?php echo $edata["parentEmail"]?></p></td>
       </tr></table>
   
       <table class="field" width=800px height=50px><tr>
           <td width=100px>
-              <p class="head"><b>Parent 1</b></p>
+              <p class="head"><b><?php echo _("Parent 1"); ?></b></p>
           </td>
           <td width=286px><p class="info"><?php echo $edata["parent1"]?></p></td>
           <td width=100px>
-              <p class="head"><b>Parent 2</b></p>
+              <p class="head"><b><?php echo _("Parent 2"); ?></b></p>
           </td>
           <td><p class="info"><?php echo $edata["parent2"]?></p></td>
       </tr></table>
   
       <table class="field" width=800px height=50px><tr>
           <td width=110px>
-              <p class="head"><b>Medical &amp; Allergies</b></p>
+              <p class="head"><b><?php echo _("Medical &amp; Allergies"); ?></b></p>
           </td>
           <td width=276px><p class="info"><?php echo $edata["medical"]?></p></td>
           <td width=110px>
-              <p style="text-align: center"><b>Special Instructions</b></p>
+              <p style="text-align: center"><b><?php echo _("Special Instructions"); ?></b></p>
           </td>
           <td><p class="info"><?php echo $edata["notes"]?></p></td>
       </tr></table>
   
       <img src="resources/black.gif" width=800 height=3 style="margin-top: 10px">
-      <p>Additional information and emergency contact (optional):</p>
+      <p><?php echo _("Additional information and emergency contact (optional):"); ?></p>
   
       <table class="field" width=800px height=50px><tr>
           <td width=100px>
-              <p class="head"><b>Address</b></p>
+              <p class="head"><b><?php echo _("Address"); ?></b></p>
           </td>
           <td width=676px><p class="info"> </p></td>
       </tr></table>
       <table class="field" width=800px height=50px><tr>
           <td width=100px>
-              <p class="head"><b>City</b></p>
+              <p class="head"><b><?php echo _("City"); ?></b></p>
           </td>
           <td width=190px>
               <p class="info"> </p>
           </td>
           <td width=100px>
-              <p class="head"><b>State</b></p>
+              <p class="head"><b><?php echo _("State"); ?></b></p>
           </td>
           <td width=100px>
               <p class="info"> </p>
           </td>
           <td width=100px>
-              <p class="head"><b>ZIP</b></p>
+              <p class="head"><b><?php echo _("ZIP"); ?></b></p>
           </td>
           <td width=170px>
               <p class="info"> </p>
@@ -235,41 +239,41 @@
   
       <table class="field" width=800px height=50px><tr>
           <td width=100px>
-              <p class="head"><b>Parent 1 Phone</b></p>
+              <p class="head"><b><?php echo _("Parent 1 Phone"); ?></b></p>
           </td>
           <td width=286px><p class="info"> </p></td>
           <td>
-              <p class="info">Mobile: </p>
+              <p class="info"><?php echo _("Mobile"); ?>: </p>
           </td>
       </tr></table>
   
       <table class="field" width=800px height=50px><tr>
           <td width=100px>
-              <p class="head"><b>Parent 2 Phone</b></p>
+              <p class="head"><b><?php echo _("Parent 2 Phone"); ?></b></p>
           </td>
           <td width=286px><p class="info"> </p></td>
           <td>
-              <p class="info">Mobile: </p>
+              <p class="info"><?php echo _("Mobile"); ?>: </p>
           </td>
       </tr></table>
   
       <table class="field" width=800px height=50px><tr>
           <td width=120px>
-              <p class="head"><b>Emergency Contact 1</b></p>
+              <p class="head"><b><?php echo _("Emergency Contact 1"); ?></b></p>
           </td>
           <td width=286px><p class="info"> </p></td>
           <td>
-              <p class="info">Relationship: </p>
+              <p class="info"><?php echo _("Relationship"); ?>: </p>
           </td>
       </tr></table>
   
       <table class="field" width=800px height=50px><tr>
           <td width=120px>
-              <p class="head"><b>Emergency Contact 2</b></p>
+              <p class="head"><b><?php echo _("Emergency Contact 2"); ?></b></p>
           </td>
           <td width=286px><p class="info"> </p></td>
           <td>
-              <p class="info">Relationship: </p>
+              <p class="info"><?php echo _("Relationship"); ?>: </p>
           </td>
       </tr></table>
   </body>

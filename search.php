@@ -1,22 +1,26 @@
 <?php
-	$page_title = "Search";
-	require_once "template/header.php";
+  //internationalisation
+  $domain = "search";
+  require_once 'locale.php';
+
+  $page_title = "Search";
+  require_once "template/header.php";
 ?>
-					<!-- sidebar -->
+          <!-- sidebar -->
           <div class="span3">
             <div class="well sidebar-nav">
               <ul class="nav nav-list">
-                <li class="nav-header">Search</li>
-                <li class="active"><a href="#"><i class="icon-search"></i>Search</a></li>
-                <li><a href="#"><i class="icon-filter"></i>Advanced</a></li>
-                <li><a href="#"><i class="icon-bookmark"></i>Saved searches</a></li>
+                <li class="nav-header"><?php echo _("Search"); ?></li>
+                <li class="active"><a href="#"><i class="icon-search"></i><?php echo _("Search"); ?></a></li>
+                <li><a href="#"><i class="icon-filter"></i><?php echo _("Advanced"); ?></a></li>
+                <li><a href="#"><i class="icon-bookmark"></i><?php echo _("Saved Searches"); ?></a></li>
               </ul>
               <ul class="nav nav-list">
-                <li class="nav-header">Actions</li>
-                <li><a href="register.php"><i class="icon-plus-sign"></i>Register</a></li>
-                <li><a href="#"><i class="icon-user"></i>Register Visitor</a></li>
-                <li><a href="#"><i class="icon-print"></i>Print Search</a></li>
-                <li><a href="#"><i class="icon-download-alt"></i>Download Results</a></li>
+                <li class="nav-header"><?php echo _("Actions"); ?></li>
+                <li><a href="register.php"><i class="icon-plus-sign"></i><?php echo _("Register"); ?></a></li>
+                <li><a href="#"><i class="icon-user"></i><?php echo _("Register Visitor"); ?></a></li>
+                <li><a href="#"><i class="icon-print"></i><?php echo _("Print Search"); ?></a></li>
+                <li><a href="#"><i class="icon-download-alt"></i><?php echo _("Download Results"); ?></a></li>
               </ul>
             </div>
           </div>
@@ -25,8 +29,9 @@
           <div class="span9">
             <!-- Search form -->
             <form class="well form-search" name="search" action="search.php" method="post">
-              <input type="text" class="input-medium search-query" name="search" placeholder="Search…" autofocus>
-              <button type="submit" class="btn">Search</button>
+              <input type="text" class="input-medium search-query" name="search" 
+                placeholder="<?php echo _("Search"); ?>…" autofocus>
+              <button type="submit" class="btn"><?php echo _("Search"); ?></button>
             </form>
             
             <?php
@@ -76,7 +81,8 @@
                 if (pg_num_rows($result) == 0) {
                   echo '<div class="alert alert-error">';
                   echo '<a class="close" data-dismiss="alert" href="#">×</a>';
-                  echo "<h4 class=\"alert-heading\">No results for &ldquo;$inp&rdquo;</h4>";
+                  echo "<h4 class=\"alert-heading\">" . 
+                    sprintf(_("No results for &ldquo;%s&rdquo;"), $inp). "</h4>";
                   echo '</div>';
                 } else {
                   // setup table:
@@ -91,10 +97,10 @@
                                 }
                               </script>
                               <th><input type="checkbox" onClick="toggle(this)"></th>
-                              <th>Name</th>
-                              <th>Activity</th>
-                              <th>Room</th>
-                              <th>Paging</th>
+                              <th>' . _("Name") . '</th>
+                              <th>' . _("Activity") . '</th>
+                              <th>' . _("Room") . '</th>
+                              <th>' . _("Paging") . '</th>
                             </tr>
                           </thead>
                           <tbody>';
@@ -117,5 +123,5 @@
             ?>
             
           </div>
-			</div>
+      </div>
 <?php require_once "template/footer.php" ; ?>

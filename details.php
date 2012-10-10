@@ -626,6 +626,7 @@ selecttab = function(tab) {
   </div>
 </div>
 </div>
+<link href="resources/css/Jcrop.min.css" rel="stylesheet">
 <script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
 <script src="resources/js/canvas_toblob.js"> </script>
 <script src="resources/js/jquery.getparams.js"> </script>

@@ -1,4 +1,10 @@
 <!-- Be sure to call locale.php before header.php -->
+<?php
+  $old_domain = textdomain(NULL);
+  bindtextdomain('header', "locale"); 
+  textdomain('header');
+  bind_textdomain_codeset('header', 'UTF-8');
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -62,7 +68,8 @@
               <li class="divider-vertical"></li>
             </ul>
             <form class="navbar-search pull-left" action="search.php" method="post">
-                <input name="search" type="text" class="search-query input-medium" placeholder="Search">
+                <input name="search" type="text" class="search-query input-medium"
+                  placeholder="<?php echo _("Search"); ?>">
               </form>
           </div><!--/.nav-collapse -->
         </div>
@@ -74,3 +81,6 @@
       <div class="container-fluid">
         <div class="row-fluid">
 
+<?php
+  textdomain($old_domain);  //restore the old domain
+?>

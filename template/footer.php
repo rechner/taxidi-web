@@ -21,8 +21,7 @@
     <script src="resources/js/jquery.ui.core.js"></script>
     <script src="resources/js/jquery.ui.datepicker.js"></script>
     <style type="text/css">
-      @import url("resources/css/jqueryui-themes/ui-lightness/jquery.ui.all.css");
-      <!-- @import url("themes/<?php echo $theme?>/css/jquery-ui.css"); -->
+      @import url("themes/<?php echo $theme?>/css/jquery-ui.css");
     </style>
     <script>
       $.datepicker.setDefaults({

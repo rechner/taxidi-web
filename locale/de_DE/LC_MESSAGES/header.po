@@ -1,0 +1,51 @@
+# German translations for PACKAGE package
+# German messages for PACKAGE.
+# Copyright (C) 2012 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Zac Sturgeon <jkltechinc@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Taxidi\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-10-09 19:43-0500\n"
+"PO-Revision-Date: 2012-10-09 21:43-0500\n"
+"Last-Translator: Zac Sturgeon <jkltechinc@gmail.com>\n"
+"Language-Team: German <jkltechinc@gmail.com>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: template/header.php:62
+msgid "Home"
+msgstr "Startseite"
+
+#: template/header.php:55
+msgid "Profile"
+msgstr "Profil"
+
+#: template/header.php:64
+msgid "Register"
+msgstr "Registrieren"
+
+#: template/header.php:63
+msgid "Search"
+msgstr "Suche"
+
+#: template/header.php:57
+msgid "Sign Out"
+msgstr "Austragen"
+
+#: template/header.php:65
+msgid "Statistics"
+msgstr "Statistik"
+
+#: template/header.php:51
+msgid "Username"
+msgstr "Benutzername"
+

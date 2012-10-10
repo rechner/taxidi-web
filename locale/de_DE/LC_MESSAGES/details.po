@@ -1,0 +1,350 @@
+# German translations for Taxidi package
+# German messages for Taxidi.
+# Copyright (C) 2012 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Originally translated by Ben Dippold <ben_Dippold@yahoo.de>
+# Approved and corrected by Zac Sturgeon <jkltechinc@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: TAXIDI\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-10-09 17:18-0500\n"
+"PO-Revision-Date: 2012-10-09 15:48-0700\n"
+"Last-Translator: Benjamin <ben_Dippold@yahoo.de>\n"
+"Language-Team: German <ben_Dippold@yahoo.de>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: details.php:458 details.php:459
+msgid "%e %B %Y"
+msgstr "%e %B %Y"
+
+#: details.php:461
+msgid "%e %b %Y %H:%M:%S"
+msgstr "%e %b %Y %H:%M:%S"
+
+#: register.php:113
+msgid "(###) ###-####"
+msgstr "(###) ###-####"
+
+#: details.php:113 register.php:70 recent.php:19
+msgid "Actions"
+msgstr "Aktionen"
+
+#: details.php:544 details.php:549 register.php:139 register.php:145
+#: recent.php:33 recent.php:99
+msgid "Activity"
+msgstr "Aktivität"
+
+#: details.php:111 register.php:66 recent.php:15
+msgid "Advanced"
+msgstr "Fortgeschritten"
+
+#: details.php:78 details.php:80
+msgid "Age"
+msgstr "Alter"
+
+#: recent.php:33 recent.php:36 recent.php:45 recent.php:48
+msgid "Any"
+msgstr "Etwas"
+
+#: details.php:162
+msgid "Are you sure you want to delete this record?"
+msgstr "Sind sie sicher sie möchten diese Akte löschen?"
+
+#: details.php:535 register.php:128
+msgid "Birthdate"
+msgstr "Geburtstag"
+
+#: details.php:207
+msgid "Browse"
+msgstr "Suchen"
+
+#: details.php:622 register.php:224
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: details.php:485 details.php:488
+msgid "City"
+msgstr "Stadt"
+
+#: details.php:151 details.php:166 details.php:215
+msgid "Close"
+msgstr "Schließen"
+
+#: details.php:462
+#, php-format
+msgid "Count: %s"
+msgstr "Zählen: %s"
+
+#: register.php:223
+msgid "Create Record"
+msgstr "Neue Akte"
+
+#: details.php:116
+msgid "Create incident report"
+msgstr "Neue Zwischenfall Akte"
+
+#: details.php:458
+#, php-format
+msgid "Created: %s"
+msgstr "Neue %s"
+
+#: recent.php:64
+msgid "Custom Range"
+msgstr "Benutzerdefinierte Reichweite"
+
+#: recent.php:97
+msgid "Date"
+msgstr "Datum"
+
+#: details.php:172
+msgid "Delete"
+msgstr "Löschen"
+
+#: details.php:159
+msgid "Delete Record"
+msgstr "Akte Löschen"
+
+#: details.php:117
+msgid "Delete record"
+msgstr "Akte Löschen"
+
+#: details.php:152
+msgid "Download"
+msgstr "Downloaden"
+
+#: details.php:127
+msgid "Download Record Data"
+msgstr "Akten Daten Downloaden"
+
+#: details.php:115
+msgid "Download details"
+msgstr "Details Downloaden"
+
+#Fuzzy.  (Context: Select format to download file in)
+#: details.php:130
+msgid "Download format" 
+msgstr "Format Downloaden"
+
+#: details.php:201 details.php:209
+msgid "Drop file here."
+msgstr "Akte hier Absetzen"
+
+#: details.php:603 register.php:207
+msgid "Email"
+msgstr "E-mail"
+
+#: details.php:192
+msgid "Error: File type not supported."
+msgstr "Fehler: Dateityp nicht unterstüzt"
+
+#: details.php:457\
+#, php-format
+msgid "Expiry: %s"
+msgstr "Ablauf: %s"
+
+#: details.php:471
+msgid "Extended"
+msgstr "Erweitert"
+
+#: recent.php:68
+msgid "Go"
+msgstr "Los"
+
+#: details.php:529 details.php:533 register.php:122 register.php:126
+msgid "Grade"
+msgstr "Note"
+
+#: details.php:459
+#, php-format
+msgid "Last Seen: %s"
+msgstr "Zu letzt gesehen: %s"
+
+#: details.php:513 register.php:106
+msgid "Lastname"
+msgstr "Nachname"
+
+#: details.php:468
+msgid "Main"
+msgstr "Haupt"
+
+#: details.php:582 register.php:180 register.php:183
+msgid "Medical"
+msgstr "Medizinisch"
+
+#: details.php:579
+msgid "Medical Info"
+msgstr "Medizinische Information"
+
+#: details.php:456
+msgid "Member"
+msgstr "Mitglied"
+
+#: register.php:117
+msgid "Mobile Phone"
+msgstr "Handy-Nummer"
+
+#: details.php:524
+msgid "Mobile phone"
+msgstr "Handy-Nummer"
+
+#: details.php:359
+msgid "Modified"
+msgstr "Modifiziert"
+
+#: details.php:460
+#, php-format
+msgid "Modified: %s"
+msgstr "Modifiziert: %s"
+
+#: details.php:508 details.php:511 details.php:589 details.php:596
+#: register.php:101 register.php:104 recent.php:98
+msgid "Name"
+msgstr "Name"
+
+#: recent.php:89
+msgid "No recent registrations within past 7 days."
+msgstr "Keine neue registrierungen innerhalb 7 Tagen."
+
+#: details.php:611 details.php:613 register.php:215 register.php:218
+msgid "Notes"
+msgstr "Notizen"
+
+#: recent.php:101
+msgid "Paging"
+msgstr "Paging"
+
+#: details.php:586 register.php:188 register.php:191
+msgid "Parent 1"
+msgstr "Elternteil 1"
+
+#: details.php:593 register.php:196 register.php:199
+msgid "Parent 2"
+msgstr "Elternteil 2"
+
+#: details.php:600 register.php:204
+msgid "Parent's Email"
+msgstr "Eltern E-mail"
+
+#: recent.php:61
+msgid "Past Month"
+msgstr "Letzter Monat"
+
+#: recent.php:57 recent.php:60
+msgid "Past Week"
+msgstr "Letzte Woche"
+
+#: recent.php:62
+msgid "Past Year"
+msgstr "Letztes Jahr"
+
+#: details.php:517 details.php:520 register.php:110 register.php:114
+msgid "Phone"
+msgstr "Telefon"
+
+#: details.php:114
+msgid "Print details"
+msgstr "Details Drucken" #Corrected for spelling
+
+#: recent.php:57
+msgid "Range"
+msgstr "Reichweite"
+
+#: recent.php:71
+msgid "Recent Registrations"
+msgstr "Kürzliche Registrierungen"
+
+#: register.php:71 recent.php:20
+msgid "Register"
+msgstr "Registrieren"
+
+#: register.php:72 recent.php:21
+msgid "Register Visitor"
+msgstr "Besucher Registrieren"
+
+#: register.php:82
+msgid "Registration"
+msgstr "Registrieren"
+
+#: register.php:91
+msgid "Registration Complete"
+msgstr "Registrierung Komplet"
+
+#: register.php:160 register.php:165 recent.php:45 recent.php:100
+msgid "Room"
+msgstr "Zimmer"
+
+#: details.php:621
+msgid "Save changes"
+msgstr "Änderungen Speichern"
+
+#: details.php:112 register.php:67 recent.php:16
+msgid "Saved Searches"
+msgstr "Gespeicherte Suchen"
+
+#: details.php:109 details.php:110 register.php:64 register.php:65
+#: recent.php:13 recent.php:14
+msgid "Search"
+msgstr "Suchen"
+
+#: details.php:134
+msgid "Select Format"
+msgstr "Format Selektieren"
+
+#: details.php:492 details.php:495
+msgid "State"
+msgstr "Staat"
+
+#: details.php:478
+msgid "Street"
+msgstr "Straße"
+
+#: details.php:481
+msgid "Street Address"
+msgstr "Straßen Addresse"
+
+#: register.php:92
+#, php-format
+msgid "Successfully registered %s."
+msgstr "Erfolgreich Registriert %s."
+
+#: details.php:163
+msgid "This action cannot be undone."
+msgstr "Diese Aktion kann nicht rükgängig gemacht werden."
+
+#: details.php:179
+msgid "Upload New Photo"
+msgstr "Neues Foto uploaden"
+
+#: details.php:216
+msgid "Upload Photo"
+msgstr "Foto Uploaden"
+
+#: details.php:182
+#, php-format
+msgid "Uploads are limited to %s and must be in jpeg or png format"
+msgstr "Uploads sind limitiert zu %s und müssen dem jpeg oder png Format entsprechen"
+
+#: details.php:456
+msgid "Visitor"
+msgstr "Besucher"
+
+#: register.php:132
+msgid "YYYY-MM-DD"
+msgstr "YYYY-MM-TT"
+
+#: details.php:499 details.php:502
+msgid "ZIP"
+msgstr "Postleitzahl"
+
+#: details.php:80
+msgid "months"
+msgstr "Monate"
+

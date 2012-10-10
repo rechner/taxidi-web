@@ -9,4 +9,6 @@ $dbname = 'taxidi_dev2';
 $photo_path = '/home/nathan/taxidi_photos/'; 
 $photo_maxsize = 1 * 1024 * 1024; // bytes
 
+$theme = "default";
+
 ?>

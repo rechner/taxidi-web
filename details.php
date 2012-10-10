@@ -356,7 +356,7 @@ $(function(){
 						$("#photomain").attr("src", "photo.php?id=" + response.newphotoid);
 						var date1 = response.modified.split(".")[0].split(" ");
 						var date2 = new Date(date1[0]);
-						$("#lastmodified").text(<?php echo _("Modified") .": "; ?> + date2.getUTCDate() + " " + (new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[date2.getUTCMonth()]) + " " + date2.getUTCFullYear() + " " + date1[1]);
+						$("#lastmodified").text("<?php echo _("Modified") .": "; ?>" + date2.getUTCDate() + " " + (new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[date2.getUTCMonth()]) + " " + date2.getUTCFullYear() + " " + date1[1]);
 						$('#photouploadModal').modal("hide");
 					} else {
 						//TODO server side error!

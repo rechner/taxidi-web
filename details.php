@@ -536,7 +536,8 @@ selecttab = function(tab) {
             </div>
             <div>
               <input type="text" class="input-small datepicker" name="dob" 
-                id="dob" placeholder="YYYY-MM-DD" value="<?php echo $edata["dob"]; ?>"> <?php echo $agestr ?>
+                id="dob" placeholder="<?php echo _("YYYY-MM-DD"); ?>"
+                value="<?php echo $edata["dob"]; ?>"> <?php echo $agestr ?>
             </div>
           </div>
         </div>
@@ -559,7 +560,7 @@ selecttab = function(tab) {
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="room">Room</label>
+          <label class="control-label" for="room"><?php echo _("Room"); ?></label>
           <div class="controls">
             <select name="room" id="room">
               <?php

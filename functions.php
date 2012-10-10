@@ -8,6 +8,7 @@
   }
   
   function session_assert_valid() {
+    session_start();
     if (!session_verify_fingerprint()) {
       $params = session_get_cookie_params();
       setcookie(session_name(), "", time() - 42000,

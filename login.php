@@ -4,46 +4,50 @@
 	if(!isset($_SERVER['HTTPS'])) {  //Force use of SSL
 	    header("location: https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
 	}
+
+	require_once "config.php";
+	require_once "functions.php";
 	
-	// I18N support
+	// I18N support information here
+	if (empty($locale))
+		$language = 'en';
+	if (isset($_GET['locale']) && !empty($_GET['locale']))
+		$language = $_GET['locale'];
+	
+	putenv("LANG=$language"); 
+	setlocale(LC_ALL, $language);
+	
+	// Set the text domain as 'login'
 	$domain = 'login';
-	require_once 'locale.php';
-	
-	require_once 'config.php';
-	$connection = pg_connect ("host=$dbhost dbname=$dbname user=$dbuser password=$dbpass");
+	bindtextdomain($domain, "locale"); 
+	textdomain($domain);
+	bind_textdomain_codeset($domain, 'UTF-8');
 	
 	session_start();
-
-	/* TODO
-		* Make error messages better
-		* Make sessions more secure
-		* Encrpyt passwords over http
-		* Make error box look better
-	*/
 	
 	$successpage = "index.php";
 	if(!empty($_SESSION["userid"])) {
 		header("Location: $successpage");
 	} elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
 		if (!empty($_POST["username"]) && !empty($_POST["password"])) {
-			$query  = "SELECT id, \"user\", hash, salt from users WHERE \"user\" = '{$_POST["username"]}';";
-			$result = pg_query($connection, $query) or die("Error in query: $query." . pg_last_error($connection));
+			$conn   = pg_connect ("host=$dbhost dbname=$dbname user=$dbuser password=$dbpass");
+			$query  = "SELECT id, \"user\", hash, salt, name from users WHERE \"user\" = '{$_POST["username"]}';";
+			$result = pg_query($conn, $query) or die("Error in query: $query." . pg_last_error($connection));
 			$data   = pg_fetch_assoc($result);
 
-			if ($data) {		
-				if (hash("sha256", $_POST["password"] . $data["salt"]) == $data["hash"]) {
-					$_SESSION["userid"] = $data["id"];
-					header("Location: $successpage");
-				} else {
-					$error = _("Incorrect username or password");
-				}
+			if ($data && hash("sha256", $_POST["password"] . $data["salt"]) == $data["hash"]) {
+				$_SESSION["userid"]   = $data["id"];
+				$_SESSION["username"] = $data[$data["name"] ? "name" : "user"];
+				
+				$_SESSION["salt"]        = hash("sha256", $_SERVER["REQUEST_TIME"]);
+				$_SESSION["fingerprint"] = session_create_fingerprint();
+				header("Location: $successpage");
 			} else {
 				$error = _("Incorrect username or password");
 			}
-		} /*else {
-			//For some reason this pops up with the forced SSL
-			$error = "form not completed";
-		}*/
+		} else {
+			$error = _("Form not completed");
+		}
 	}
 	
 ?>

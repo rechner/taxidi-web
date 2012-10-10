@@ -4,6 +4,9 @@
   bindtextdomain('header', "locale"); 
   textdomain('header');
   bind_textdomain_codeset('header', 'UTF-8');
+  
+  require_once "functions.php";
+  session_assert_valid();
 ?>
 <!DOCTYPE html>
 <html lang="en">

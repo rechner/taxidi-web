@@ -20,6 +20,7 @@
 
     <script src="resources/js/jquery.ui.core.js"></script>
     <script src="resources/js/jquery.ui.datepicker.js"></script>
+    <script src="resources/js/jquery.ui.i18n.js"></script>
     <style type="text/css">
       @import url("themes/<?php echo $theme?>/css/jquery-ui.css");
     </style>

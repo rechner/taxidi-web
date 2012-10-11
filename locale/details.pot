@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-09 17:18-0500\n"
+"POT-Creation-Date: 2012-10-09 22:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: details.php:544 details.php:549 register.php:139 register.php:145
+#: details.php:545 details.php:550 register.php:139 register.php:145
 #: recent.php:33 recent.php:99
 msgid "Activity"
 msgstr ""
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Browse"
 msgstr ""
 
-#: details.php:622 register.php:224
+#: details.php:623 register.php:224
 msgid "Cancel"
 msgstr ""
 
@@ -132,7 +132,7 @@ msgstr ""
 msgid "Drop file here."
 msgstr ""
 
-#: details.php:603 register.php:207
+#: details.php:604 register.php:207
 msgid "Email"
 msgstr ""
 
@@ -170,11 +170,11 @@ msgstr ""
 msgid "Main"
 msgstr ""
 
-#: details.php:582 register.php:180 register.php:183
+#: details.php:583 register.php:180 register.php:183
 msgid "Medical"
 msgstr ""
 
-#: details.php:579
+#: details.php:580
 msgid "Medical Info"
 msgstr ""
 
@@ -199,7 +199,7 @@ msgstr ""
 msgid "Modified: %s"
 msgstr ""
 
-#: details.php:508 details.php:511 details.php:589 details.php:596
+#: details.php:508 details.php:511 details.php:590 details.php:597
 #: register.php:101 register.php:104 recent.php:98
 msgid "Name"
 msgstr ""
@@ -208,7 +208,7 @@ msgstr ""
 msgid "No recent registrations within past 7 days."
 msgstr ""
 
-#: details.php:611 details.php:613 register.php:215 register.php:218
+#: details.php:612 details.php:614 register.php:215 register.php:218
 msgid "Notes"
 msgstr ""
 
@@ -216,15 +216,15 @@ msgstr ""
 msgid "Paging"
 msgstr ""
 
-#: details.php:586 register.php:188 register.php:191
+#: details.php:587 register.php:188 register.php:191
 msgid "Parent 1"
 msgstr ""
 
-#: details.php:593 register.php:196 register.php:199
+#: details.php:594 register.php:196 register.php:199
 msgid "Parent 2"
 msgstr ""
 
-#: details.php:600 register.php:204
+#: details.php:601 register.php:204
 msgid "Parent's Email"
 msgstr ""
 
@@ -272,11 +272,12 @@ msgstr ""
 msgid "Registration Complete"
 msgstr ""
 
-#: register.php:160 register.php:165 recent.php:45 recent.php:100
+#: details.php:563 register.php:160 register.php:165 recent.php:45
+#: recent.php:100
 msgid "Room"
 msgstr ""
 
-#: details.php:621
+#: details.php:622
 msgid "Save changes"
 msgstr ""
 
@@ -314,7 +315,7 @@ msgstr ""
 msgid "This action cannot be undone."
 msgstr ""
 
-#: details.php:179
+#: details.php:179 details.php:451
 msgid "Upload New Photo"
 msgstr ""
 
@@ -331,7 +332,7 @@ msgstr ""
 msgid "Visitor"
 msgstr ""
 
-#: register.php:132
+#: details.php:539 register.php:132
 msgid "YYYY-MM-DD"
 msgstr ""
 

@@ -59,7 +59,7 @@
               <ul class="dropdown-menu">
                 <li><a href="#"><?php echo _('Profile') ?></a></li>
                 <li class="divider"></li>
-                <li><a href="#"><?php echo _('Sign Out') ?></a></li>
+                <li><a href="logout.php"><?php echo _('Sign Out') ?></a></li>
               </ul>
             </div>
           <div class="nav-collapse">

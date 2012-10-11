@@ -41,7 +41,16 @@
 				
 				$_SESSION["salt"]        = hash("sha256", $_SERVER["REQUEST_TIME"]);
 				$_SESSION["fingerprint"] = session_create_fingerprint();
-				header("Location: $successpage");
+				
+				if (array_key_exists("redirectto",$_GET)) {
+					header("Location: " . rawurldecode($_GET["redirectto"]));
+				} elseif (array_key_exists("backto",$_SESSION)) {
+					header("Location: " . $_SESSION["backto"]);
+				} elseif (array_key_exists("HTTP_REFERER",$_SERVER)) {
+					header("Location: " . rawurldecode($_SERVER["HTTP_REFERER"]));
+				} else {
+					header("Location: $successpage");
+				}
 			} else {
 				$error = _("Incorrect username or password");
 			}
@@ -121,10 +130,10 @@
       </div>
     </div>
     
-    <div class="modal hide fade" id="banner" tabindex="-1" role="dialog" aria-labelledby="bannerLabel" aria-hidden="true">
+    <div class="modal hide fade" id="banner" tabindex="-1" role="dialog" aria-labelledby="bannerLabel" aria-hidden="true" style="margin-top: -270px;">
       <div class="modal-header" style="background-color: #850505; border-bottom-color: #600000; color: white;">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="bannerLabel">
+        <h3 id="bannerLabel" style="margin: 0;">
 	  <i class="icon-warning-sign icon-white" style="margin-top: 4px;">
 	  </i> Warning / Achtung / Avertissement</h3>
       </div>

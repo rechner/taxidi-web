@@ -12,7 +12,7 @@ if (ini_get("session.use_cookies")) {
 }
 
 session_destroy();
-require_once('login.php');  //redirect to login page.
+header("Location: login.php");  //redirect to login page.
 /* Otherwise we should display a "Logout successful" and include a link
  * back to the login page. */
 ?>

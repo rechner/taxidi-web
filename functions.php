@@ -23,4 +23,9 @@
       header("Location: login.php");
     }
   }
+  
+  function db_connect() {
+    global $dbdsn;
+    return new PDO($dbdsn, null, null, array(PDO::ATTR_PERSISTENT => true));
+  }
 ?>

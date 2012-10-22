@@ -30,10 +30,13 @@
 		header("Location: $successpage");
 	} elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
 		if (!empty($_POST["username"]) && !empty($_POST["password"])) {
-			$conn   = pg_connect ("host=$dbhost dbname=$dbname user=$dbuser password=$dbpass");
-			$query  = "SELECT id, \"user\", hash, salt, name from users WHERE \"user\" = '{$_POST["username"]}';";
-			$result = pg_query($conn, $query) or die("Error in query: $query." . pg_last_error($connection));
-			$data   = pg_fetch_assoc($result);
+			$dbh = db_connect();
+			
+			$sql  = "SELECT id, \"user\", hash, salt, name FROM users WHERE \"user\" = :username";
+			$sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+			
+			$sth->execute(array(":username" => $_POST["username"]));
+			$data = $sth->fetch(PDO::FETCH_ASSOC);
 
 			if ($data && hash("sha256", $_POST["password"] . $data["salt"]) == $data["hash"]) {
 				$_SESSION["userid"]   = $data["id"];

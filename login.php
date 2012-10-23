@@ -1,67 +1,67 @@
 <?php
-	// vim: tabstop=2:softtabstop=2
-	
-	if(!isset($_SERVER['HTTPS'])) {  //Force use of SSL
-	    header("location: https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
-	}
+        // vim: tabstop=2:softtabstop=2
+        
+        if(!isset($_SERVER['HTTPS'])) {  //Force use of SSL
+            header("location: https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+        }
 
-	require_once "config.php";
-	require_once "functions.php";
-	
-	// I18N support information here
-	if (empty($locale))
-		$language = 'en';
-	if (isset($_GET['locale']) && !empty($_GET['locale']))
-		$language = $_GET['locale'];
-	
-	putenv("LANG=$language"); 
-	setlocale(LC_ALL, $language);
-	
-	// Set the text domain as 'login'
-	$domain = 'login';
-	bindtextdomain($domain, "locale"); 
-	textdomain($domain);
-	bind_textdomain_codeset($domain, 'UTF-8');
-	
-	session_start();
-	
-	$successpage = "index.php";
-	if(!empty($_SESSION["userid"])) {
-		header("Location: $successpage");
-	} elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
-		if (!empty($_POST["username"]) && !empty($_POST["password"])) {
-			$dbh = db_connect();
-			
-			$sql  = "SELECT id, \"user\", hash, salt, name FROM users WHERE \"user\" = :username";
-			$sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-			
-			$sth->execute(array(":username" => $_POST["username"]));
-			$data = $sth->fetch(PDO::FETCH_ASSOC);
+        require_once "config.php";
+        require_once "functions.php";
+        
+        // I18N support information here
+        if (empty($locale))
+                $language = 'en';
+        if (isset($_GET['locale']) && !empty($_GET['locale']))
+                $language = $_GET['locale'];
+        
+        putenv("LANG=$language"); 
+        setlocale(LC_ALL, $language);
+        
+        // Set the text domain as 'login'
+        $domain = 'login';
+        bindtextdomain($domain, "locale"); 
+        textdomain($domain);
+        bind_textdomain_codeset($domain, 'UTF-8');
+        
+        session_start();
+        
+        $successpage = "index.php";
+        if(!empty($_SESSION["userid"])) {
+                header("Location: $successpage");
+        } elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
+                if (!empty($_POST["username"]) && !empty($_POST["password"])) {
+                        $dbh = db_connect();
+                        
+                        $sql  = "SELECT id, \"user\", hash, salt, name FROM users WHERE \"user\" = :username";
+                        $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                        
+                        $sth->execute(array(":username" => $_POST["username"]));
+                        $data = $sth->fetch(PDO::FETCH_ASSOC);
 
-			if ($data && hash("sha256", $_POST["password"] . $data["salt"]) == $data["hash"]) {
-				$_SESSION["userid"]   = $data["id"];
-				$_SESSION["username"] = $data[$data["name"] ? "name" : "user"];
-				
-				$_SESSION["salt"]        = hash("sha256", $_SERVER["REQUEST_TIME"]);
-				$_SESSION["fingerprint"] = session_create_fingerprint();
-				
-				if (array_key_exists("redirectto",$_GET)) {
-					header("Location: " . rawurldecode($_GET["redirectto"]));
-				} elseif (array_key_exists("backto",$_SESSION)) {
-					header("Location: " . $_SESSION["backto"]);
-				} elseif (array_key_exists("HTTP_REFERER",$_SERVER)) {
-					header("Location: " . rawurldecode($_SERVER["HTTP_REFERER"]));
-				} else {
-					header("Location: $successpage");
-				}
-			} else {
-				$error = _("Incorrect username or password");
-			}
-		} else {
-			$error = _("Form not completed");
-		}
-	}
-	
+                        if ($data && hash("sha256", $_POST["password"] . $data["salt"]) == $data["hash"]) {
+                                $_SESSION["userid"]   = $data["id"];
+                                $_SESSION["username"] = $data[$data["name"] ? "name" : "user"];
+                                
+                                $_SESSION["salt"]        = hash("sha256", $_SERVER["REQUEST_TIME"]);
+                                $_SESSION["fingerprint"] = session_create_fingerprint();
+                                
+                                if (array_key_exists("redirectto",$_GET)) {
+                                        header("Location: " . rawurldecode($_GET["redirectto"]));
+                                } elseif (array_key_exists("backto",$_SESSION)) {
+                                        header("Location: " . $_SESSION["backto"]);
+                                } elseif (array_key_exists("HTTP_REFERER",$_SERVER)) {
+                                        header("Location: " . rawurldecode($_SERVER["HTTP_REFERER"]));
+                                } else {
+                                        header("Location: $successpage");
+                                }
+                        } else {
+                                $error = _("Incorrect username or password");
+                        }
+                } else {
+                        $error = _("Form not completed");
+                }
+        }
+        
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $language ?>">
@@ -110,24 +110,24 @@
             <ul class="nav">
               <li class="active"><a href="login.php"><?php echo _('Login') ?></a></li>
             </ul>
-	    <ul class="nav pull-right">
-	      <li id="fat-menu" class="dropdown">
-		<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">
-		  <?php echo _('Language') ?>: <strong>
-		    <?php if ($language=="en") echo "English (UK)";
-			  if ($language=="de_DE") echo "Deutsch";
-			  if ($language=="fr_FR.utf8") echo "français";
-		    ?>
-		  </strong><b class="caret"></b></a>
-		<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
-		  <li><a tabindex="-1" href="login.php?locale=en">English</a></li>
-		  <li><a tabindex="-1" href="login.php?locale=de_DE">Deutsch</a></li>
-		  <li><a tabindex="-1" href="login.php?locale=fr_FR.utf8">françias</a></li>
-		  <li class="divider"></li>
-		  <li><a tabindex="-1" href="#"><?php echo _('Translate this application') ?></a></li>
-		</ul>
-	      </li>
-	    </ul>
+            <ul class="nav pull-right">
+              <li id="fat-menu" class="dropdown">
+                <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">
+                  <?php echo _('Language') ?>: <strong>
+                    <?php if ($language=="en") echo "English (UK)";
+                          if ($language=="de_DE") echo "Deutsch";
+                          if ($language=="fr_FR.utf8") echo "français";
+                    ?>
+                  </strong><b class="caret"></b></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+                  <li><a tabindex="-1" href="login.php?locale=en">English</a></li>
+                  <li><a tabindex="-1" href="login.php?locale=de_DE">Deutsch</a></li>
+                  <li><a tabindex="-1" href="login.php?locale=fr_FR.utf8">françias</a></li>
+                  <li class="divider"></li>
+                  <li><a tabindex="-1" href="#"><?php echo _('Translate this application') ?></a></li>
+                </ul>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -137,15 +137,15 @@
       <div class="modal-header" style="background-color: #850505; border-bottom-color: #600000; color: white;">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="bannerLabel" style="margin: 0;">
-	  <i class="icon-warning-sign icon-white" style="margin-top: 4px;">
-	  </i> Warning / Achtung / Avertissement</h3>
+          <i class="icon-warning-sign icon-white" style="margin-top: 7px;">
+          </i> <?php echo _('Warning'); ?> </h3>
       </div>
       <div class="modal-body" style="background-color: #800000; color: white;">
-        <h2 style="text-align: center"><i class="icon-lock icon-white" style="margin-top: 6px;"></i> 
+        <h2 style="text-align: center"><i class="icon-lock icon-white" style="margin-top: 10px;"></i> 
           <?php echo _('Private Computer System') ?> 
-	  <i class="icon-lock icon-white" style="margin-top: 6px;"></i></h2><br>
+          <i class="icon-lock icon-white" style="margin-top: 10px;"></i></h2><br>
         <p style="text-align: justify">
-	  This   computer  system  including  all  related  equipment,   network  devices
+          This   computer  system  including  all  related  equipment,   network  devices
           (specifically including Internet access), are provided only for authorized use.
           All computer systems  may be monitored  for all  lawful purposes,  including to
           ensure  that  their  use  is  authorized,  for management  of  the  system,  to 
@@ -159,40 +159,42 @@
           of  this  system.  Unauthorized  use may  subject you  to criminal prosecution.
           Evidence of any  such unauthorized  use collected during monitoring may be used
           for  administrative,  criminal  or other  adverse  action.</p>
-        <p><b>Use of this system constitutes consent to monitoring for these purposes.<br></b>
-        <i>Die Benutzung diesem System setzt ein Zustimmung zur Überwachung.</i><br>
-        L'utilisation de ce système constitue un consentement de ce contrôle.</p>
+        <p><b>
+          <?php echo _('Login Agreement'); /* Use of this system constitutes consent to monitoring for these purposes. */ ?>
+        <br></b></p>
+        <!-- <i>Die Benutzung diesem System setzt ein Zustimmung zur Überwachung.</i><br>
+        L'utilisation de ce système constitue un consentement de ce contrôle.</p> -->
         </div>
       <div class="modal-footer" style="background-color: #850505; color: white; border-top-color: #600000; box-shadow: 0 1px 0 #700000 inset;">
         <button class="btn" data-dismiss="modal" aria-hidden="true">
-	  <?php echo _('Continue'); ?> <i class="icon-arrow-right"></i>
-	</button>
+          <?php echo _('Continue'); ?> <i class="icon-arrow-right"></i>
+        </button>
       </div>
     </div>
     
     <div class="row-fluid">
       <div class="span4"></div>
         <div class="span4">
-	<?php echo $error ? "<div class=\"alert alert-error\">$error</div>": ""; ?>
+        <?php echo $error ? "<div class=\"alert alert-error\">$error</div>": ""; ?>
         <form class="form-horizontal" method="POST">
-	  <legend><strong><?php echo _('Login') ?></strong></legend>
+          <legend><strong><?php echo _('Login') ?></strong></legend>
           <div class="control-group">
             <label class="control-label" for="username"><?php echo _('Username') ?></label>
             <div class="controls">
               <input type="text" id="username" name="username"
-		     placeholder="<?php echo _('Username') ?>" autofocus>
+                     placeholder="<?php echo _('Username') ?>" autofocus>
             </div>
           </div>
           <div class="control-group">
             <label class="control-label" for="password"><?php echo _('Password') ?></label>
             <div class="controls">
               <input type="password" id="password" name="password"
-		     placeholder="<?php echo _('Password') ?>">
+                     placeholder="<?php echo _('Password') ?>">
             </div>
           </div>
           <div class="control-group">
             <div class="controls form-inline">
-	      <button type="submit" class="btn btn-primary"><?php echo _('Sign in') ?></button>
+              <button type="submit" class="btn btn-primary"><?php echo _('Sign in') ?></button>
               <!--<label class="checkbox pull-right">
                 <input type="checkbox"> Remember me
               </label>-->
@@ -207,5 +209,5 @@
       });
     </script>
 
-					
+                                        
 <?php require_once "template/footer.php" ; ?>

@@ -1,31 +1,24 @@
 <!DOCTYPE html>
-<!-- vim: tabstop=2:softtabstop=2 -->
+<!-- vim: tabstop=2:expandtab:softtabstop=2 -->
 <?php
-/* vim: tabstop=2:expandtab:softtabstop=2 */
-  /* TODO list
-    * Phone mask
-    * Proper error message for bad id
-    *
-    * Changes: Added a few info displays, removed explicit script reference
-    * Phone mask
-    * Proper error message for bad id
-  */
   
   //get input:
   if (is_numeric($id = $_GET["id"])) { 
     require_once 'config.php';
+    require_once 'functions.php';
     
     //internationalisation
     $domain = "details";
     require_once 'locale.php';
     
 
-    $connection = pg_connect ("host=$dbhost dbname=$dbname 
-                              user=$dbuser password=$dbpass");
+    /*$connection = pg_connect ("host=$dbhost dbname=$dbname 
+                              user=$dbuser password=$dbpass");*/
+    $dbh = db_connect();
 
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
       
-      $query = "UPDATE data SET " .
+      /*$query = "UPDATE data SET " .
                     "   name = '"              . $_POST["name"]         .
                     "', lastname = '"          . $_POST["lastname"]     .
                     "', phone = '"             . $_POST["phone"]        . 
@@ -40,24 +33,28 @@
                     "', \"parentEmail\" = '"   . $_POST["parent_email"] . 
                     "', notes = '"             . $_POST["notes"]        . 
                     "', \"lastModified\" = '"  . date("Y-m-d H:i:s.u", $_SERVER["REQUEST_TIME"]) . 
-                  "' WHERE id = $id;";
+                  "' WHERE id = $id;"; */
+      $sql = "UPDATE data SET name = :name, lastname = :lastname, phone = :phone, \"mobileCarrier\" = :mobilecarrier, grade = :grade, dob = :dob, activity = :activity, room = :room, medical = :medical, parent1 = :parent1, parent2 = :parent2, \"parentEmail\" = :parentemail, notes = :notes, \"lastModified\" = " . date("Y-m-d H:i:s.u", $_SERVER["REQUEST_TIME"]) . "WHERE id = :id;";
       
-      $result = pg_query($connection, $query) or 
-        die("Error in query: $query." . pg_last_error($connection));
-      pg_free_result($result);
+      $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+      $sth->execute(array(":name" => $_POST["name"], ":lastname" => $_POST["lastname"], ":phone" => $_POST["phone"], ":mobilecarrier" => isset($_POST["mobileCarrier"]) ? "1" : "0", ":grade" => $_POST["grade"], ":dob" => $_POST["dob"], ":activity" => is_numeric($_POST["activity"]) ? $_POST["activity"] : 0, ":room" => is_numeric($_POST["room"]) ? $_POST["room"] : 0, ":medical" => $_POST["medical"], ":parent1" => $_POST["parent1"], ":parent2" => $_POST["parent2"], ":parentemail" => $_POST["parent_email"], ":notes" => $_POST["notes"], ":id" => $id));
+      
+      //TODO check for error
       $modifysuccess = true;
     }
                               
     ///*
-    $query = "SELECT name, lastname, dob, activity, room, grade, phone, 
+    $sql = "SELECT name, lastname, dob, activity, room, grade, phone, 
                      \"mobileCarrier\", paging, parent1, parent2,
                      \"parentEmail\", medical, \"joinDate\", \"lastSeen\",
                      \"lastModified\", count, visitor, expiry, \"noParentTag\",
                      barcode, picture, notes
-                FROM data WHERE id = $id;";
-    $result = pg_query($connection, $query) or 
-      die("Error in query: $query." . pg_last_error($connection));
-    $edata = pg_fetch_assoc($result);
+                FROM data WHERE id = :id;";
+    /*$result = pg_query($connection, $query) or 
+      die("Error in query: $query." . pg_last_error($connection));*/
+    $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+    $sth->execute(array(":id" => $id));
+    $edata = $sth->fetch(PDO::FETCH_ASSOC);
     
     if (!$edata) {
       header("HTTP/1.1 400 Bad Request");
@@ -548,13 +545,9 @@ selecttab = function(tab) {
               <?php
                 echo (is_null($edata["activity"]) ? "<option disabled selected>" .
                   _("Activity") . "</option>\n" : "");
-                $query = "SELECT id, name FROM activities;";
-                $result = pg_query($connection, $query) or
-                    die("Error in query: $query." . pg_last_error($connection));
-                while ($data = pg_fetch_assoc($result)) {
-                  echo "<option value=\"{$data["id"]}\"" . ($data["id"] == $edata["activity"] ? " selected" : "") . ">{$data["name"]}</option>\n";
+                foreach ($dbh->query("SELECT id, name FROM activities;") as $row) {
+                  echo "<option value=\"{$row["id"]}\"" . ($row["id"] == $edata["activity"] ? " selected" : "") . ">{$row["name"]}</option>\n";
                 }
-                pg_free_result($result);
               ?>
             </select>
           </div>
@@ -565,13 +558,9 @@ selecttab = function(tab) {
             <select name="room" id="room">
               <?php
                 echo (is_null($edata["room"]) ? "<option disabled selected>Room</option>\n" : "");
-                $query = "SELECT id, name FROM rooms;";
-                $result = pg_query($connection, $query) or
-                  die("Error in query: $query." . pg_last_error($connection));
-                while ($data = pg_fetch_assoc($result)) {
-                  echo "<option value=\"{$data["id"]}\"" . ($data["id"] == $edata["room"] ? " selected" : "") . ">{$data["name"]}</option>\n";
+                foreach ($dbh->query("SELECT id, name FROM rooms;") as $row) {
+                  echo "<option value=\"{$row["id"]}\"" . ($row["id"] == $edata["room"] ? " selected" : "") . ">{$row["name"]}</option>\n";
                 }
-                pg_free_result($result);
               ?>
             </select>
           </div>
@@ -631,6 +620,5 @@ selecttab = function(tab) {
 <script src="resources/js/canvas_toblob.js"> </script>
 <script src="resources/js/jquery.getparams.js"> </script>
 <?php
-  require_once "template/footer.php" ;
-  pg_close($connection);
+  require_once "template/footer.php";
 ?>

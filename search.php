@@ -45,40 +45,36 @@
                 echo '';
               } else {
                 // do query
+                require_once "functions.php";
                 require_once 'config.php';
-                $connection = pg_connect ("host=$dbhost dbname=$dbname 
-                                          user=$dbuser password=$dbpass");
+                $dbh = db_connect();
+                
+                $inp = trim($inp);
                 //Perform a query:
                 if ($inp == '*') {
-                  $query = "SELECT DISTINCT data.id, data.name, lastname, 
+                  $sql = "SELECT DISTINCT data.id, data.name, lastname, 
                             activities.name, rooms.name, paging
                             FROM \"data\" 
                             LEFT JOIN activities ON data.activity=activities.id
                             LEFT JOIN rooms ON data.room = rooms.id
                             ORDER BY lastname;";
                 } else {
-                  $query = "SELECT DISTINCT data.id, data.name, lastname, 
+                  $sql = "SELECT DISTINCT data.id, data.name, lastname, 
                               activities.name, rooms.name, paging
                               FROM \"data\" 
                               LEFT JOIN activities ON data.activity=activities.id
                               LEFT JOIN rooms ON data.room = rooms.id WHERE
-                                data.name || ' ' || lastname ILIKE '%$inp%'
-                                OR parent1 ILIKE '%$inp%'
-                                OR parent2 ILIKE '%$inp%'
-                                OR phone LIKE '%$inp'
+                                data.name || ' ' || lastname ILIKE :inp
+                                OR parent1 ILIKE :inp
+                                OR parent2 ILIKE :inp
+                                OR phone LIKE :inp
                                 ORDER BY lastname;";
                 }
                 
-                $result = pg_query($connection, $query) or 
-                  die("Error in query: $query." . pg_last_error($connection));
-                  
-                $roomsql = "SELECT id, name FROM rooms;";
-                $rooms = pg_query($connection, $roomsql)
-                    or die("Error in query: $query." . pg_last_error($connection));
-
-
+                $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                $sth->execute(array(":inp" => "%".$inp."%"));
                                 
-                if (pg_num_rows($result) == 0) {
+                if ($sth->rowCount() == 0) {
                   echo '<div class="alert alert-error">';
                   echo '<a class="close" data-dismiss="alert" href="#">×</a>';
                   echo "<h4 class=\"alert-heading\">" . 
@@ -106,8 +102,7 @@
                           <tbody>';
                   // iterate over result set
                   // print each row
-                  while ($row = pg_fetch_array($result)) {
-                    
+                  foreach ($sth as $row) {
                     echo '<tr>
                           <td style="width:30px"><input type="checkbox" name="foo"></td>';
                     echo '<td><a href="details.php?id='.$row[0].'&query='.$inp.'">' . $row[1] . ' ' . $row[2] .'</a></td>';

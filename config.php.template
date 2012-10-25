@@ -1,12 +1,11 @@
 <?php
 
-$dbhost ='localhost';
-$dbuser = 'taxidi';
-$dbpass = 'secret';
-$dbname = 'taxidi';
+$dbdsn = "pgsql:host=localhost;dbname=<db name>;user=<db user>;password=<db password>";
 
 // Path to photo database with trailing slash
 $photo_path = '/home/taxidi/taxidi_photos/'; 
 $photo_maxsize = 1 * 1024 * 1024; // bytes
+
+$theme = "default";
 
 ?>

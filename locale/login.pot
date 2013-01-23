@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-08 15:19-0500\n"
+"POT-Creation-Date: 2012-10-22 22:24-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,38 +17,50 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: login.php:143
+#: login.php:170
 msgid "Continue"
 msgstr ""
 
-#: login.php:34 login.php:37
+#: login.php:61
+msgid "Form not completed"
+msgstr ""
+
+#: login.php:58
 msgid "Incorrect username or password"
 msgstr ""
 
-#: login.php:96
+#: login.php:116
 msgid "Language"
 msgstr ""
 
-#: login.php:51 login.php:91 login.php:153
+#: login.php:71 login.php:111 login.php:180
 msgid "Login"
 msgstr ""
 
-#: login.php:162 login.php:165
+#: login.php:163
+msgid "Login Agreement"
+msgstr ""
+
+#: login.php:189 login.php:192
 msgid "Password"
 msgstr ""
 
-#: login.php:120
+#: login.php:145
 msgid "Private Computer System"
 msgstr ""
 
-#: login.php:170
+#: login.php:197
 msgid "Sign in"
 msgstr ""
 
-#: login.php:102
+#: login.php:127
 msgid "Translate this application"
 msgstr ""
 
-#: login.php:155 login.php:158
+#: login.php:182 login.php:185
 msgid "Username"
+msgstr ""
+
+#: login.php:141
+msgid "Warning"
 msgstr ""

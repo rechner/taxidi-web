@@ -10,7 +10,7 @@
         
         // I18N support information here
         if (empty($locale))
-                $language = 'en';
+                $language = 'en_GB.utf8';
         if (isset($_GET['locale']) && !empty($_GET['locale']))
                 $language = $_GET['locale'];
         

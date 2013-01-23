@@ -127,13 +127,13 @@
           <label class="control-label" for="grade"><?php echo _("Grade"); ?></label>
           <div class="controls">
             <div style="width: 220px; float: left; margin-right: 4px;">
-              <input type="text" class="input-small" name="grade" id="grade"
+              <input type="number" class="input-small" name="grade" id="grade"
                 placeholder="<?php echo _("Grade"); ?>" value="<?php echo $edata["grade"]; ?>">
               <label for="dob" style="float: right; padding-top: 5px; margin-right: 16px;">
                 <?php echo _("Birthdate"); ?></label>
             </div>
             <div>
-              <input type="text" class="input-small" name="dob" id="dob"
+              <input type="number" class="input-small" name="dob" id="dob"
                 placeholder=<?php echo _("YYYY-MM-DD"); ?> 
                 value="<?php echo $edata["dob"]; ?>"> <?php echo $agestr ?>
             </div>
@@ -237,6 +237,7 @@
   </div>
 </div>
 
+<script src="resources/js/dFilter.js"></script>
 
 <?php
   require_once "template/footer.php" ;

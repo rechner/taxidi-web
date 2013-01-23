@@ -1,0 +1,137 @@
+# German translations for PACKAGE package
+# German messages for PACKAGE.
+# Copyright (C) 2012 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Zac Sturgeon <redxine@server>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-10-09 17:45-0500\n"
+"PO-Revision-Date: 2012-10-09 17:45-0500\n"
+"Last-Translator: Zac Sturgeon <redxine@server>\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: search.php:19 advsearch.php:30
+msgid "Actions"
+msgstr ""
+
+#: search.php:101 advsearch.php:167
+msgid "Activity"
+msgstr ""
+
+#: search.php:15 advsearch.php:26
+msgid "Advanced"
+msgstr ""
+
+#: advsearch.php:10
+msgid "Advanced Search"
+msgstr ""
+
+#: advsearch.php:72
+msgid "Any Activity"
+msgstr ""
+
+#: advsearch.php:53
+msgid "Any Room"
+msgstr ""
+
+#: search.php:23 advsearch.php:34
+msgid "Download Results"
+msgstr ""
+
+#: advsearch.php:58 advsearch.php:77 advsearch.php:147
+msgid "Error in query"
+msgstr ""
+
+#: advsearch.php:109
+msgid "Invert query"
+msgstr ""
+
+#: search.php:100 advsearch.php:46 advsearch.php:166
+msgid "Name"
+msgstr ""
+
+#: advsearch.php:44
+msgid "Name contains"
+msgstr ""
+
+#: advsearch.php:152
+msgid "No results"
+msgstr ""
+
+#: search.php:85
+#, php-format
+msgid "No results for &ldquo;%s&rdquo;"
+msgstr ""
+
+#: search.php:103 advsearch.php:169
+msgid "Paging"
+msgstr ""
+
+#: advsearch.php:33
+msgid "Print Results"
+msgstr ""
+
+#: search.php:22
+msgid "Print Search"
+msgstr ""
+
+#: search.php:20 advsearch.php:31
+msgid "Register"
+msgstr ""
+
+#: search.php:21 advsearch.php:32
+msgid "Register Visitor"
+msgstr ""
+
+#: advsearch.php:116
+msgid "Reset"
+msgstr ""
+
+#: search.php:102 advsearch.php:168
+msgid "Room"
+msgstr ""
+
+#: search.php:16 advsearch.php:27
+msgid "Saved Searches"
+msgstr ""
+
+#: search.php:13 search.php:14 search.php:33 search.php:34 advsearch.php:24
+#: advsearch.php:25 advsearch.php:115
+msgid "Search"
+msgstr ""
+
+#: advsearch.php:90 advsearch.php:97 advsearch.php:104
+msgid "after"
+msgstr ""
+
+#: advsearch.php:69
+msgid "and activity is"
+msgstr ""
+
+#: advsearch.php:91 advsearch.php:98 advsearch.php:105
+msgid "and before"
+msgstr ""
+
+#: advsearch.php:95
+msgid "and joined"
+msgstr ""
+
+#: advsearch.php:102
+msgid "and last seen"
+msgstr ""
+
+#: advsearch.php:50
+msgid "and room is"
+msgstr ""
+
+#: advsearch.php:88
+msgid "and was born"
+msgstr ""

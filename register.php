@@ -100,10 +100,15 @@
         <div class="control-group">
           <label class="control-label" for="name"><?php echo _("Name"); ?></label>
           <div class="controls">
-            <input type="text" class="input" name="name" id="name" 
-                placeholder="<?php echo _("Name"); ?>" value="<?php echo $edata["name"]; ?>">
-            <input type="text" class="input" name="lastname" id="lastname"
-                placeholder="<?php echo _("Lastname"); ?>" value="<?php echo $edata["lastname"]; ?>">
+            <div class="container-fluid" style="padding: 0;">
+              <div class="row-fluid">
+                <input type="text" class="input span5" name="name" id="name" 
+                    placeholder="<?php echo _("Name"); ?>" value="<?php echo $edata["name"]; ?>">
+                <div style="display: inline-block;"> </div>
+                <input type="text" class="input span5" name="lastname" id="lastname"
+                    placeholder="<?php echo _("Lastname"); ?>" value="<?php echo $edata["lastname"]; ?>">
+              </div>
+            </div>
           </div>
         </div>
         <div class="control-group form-inline">
@@ -214,9 +219,13 @@
         <div class="control-group form-inline">
           <label class="control-label" for="notes"><?php echo _("Notes"); ?></label>
           <div class="controls">
-            <textarea name="notes" id="notes" 
-              placeholder="<?php echo _("Notes"); ?>" style="width: 434px;">
-              <?php echo $edata["notes"]; ?></textarea>
+            <div class="container-fluid" style="padding: 0;">
+              <div class="row-fluid">
+                <textarea name="notes" id="notes" class="span12"
+                  placeholder="<?php echo _("Notes"); ?>">
+                  <?php echo $edata["notes"]; ?></textarea>
+              </div>
+            <div>
           </div>
         </div>
         <div class="form-actions">

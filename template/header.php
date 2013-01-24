@@ -24,6 +24,15 @@
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
+      
+      /* <!-- hide spin buttons in webkit browsers --> */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        /* display: none; <!-- Crashes Chrome on hover -->*/
+        -webkit-appearance: none;
+        margin: 0; /* <!-- Apparently some margin are still 
+        there even though it's hidden --> */
+      }
     </style>
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -80,7 +89,7 @@
     </div>
 
     <!-- sidebar -->
-    <div class="container">
+    <div>
       <div class="container-fluid">
         <div class="row-fluid">
 

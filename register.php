@@ -95,12 +95,18 @@
       }
     ?>
        
-    <form class="form-horizontal" method="post" name="details">
+    <input type="file" accept="image/*" id="photoinput" name="photoinput" style="height: 0px; width: 0px;">
+    <form enctype="multipart/form-data" class="form-horizontal" action="" method="post" name="details">
       <fieldset>
         <div class="control-group">
           <label class="control-label" for="photo">Photo</label>
           <div class="controls">
-            <input type="file" accept="image/*" id="photoinput" name="photoinput">
+            <div style="display: table; width: 100%; height: 100%;" class="input-append">
+              <input type="text" readonly="" onclick="document.getElementById('photoinput').click();" class="input-xlarge" id="fakefileinput" style="cursor: pointer; cursor: hand;">
+              <a onclick="document.getElementById('photoinput').click();" style="margin-left: -4px; border-radius: 0 3px 3px 0; cursor: pointer; cursor: hand;" class="btn">Browse</a>
+              <div style="display: table-cell; vertical-align: middle; text-align: right;">
+                Drop file here.        </div>
+            </div>
             <div>
               <div id="fileselecterror" class="alert alert-error" style="display: none;">
                 <?php echo _('Error: File type not supported.') ?>
@@ -113,8 +119,6 @@
               <div class="thumbnail" style="width: 100px; margin: 10px">
                 <img id="photopreview" style="width: 100px;" src="photo.php<?php echo "?id=" . $edata["picture"] ?>">
               </div>
-              <img id="tarimg"></canvas>  
-              <a id="uploadphoto" class="btn btn-primary"><?php echo _('Upload Photo') ?></a>
             </div>
           </div>
         </div>
@@ -305,65 +309,26 @@
 <script src="resources/js/jquery.getparams.js"> </script>
 
 <script type="text/javascript">
-//TODO move this entire script block to head, after template insertion.
 $(function(){
+  var cropper = null; // jcropper instance
   
-  var tempphoto = null;   // photo user has selected
-  var photoupload = null; // photo upload xhr request
-  var uploadphoto = {
-    cropper : null,
-    "showerror" : function (errmsg) {
-      $("#photoinput").val("");
-      $("#fileselecterror").html(errmsg).show();
-    }, 
-    "hideerror" : function () {
-      $("#fileselecterror").hide();
-    },
-    "setprogress" : function(percent) {
-      $("#photoupload_progressbar").css("width", Math.round(percent) + "%");
-    },
-    "setstate" : function(state) {
-      //TODO switch all of this to actual css classes
-      $("body").css("cursor", "default");
-      $("#photodndbox").css("background-color", "#F5F5F5");
-      $("#photodndbox > div.progress").hide();
-      $("#drophere").hide();
-      switch (state) {
-        case 0: // browse for file
-          $("#photodndbox > div.input-append").show();
-          break;
-        case 1: // drag and drop hover
-          $("#photodndbox").css("background-color", "#5F5F5F");
-          $("#photodndbox > div.input-append").hide();
-          $("#drophere").show();
-          break;
-        case 2: // progress bar
-          uploadphoto.setprogress(0);
-          $("body").css("cursor", "progress");
-          $("#photodndbox > div.input-append").hide();
-          $("#photodndbox > div.progress").show();
-          break;
-      }
-    }, 
-    "getcroppedphoto" : function(callback) {
-      var canvas = $("<canvas>")[0];
-      var selection = uploadphoto.cropper.tellSelect();
-      var x = Math.floor(selection.x);
-      var y = Math.floor(selection.y);
-      var s = Math.floor(selection.w);
-      if (s == 0) { //extra safety
-        var ns = uploadphoto.selectcenter();
-        x = ns[0];
-        y = ns[1];
-        s = ns[2];
-      }
-      canvas.width = s;
-      canvas.height = s;
-      canvas.getContext("2d").drawImage($("#photopreview")[0], x, y, s, s, 0, 0, s, s);
-      canvas.toBlob(callback);
-    },
-    "selectcenter" : function() {
-      var bounds = uploadphoto.cropper.getBounds(); // [width, height]
+  var selectcenter = function() {
+    var bounds = cropper.getBounds(); // [width, height]
+    var w = Math.floor(bounds[0]);
+    var h = Math.floor(bounds[1]);
+    if (w < h) { //tall image
+      var o = Math.floor((h - w) / 2);
+      return [0, o, w, o + w];
+    } else if (h < w) { // wide image
+      var o = Math.floor((w - h) / 2);
+      return [o, 0, o + h, h];
+    } else {
+      return [0, 0, w, w];
+    }
+  }
+  
+  var selectcenter = function() {
+      var bounds = cropper.getBounds(); // [width, height]
       var w = Math.floor(bounds[0]);
       var h = Math.floor(bounds[1]);
       if (w < h) { //tall image
@@ -376,125 +341,67 @@ $(function(){
         return [0, 0, w, w];
       }
     }
-  };
-
-  var noop = function(e) {
-      e.stopPropagation();
-      e.preventDefault();
+  
+  var getcroppedphoto = function(callback) {
+    var canvas = $("<canvas>")[0];
+    var selection = cropper.tellSelect();
+    var x = Math.floor(selection.x);
+    var y = Math.floor(selection.y);
+    var s = Math.floor(selection.w);
+    if (s == 0) { //extra safety
+      var ns = selectcenter();
+      x = ns[0];
+      y = ns[1];
+      s = ns[2];
+    }
+    canvas.width = 480;
+    canvas.height = 480;
+    canvas.getContext("2d").drawImage($("#photopreview")[0], x, y, s, s, 0, 0, 480, 480);
+    canvas.toBlob(callback);
   }
-  $("#photoinput").on("change", function() {
-    previewphoto(this.files[0]);
-  });
-
-  var previewphoto = function(file) {
-    tempphoto = file;
-    uploadphoto.hideerror();
-    document.getElementById("photoinput").value = file.name;
-    var fileurl = window.URL.createObjectURL(file);
-    $("#photopreview")[0].src = fileurl;
-    uploadphoto.cropper.setImage(fileurl, function() {
-      this.setSelect(uploadphoto.selectcenter());
-    });
-  }
-  
-  document.getElementById("uploadphoto").onclick = function() {
-    uploadphoto.setstate(2);
-    uploadphoto.getcroppedphoto(function(file) {
-      if (file.size < <?php echo $photo_maxsize; ?>) {
-        var fd = new FormData();
-        //fd.append("id", /[\\?&]id=([^&#]*)/.exec(window.location.search)[1].replace(/\+/g, " "));
-        fd.append("photo", file);
-  
-        photoupload = new XMLHttpRequest();
-        photoupload.upload.addEventListener("progress", function(evt) {
-          if (evt.lengthComputable) {
-            uploadphoto.setprogress(evt.loaded * 100 / evt.total)
-          } else {
-            uploadphoto.setprogress(0);
-          }
-        }, false);
-        photoupload.addEventListener("load",  function() { //TODO
-          //TODO redo this entire method
-          uploadphoto.setstate(0);
-          tempphoto = null;
-          var response = JSON.parse(this.responseText);
-          if (response.success) {
-            $("#photomain").attr("src", "photo.php?id=" + response.newphotoid);
-            var date1 = response.modified.split(".")[0].split(" ");
-            var date2 = new Date(date1[0]);
-            $("#lastmodified").text("<?php echo _("Modified") .": "; ?>" + date2.getUTCDate() + " " + (new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[date2.getUTCMonth()]) + " " + date2.getUTCFullYear() + " " + date1[1]);
-            $('#photouploadModal').modal("hide");
-          } else {
-            //TODO server side error!
-            //$("#fileselecterror").text("ERROR TODO!!!");
-            //$("#fileselecterror").css("display", "block");
-          }
-        }, false);
-        photoupload.addEventListener("error", function() {
-          uploadphoto.setstate(0);
-          uploadphoto.showerror("Error uploading file."); //TODO switch to language array
-        }, false);
-        photoupload.addEventListener("abort", function() {
-          uploadphoto.setstate(0);
-          uploadphoto.showerror("Error: upload aborted."); //TODO switch to language array
-        }, false);
-        photoupload.open("POST", "photoupload.php");
-        photoupload.send(fd);
-      } else {
-        uploadphoto.showerror("Error: file too large."); //TODO switch to language array
-        uploadphoto.setstate(0);
-      }
-    });
-  };
-  
-  $("#photouploadModal").on({
-    "hide" : function() {
-      try {
-        photoupload.abort();
-        photoupload = null;
-      } catch (err) {}
-    }, 
-    "hidden" : function() {
-      uploadphoto.hideerror();
-      $("#photoinput").val("");
-      uploadphoto.cropper.setImage($("#photomain").attr("src"));
-      uploadphoto.setstate(0);
-      tempphoto = null;
-    },
-  });
   
   $('#photopreview').Jcrop({
     "aspectRatio" : 1,
     "boxWidth"    : 250,
     "boxWidth"    : 250,
     "onRelease"   : function() {
-      this.setSelect(uploadphoto.selectcenter());
+      this.setSelect(selectcenter());
     },
   }, function() {
-    uploadphoto.cropper = this;
-    this.setSelect(uploadphoto.selectcenter());
+    cropper = this;
+    this.setSelect(selectcenter());
+  });
+
+  $("#photoinput").on("change", function() {
+    var filereader = new FileReader();
+    filereader.onload = function(e) {
+      $("#photopreview")[0].src = e.target.result;
+      cropper.setImage(e.target.result, function() {
+        this.setSelect(selectcenter());
+      });
+    }
+    $("#fakefileinput").val(this.files[0].name);
+    filereader.readAsDataURL(this.files[0]);
   });
   
-  $("#cancelbutton").click(function() {
-    window.location.href = "search.php?search=" + encodeURIComponent($.getparam("query"));
+  //append resized image blob to formdata before submitting
+  //https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest/FormData/Using_FormData_Objects
+  $("form[name=details]").submit(function(e) {
+    var fd = new FormData(document.forms.namedItem("details"));
+    getcroppedphoto(function(file) {
+      fd.append("photo", file);
+      $.ajax({
+        url: $("form[name=details]").attr("action"),
+        type: "POST",
+        data: fd,
+        processData: false,
+        contentType: false 
+      });
+    });
+    e.preventDefault();
+    return false;
   });
 });
-
-//TODO, this function is dumb, fix it
-selecttab = function(tab) {
-  var tabs = ["main", "extended"];
-  for (var t in tabs) {
-    var ct = tabs[t];
-    if (ct == tab) {
-      document.getElementById("tabselect_" + ct).setAttribute("class", "active");
-      document.getElementById("tabpane_" + ct).style.display = "block";
-    } else {
-      document.getElementById("tabselect_" + ct).setAttribute("class", "");
-      document.getElementById("tabpane_" + ct).style.display = "none";
-    }
-  }
-  document.getElementById("tabinput").value = tab;
-}
 </script>
 
 <?php

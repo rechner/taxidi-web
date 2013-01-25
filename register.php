@@ -1,6 +1,19 @@
 <?php
   /* vim: tabstop=2:expandtab:softtabstop=2 */
   require_once 'config.php';
+  
+  function resize_image($file, $w, $h, $crop=FALSE) {
+    // @param file, width, height, crop
+    // Resize an image using Imagick
+    $img = new Imagick($file);
+    if ($crop) {
+        $img->cropThumbnailImage($w, $h);
+    } else {
+        $img->thumbnailImage($w, $h, TRUE);
+    }
+
+    return $img;
+  }
 
   $connection = pg_connect ("host=$dbhost dbname=$dbname 
                               user=$dbuser password=$dbpass");
@@ -18,11 +31,58 @@
     $prefix = pg_fetch_result($result, 0, 0);
     $paging = $prefix . "-" . substr($_POST["phone"], -4);
     
+    $photo_ref = "";
+    if (array_key_exists("photo", $_FILES)) {
+      if ($_FILES["photo"]["type"] == "image/png" or 
+        $_FILES["photo"]["type"] == "image/jpeg") {
+        if ($_FILES["photo"]["size"] < $photo_maxsize) {
+          // resize and save photo+thumbnail
+          
+          /* python analogue of this bit checks the file system for the
+           * next image in the sequence, not the database */
+          $result = pg_query($connection, "SELECT max(picture) FROM data;") or 
+            die("Error in query: $query." . pg_last_error($connection));
+          $rdata = pg_fetch_assoc($result);
+          pg_free_result($result);
+          $nextImage = intval($rdata["max"]) + 1;
+          
+          $parts = explode("/", $_FILES["photo"]["type"]);
+          $target_path = $photo_path . str_pad($nextImage, 6, "0", 0) . 
+                         "." . $parts[1];
+          $target_thumb = $photo_path . "/thumbs/" . 
+                          str_pad($nextImage, 6, "0", 0) . "." . $parts[1];
+          $photo_ref = str_pad($nextImage, 6, "0", 0);
+          //resize to 480x480
+          $tmp = resize_image($_FILES["photo"]['tmp_name'], 480, 480);
+          if ($tmp->writeImage($target_path)) {
+            //resize to 128x128
+            $thumb = resize_image($_FILES["photo"]['tmp_name'], 128, 128);
+            if ($thumb->writeImage($target_thumb)) {
+              unlink($_FILES["photo"]['tmp_name']);
+              $photoSuccess = TRUE;
+            } else {
+              $photoSuccess = FALSE;
+              $reason = "Unable to save thumbnail";
+            } 
+          } else {
+            $photoSuccess = FALSE;
+            $reason = "Unable to resize image";
+          }
+        } else {
+          $photoSuccess = FALSE;
+          $reason = "Image too large";
+        }
+      } else {
+        $photoSuccess = FALSE;
+        $reason = "Unsupported image type";
+      }
+    } else { $photoSuccess = TRUE; }
+			
     $query = "INSERT INTO data " .
                 "(name, lastname, phone, \"mobileCarrier\", paging, grade, " .
                 "dob, activity, room, medical, parent1, parent2, "   .
                 "\"parentEmail\", notes, visitor, \"joinDate\", "    .
-                "\"lastSeen\", \"lastModified\", count) " .                  
+                "\"lastSeen\", \"lastModified\", count, picture) " . 
               " VALUES (" .
                 "'"    . $_POST["name"]         .
                 "', '" . $_POST["lastname"]     .
@@ -42,7 +102,7 @@
                 "', '" . date("Y-m-d", $_SERVER["REQUEST_TIME"]) .
                 "', '" . date("Y-m-d", $_SERVER["REQUEST_TIME"]) .
                 "', '" . date("Y-m-d H:i:s.u", $_SERVER["REQUEST_TIME"]) . 
-              "', '0');";
+              "', '0', '" . $photo_ref . "');";
           
     $result = pg_query($connection, $query) or 
       die("Error in query: $query." . pg_last_error($connection));
@@ -95,8 +155,8 @@
       }
     ?>
        
-    <input type="file" accept="image/*" id="photoinput" name="photoinput" style="height: 0px; width: 0px;">
     <form enctype="multipart/form-data" class="form-horizontal" action="" method="post" name="details">
+      <input type="file" accept="image/*" id="photoinput" name="photo" style="height: 0px; width: 0px;">
       <fieldset>
         <div class="control-group">
           <label class="control-label" for="photo">Photo</label>
@@ -137,11 +197,13 @@
             </div>
           </div>
         </div>
-        <div class="control-group form-inline">
+       <div class="control-group form-inline">
           <label class="control-label" for="phone"><?php echo _("Phone"); ?></label>
           <div class="controls">
             <input type="tel" class="input-medium" name="phone" id="phone" required
                 onKeyDown="javascript:return dFilter (event.keyCode, this, '<?php echo _("(###) ###-####"); ?>');"
+                pattern="^\([2-9]\d\d\)\ [2-9]\d\d-\d\d\d\d$"
+                data-validation-pattern-message="Must be a valid North-American telephone number."
                 placeholder="<?php echo _("Phone"); ?>" value="<?php echo $edata["phone"]; ?>">
             <label class="checkbox">
               <input type="checkbox" name="mobileCarrier" 
@@ -269,7 +331,10 @@
 </div>
 
 <script src="resources/js/dFilter.js"></script>
-<script src="resources/js/jqBootstrapValidation.js"></script>
+<script src="bootstrap/js/jqBootstrapValidation.js"></script>
+  <script>
+      $(function () { $("input,select,textarea,checkbox").not("[type=submit]").jqBootstrapValidation(); } );
+  </script>
 <script>
   
   function showAge(ind) {

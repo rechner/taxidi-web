@@ -102,10 +102,11 @@
                 "', '" . date("Y-m-d", $_SERVER["REQUEST_TIME"]) .
                 "', '" . date("Y-m-d", $_SERVER["REQUEST_TIME"]) .
                 "', '" . date("Y-m-d H:i:s.u", $_SERVER["REQUEST_TIME"]) . 
-              "', '0', '" . $photo_ref . "');";
+              "', '0', '" . $photo_ref . "') RETURNING id;";
           
     $result = pg_query($connection, $query) or 
       die("Error in query: $query." . pg_last_error($connection));
+    $id = pg_fetch_result($result, 0, 0);
     pg_free_result($result);
     
     $register = TRUE;
@@ -149,7 +150,7 @@
         echo "<div class=\"alert alert-success\">" .
           "<a class=\"close\" data-dismiss=\"alert\" href=\"#\">×</a>" .
           "<h4 class=\"alert-heading\">" . _("Registration Complete") . "</h4>" .
-          sprintf(_("Successfully registered %s."),
+          sprintf(_("Successfully registered <a href=\"details.php?id=" . $id . "\" >%s.</a>"),
             $_POST["name"] . " " . $_POST["lastname"]) .
           "</div>";
       }

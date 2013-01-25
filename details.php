@@ -257,21 +257,25 @@ $(function(){
       }
     }, 
     "getcroppedphoto" : function(callback) {
-      var canvas = $("<canvas>")[0];
-      var selection = uploadphoto.cropper.tellSelect();
-      var x = Math.floor(selection.x);
-      var y = Math.floor(selection.y);
-      var s = Math.floor(selection.w);
-      if (s == 0) { //extra safety
-        var ns = uploadphoto.selectcenter();
-        x = ns[0];
-        y = ns[1];
-        s = ns[2];
+      try {
+        var canvas = $("<canvas>")[0];
+        var selection = uploadphoto.cropper.tellSelect();
+        var x = Math.floor(selection.x);
+        var y = Math.floor(selection.y);
+        var s = Math.floor(selection.w);
+        if (s == 0) { //extra safety
+          var ns = uploadphoto.selectcenter();
+          x = ns[0];
+          y = ns[1];
+          s = ns[2];
+        }
+        canvas.width = s;
+        canvas.height = s;
+        canvas.getContext("2d").drawImage($("#photopreview")[0], x, y, s, s, 0, 0, s, s);
+        canvas.toBlob(callback);
+      } catch (e) {
+        callback(tempphoto);
       }
-      canvas.width = s;
-      canvas.height = s;
-      canvas.getContext("2d").drawImage($("#photopreview")[0], x, y, s, s, 0, 0, s, s);
-      canvas.toBlob(callback);
     },
     "selectcenter" : function() {
       var bounds = uploadphoto.cropper.getBounds(); // [width, height]
@@ -394,17 +398,19 @@ $(function(){
     },
   });
   
-  $('#photopreview').Jcrop({
-    "aspectRatio" : 1,
-    "boxWidth"    : 250,
-    "boxWidth"    : 250,
-    "onRelease"   : function() {
+  try {
+    $('#photopreview').Jcrop({
+      "aspectRatio" : 1,
+      "boxWidth"    : 250,
+      "boxWidth"    : 250,
+      "onRelease"   : function() {
+        this.setSelect(uploadphoto.selectcenter());
+      },
+    }, function() {
+      uploadphoto.cropper = this;
       this.setSelect(uploadphoto.selectcenter());
-    },
-  }, function() {
-    uploadphoto.cropper = this;
-    this.setSelect(uploadphoto.selectcenter());
-  });
+    });
+  } catch(e) { }
   
   $("#cancelbutton").click(function() {
     window.location.href = "search.php?search=" + encodeURIComponent($.getparam("query"));

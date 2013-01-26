@@ -855,15 +855,18 @@
     margin-left: 0;
   }
   .modal {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    left: 20px;
-    width: auto;
-    margin: 0;
+    position: fixed; 
+    top: 3%; 
+    right: 3%; 
+    left: 3%; 
+    width: auto; 
+    margin: 0; 
   }
   .modal.fade.in {
     top: auto;
+  }
+  .modal-body { 
+    height: 60%; 
   }
 }
 
@@ -896,9 +899,18 @@
     padding-left: 10px;
   }
   .modal {
-    top: 10px;
-    right: 10px;
-    left: 10px;
+    position: fixed; 
+    top: 3%; 
+    right: 3%; 
+    left: 3%; 
+    width: auto; 
+    margin: 0; 
+  }
+  .modal.fade.in {
+    top: auto;
+  }
+  .modal-body { 
+    height: 60%; 
   }
   .modal-header .close {
     padding: 10px;

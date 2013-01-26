@@ -18,6 +18,12 @@
       $result = pg_query($connection, $query) or
         die("Error in query: $query." . pg_last_error($connection));
         
+      //delete photos
+      $files = glob($photo_path . str_pad($edata["picture"], 6, "0", 0) . "*");
+      unlink($files[0]);
+      $files = glob($photo_path . "/thumbs/" . str_pad($edata["picture"], 6, "0", 0) . "*");
+      unlink($files[0]);
+        
       $host  = $_SERVER['HTTP_HOST'];
       $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
       if (array_key_exists('query', $_GET)) {

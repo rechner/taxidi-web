@@ -6,6 +6,9 @@
   $page_title = "Profile Settings";
   require_once "template/header.php";
   
+  require_once "config.php";
+  require_once "functions.php";
+  
   /**
    * This function generates a password salt as a string of x (default = 15) characters
    * in the a-zA-Z0-9!@#$%&*? range.
@@ -47,6 +50,7 @@
           <div class="span9">
             <?php
               if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                $dbh = db_connect();
     
                 // from login.php:33
                 $sql  = "SELECT id, \"user\", hash, salt, name FROM users WHERE \"user\" = :username";

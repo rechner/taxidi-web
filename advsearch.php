@@ -28,7 +28,7 @@
               </ul>
               <ul class="nav nav-list">
                 <li class="nav-header"><?php echo _("Actions") ?></li>
-                <li><a href="#"><i class="icon-plus-sign"></i><?php echo _("Register") ?></a></li>
+                <li><a href="register.php"><i class="icon-plus-sign"></i><?php echo _("Register") ?></a></li>
                 <li><a href="#"><i class="icon-user"></i><?php echo _("Register Visitor") ?></a></li>
                 <li><a href="#"><i class="icon-print"></i><?php echo _("Print Results") ?></a></li>
                 <li><a href="#"><i class="icon-download-alt"></i><?php echo _("Download Results") ?></a></li>

@@ -115,7 +115,8 @@
               <li id="fat-menu" class="dropdown">
                 <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">
                   <?php echo _('Language') ?>: <strong>
-                    <?php if ($language=="en") echo "English (UK)";
+                    <?php $lang = substr($language, 0, 2);
+						  if ($lang=="en") echo "English (UK)";
                           if ($language=="de_DE") echo "Deutsch";
                           if ($language=="fr_FR.utf8") echo "français";
                     ?>

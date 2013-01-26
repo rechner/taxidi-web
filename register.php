@@ -267,15 +267,11 @@
           <div class="controls">
             <select name="room" id="room">
               <?php
-                echo (is_null($edata["room"]) ? "<option disabled selected>" .
-                    _("Room") . "</option>\n" : "");
                 $query = "SELECT id, name FROM rooms;";
                 $result = pg_query($connection, $query) or
                   die("Error in query: $query." . pg_last_error($connection));
                 while ($data = pg_fetch_assoc($result)) {
-                  echo "<option value=\"{$data["id"]}\"" . 
-                    ($data["id"] == $edata["room"] ? " selected" : "") .
-                    ">{$data["name"]}</option>\n";
+                  echo "<option value=\"{$data["id"]}\">{$data["name"]}</option>\n";
                 }
                 pg_free_result($result);
               ?>
@@ -286,35 +282,27 @@
           <label class="control-label" for="medical"><?php echo _("Medical"); ?></label>
           <div class="controls">
             <input type="text" class="input" name="medical" id="medical"
-                placeholder="<?php echo _("Medical"); ?>"
-                value="<?php echo $edata["medical"]; ?>">
+                placeholder="<?php echo _("Medical"); ?>">
           </div>
         </div>
         <div class="control-group form-inline">
           <label class="control-label" for="parent1"><?php echo _("Parent 1"); ?></label>
           <div class="controls">
             <input type="text" class="input" name="parent1" id="parent1"
-              placeholder="<?php echo _("Parent 1"); ?>" required
-              value="<?php echo $edata["parent1"]; ?>">
+              placeholder="<?php echo _("Parent 1"); ?>" required>
           </div>
         </div>
         <div class="control-group form-inline">
           <label class="control-label" for="parent2"><?php echo _("Parent 2"); ?></label>
           <div class="controls">
             <input type="text" class="input" name="parent2" id="parent2" 
-              placeholder="<?php echo _("Parent 2"); ?>"
-              value="<?php echo $edata["parent2"]; ?>">
+              placeholder="<?php echo _("Parent 2"); ?>">
           </div>
         </div>
         <div class="control-group form-inline">
           <label class="control-label" for="parent_email"><?php echo _("Parent's Email"); ?></label>
           <div class="controls">
-            <input type="email" class="input" name="parent_email" id="parent_email"
-              placeholder="<?php echo _("Email"); ?>" 
-              value="<?php echo $edata["parentEmail"]; ?>">
-              <button class="btn" type="button" 
-                onClick="parent.location='mailto:<?php echo $edata["parentEmail"]; ?>'">
-              <i class="icon-envelope"></i></button>
+            <input type="email" class="input" name="parent_email" id="parent_email">
           </div>
         </div>
         <div class="control-group form-inline">

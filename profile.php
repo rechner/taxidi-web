@@ -5,6 +5,24 @@
 
   $page_title = "Profile Settings";
   require_once "template/header.php";
+  
+  /**
+   * This function generates a password salt as a string of x (default = 15) characters
+   * in the a-zA-Z0-9!@#$%&*? range.
+   * @param $max integer The number of characters in the string
+   * @return string
+   * @author AfroSoft <info@afrosoft.tk>
+   */
+  function generateSalt($max = 15) {
+          $characterList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*?";
+          $i = 0;
+          $salt = "";
+          while ($i <= $max) {
+              $salt .= $characterList{mt_rand(0, (strlen($characterList) - 1))};
+              $i++;
+          }
+          return $salt;
+  }
 ?>
           <!-- sidebar -->
           <div class="span3">
@@ -27,6 +45,32 @@
           <!-- /sidebar -->
 
           <div class="span9">
+            <?php
+              if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    
+                // from login.php:33
+                $sql  = "SELECT id, \"user\", hash, salt, name FROM users WHERE \"user\" = :username";
+                $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                                    
+                $sth->execute(array(":username" => $_SESSION["username"]));
+                $data = $sth->fetch(PDO::FETCH_ASSOC);
+                
+                if ($data && hash("sha256", $_POST["oldpass"] . $data["salt"]) == $data["hash"]) {
+                  // password was correct.
+                  echo '<div class="alert alert-success">
+                          <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          <strong>Password Correct.</strong> Changes committed successfully.
+                        </div>';
+                } else {
+                  echo '<div class="alert alert-error">
+                          <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          <strong>Password Incorrect.</strong> Please try again.
+                        </div>';
+                }
+                  
+              }
+              
+            ?>
             <!-- password form-->
             <form class="well form-horizontal" name="search" action="profile.php" method="post">
               <fieldset>

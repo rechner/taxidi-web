@@ -40,7 +40,8 @@
 
                         if ($data && hash("sha256", $_POST["password"] . $data["salt"]) == $data["hash"]) {
                                 $_SESSION["userid"]   = $data["id"];
-                                $_SESSION["username"] = $data[$data["name"] ? "name" : "user"];
+                                $_SESSION["username"] = $data["user"];
+                                $_SESSION["usernick"] = $data[$data["name"] ? "name" : "user"];
                                 
                                 $_SESSION["salt"]        = hash("sha256", $_SERVER["REQUEST_TIME"]);
                                 $_SESSION["fingerprint"] = session_create_fingerprint();

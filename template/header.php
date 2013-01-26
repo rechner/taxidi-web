@@ -64,11 +64,11 @@
           <a class="brand" href="index.php">Taxídí</a>
             <div class="btn-group pull-right">
               <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="icon-user"></i> <?php echo _("Username") ?>
+                <i class="icon-user"></i> <?php echo $_SESSION["username"]; ?>
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
-                <li><a href="#"><?php echo _('Profile') ?></a></li>
+                <li><a href="profile.php"><?php echo _('Profile') ?></a></li>
                 <li class="divider"></li>
                 <li><a href="logout.php"><?php echo _('Sign Out') ?></a></li>
               </ul>

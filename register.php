@@ -149,7 +149,7 @@
   <div class="span9 well" style="overflow-x: auto;">
     <ul class="thumbnails">
       <li class="span6">
-        <div class="page-header">
+        <div class="page-header" style="margin-bottom: 0px;">
           <h1><?php echo _("Registration"); ?></h1>
         </div>
       </li>

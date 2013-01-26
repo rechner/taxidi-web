@@ -420,17 +420,22 @@ $(function(){
     canvas.toBlob(callback);
   }
   
-  $('#photopreview').Jcrop({
-    "aspectRatio" : 1,
-    "boxWidth"    : 250,
-    "boxWidth"    : 250,
-    "onRelease"   : function() {
+  var resetjcrop = function() {
+    cropper && cropper.destroy();
+    $("#photopreview").attr("src", "photo.php")
+    $('#photopreview').Jcrop({
+      "aspectRatio" : 1,
+      "boxWidth"    : 250,
+      "boxWidth"    : 250,
+      "onRelease"   : function() {
+        this.setSelect(selectcenter());
+      },
+    }, function() {
+      cropper = this;
       this.setSelect(selectcenter());
-    },
-  }, function() {
-    cropper = this;
-    this.setSelect(selectcenter());
-  });
+    });
+  }
+  resetjcrop();
 
   $("#photoinput").on("change", function() {
     var filereader = new FileReader();
@@ -446,25 +451,34 @@ $(function(){
   
   //append resized image blob to formdata before submitting
   //https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest/FormData/Using_FormData_Objects
+  var disablesubmit = false;
   $("form[name=details]").submit(function(e) {
-    var fd = new FormData(document.forms.namedItem("details"));
-    getcroppedphoto(function(file) {
-      fd.append("photo", file);
-      $.ajax({
-        url: $("form[name=details]").attr("action"),
-        type: "POST",
-        data: fd,
-        processData: false,
-        contentType: false
-      }).done(function(data) {
-        if (data.success) {
-          $("#successalert span").html("Successfully registered <a href=\"details.php?id=" + data.id + "\"> " + data.name + "</a>");
-          $("#successalert").show();
-          $("form[name=details]")[0].reset();
-          document.body.scrollTop = document.documentElement.scrollTop = 0;
-        }
+    if (!disablesubmit) {
+      disablesubmit = true;
+      $("form[name=details] input[type=submit]").attr("disabled", true);
+      var fd = new FormData(document.forms.namedItem("details"));
+      getcroppedphoto(function(file) {
+        fd.append("photo", file);
+        $.ajax({
+          url: $("form[name=details]").attr("action"),
+          type: "POST",
+          data: fd,
+          processData: false,
+          contentType: false
+        }).done(function(data) {
+          if (data.success) {
+            $("#successalert span").html("Successfully registered <a href=\"details.php?id=" + data.id + "\"> " + data.name + "</a>");
+            $("#successalert").show();
+            $("form[name=details]")[0].reset();
+            resetjcrop();
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+          }
+        }).always(function(data) {
+          disablesubmit = false;
+          $("form[name=details] input[type=submit]").attr("disabled", false);
+        });
       });
-    });
+    }
     e.preventDefault();
     return false;
   });

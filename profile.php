@@ -188,10 +188,11 @@
         });
         
         $(".password_confirm").passConfirm({
-            confirmpass: "top_badPass",
+            confirmPass: "top_badPasslong",
             goodPass:		"top_goodPass",
             baseStyle:   "top_testresult",
             password:    "#newpass",
+            strongPass:		"top_strongPass",
             messageloc: 1
         });
       });

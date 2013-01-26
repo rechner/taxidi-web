@@ -52,6 +52,7 @@
 			goodPass:		"strongPass",
 			baseStyle:	 "testresult",
 			password:	 "password",
+		  strongPass:		"strongPass",	//optional
 			messageloc: 1
 		};
 		var opts = $.extend(defaults, options); 

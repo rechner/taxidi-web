@@ -113,10 +113,10 @@
     
     header("Content-Type: application/json");
     if ($register == TRUE) {
-      echo "{success:true,id:".$id."}";
+      echo "{\"success\":true,\"id\":".$id.",\"name\":\"" . $_POST["name"] . " " . $_POST["lastname"] . "\"}";
       exit;
     } else {
-      echo "{success:false}";
+      echo "{\"success\":false}";
       exit;
     }
     
@@ -155,16 +155,13 @@
       </li>
     </ul>   
     
-    <?php
-      if ($register == TRUE) {
-        echo "<div class=\"alert alert-success\">" .
-          "<a class=\"close\" data-dismiss=\"alert\" href=\"#\">×</a>" .
-          "<h4 class=\"alert-heading\">" . _("Registration Complete") . "</h4>" .
-          sprintf(_("Successfully registered <a href=\"details.php?id=" . $id . "\" >%s.</a>"),
-            $_POST["name"] . " " . $_POST["lastname"]) .
-          "</div>";
-      }
-    ?>
+    <div id="successalert" class="alert alert-success" style="display:none;">
+    <a class="close" data-dismiss="alert" href="#">×</a>
+      <h4 class="alert-heading"> <?php echo _("Registration Complete"); ?> </h4>
+      <!-- sprintf(_("Successfully registered <a href=\"details.php?id=" . $id . "\" >%s.</a>"),
+            $_POST["name"] . " " . $_POST["lastname"]) .-->
+      <span> </span>
+    </div>
        
     <input type="file" accept="image/*" id="photoinput" name="origphoto" style="height: 0px; width: 0px;">
     <form enctype="multipart/form-data" class="form-horizontal" action="" method="post" name="details">
@@ -462,7 +459,6 @@ $(function(){
   //append resized image blob to formdata before submitting
   //https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest/FormData/Using_FormData_Objects
   $("form[name=details]").submit(function(e) {
-    console.log("submit");
     var fd = new FormData(document.forms.namedItem("details"));
     getcroppedphoto(function(file) {
       fd.append("photo", file);
@@ -471,7 +467,14 @@ $(function(){
         type: "POST",
         data: fd,
         processData: false,
-        contentType: false 
+        contentType: false
+      }).done(function(data) {
+        if (data.success) {
+          $("#successalert span").html("Successfully registered <a href=\"details.php?id=" + data.id + "\"> " + data.name + "</a>");
+          $("#successalert").show();
+          $("form[name=details]")[0].reset();
+          document.body.scrollTop = document.documentElement.scrollTop = 0;
+        }
       });
     });
     e.preventDefault();

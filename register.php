@@ -40,7 +40,7 @@
           
           /* python analogue of this bit checks the file system for the
            * next image in the sequence, not the database */
-          $result = pg_query($connection, "SELECT max(picture) FROM data;") or 
+          $result = pg_query($connection, "SELECT max(picture::integer) FROM data WHERE picture != '';") or 
             die("Error in query: $query." . pg_last_error($connection));
           $rdata = pg_fetch_assoc($result);
           pg_free_result($result);
@@ -110,6 +110,16 @@
     pg_free_result($result);
     
     $register = TRUE;
+    
+    header("Content-Type: application/json");
+    if ($register == TRUE) {
+      echo "{success:true,id:".$id."}";
+      exit;
+    } else {
+      echo "{success:false}";
+      exit;
+    }
+    
   }
   
   $page_title = "Register";
@@ -156,11 +166,11 @@
       }
     ?>
        
+    <input type="file" accept="image/*" id="photoinput" name="origphoto" style="height: 0px; width: 0px;">
     <form enctype="multipart/form-data" class="form-horizontal" action="" method="post" name="details">
-      <input type="file" accept="image/*" id="photoinput" name="photo" style="height: 0px; width: 0px;">
       <fieldset>
         <div class="control-group">
-          <label class="control-label" for="photo">Photo</label>
+          <label class="control-label">Photo</label>
           <div class="controls">
             <div style="display: table; width: 100%; height: 100%;" class="input-append">
               <input type="text" readonly="" onclick="document.getElementById('photoinput').click();" class="input-xlarge" id="fakefileinput" style="cursor: pointer; cursor: hand;">
@@ -333,9 +343,6 @@
 
 <script src="resources/js/dFilter.js"></script>
 <script src="bootstrap/js/jqBootstrapValidation.js"></script>
-  <script>
-      $(function () { $("input,select,textarea,checkbox").not("[type=submit]").jqBootstrapValidation(); } );
-  </script>
 <script>
   
   function showAge(ind) {
@@ -376,6 +383,8 @@
 
 <script type="text/javascript">
 $(function(){
+  //$("input,select,textarea,checkbox").not("[type=submit]").jqBootstrapValidation();
+  
   var cropper = null; // jcropper instance
   
   var selectcenter = function() {
@@ -453,6 +462,7 @@ $(function(){
   //append resized image blob to formdata before submitting
   //https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest/FormData/Using_FormData_Objects
   $("form[name=details]").submit(function(e) {
+    console.log("submit");
     var fd = new FormData(document.forms.namedItem("details"));
     getcroppedphoto(function(file) {
       fd.append("photo", file);

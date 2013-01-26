@@ -33,15 +33,13 @@
               <ul class="nav nav-list">
                 <li class="nav-header"><?php echo _("Search"); ?></li>
                 <li class="active"><a href="#"><i class="icon-search"></i><?php echo _("Search"); ?></a></li>
-                <li><a href="#"><i class="icon-filter"></i><?php echo _("Advanced"); ?></a></li>
+                <li><a href="advsearch.php"><i class="icon-filter"></i><?php echo _("Advanced"); ?></a></li>
                 <li><a href="#"><i class="icon-bookmark"></i><?php echo _("Saved Searches"); ?></a></li>
               </ul>
               <ul class="nav nav-list">
                 <li class="nav-header"><?php echo _("Actions"); ?></li>
                 <li><a href="register.php"><i class="icon-plus-sign"></i><?php echo _("Register"); ?></a></li>
                 <li><a href="#"><i class="icon-user"></i><?php echo _("Register Visitor"); ?></a></li>
-                <li><a href="#"><i class="icon-print"></i><?php echo _("Print Search"); ?></a></li>
-                <li><a href="#"><i class="icon-download-alt"></i><?php echo _("Download Results"); ?></a></li>
               </ul>
             </div>
           </div>
@@ -50,6 +48,7 @@
           <div class="span9">
             <?php
               if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                $errorFlag = false; // let us know further down if there was a problem
                 $dbh = db_connect();
     
                 // from login.php:33
@@ -61,10 +60,43 @@
                 
                 if ($data && hash("sha256", $_POST["oldpass"] . $data["salt"]) == $data["hash"]) {
                   // password was correct.
-                  echo '<div class="alert alert-success">
+                  if ($_POST["newpass"] != "" && $_POST["newpass"] == $_POST["confirmpass"])  {
+                    // update password
+                    $salt = generateSalt(40);
+                    $hash = hash("sha256", $_POST["newpass"] . $salt);
+                    $sql = "UPDATE users SET (hash, salt, name) = (:hash, :salt, :name) WHERE id = :id";
+                    $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                    
+                    $sth->execute(array(":id" => $_SESSION["userid"],
+                                        ":hash" => $hash,
+                                        ":salt" => $salt,
+                                        ":name" => $_POST["name"]));
+                    $data = $sth->fetch(PDO::FETCH_ASSOC);
+                  } else if ($_POST["newpass"] != "" && $_POST["newpass"] != $_POST["confirmpass"]) {
+                    // new passwords do not match
+                    echo '<div class="alert alert-error">
                           <button type="button" class="close" data-dismiss="alert">&times;</button>
-                          <strong>Password Correct.</strong> Changes committed successfully.
+                          <strong>New passwords do not match.</strong> Please try again.
                         </div>';
+                    $errorFlag = true;
+                  } else {
+                    // just update settings
+                    $sql = "UPDATE users SET name = :name WHERE id = :id";
+                    $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                    
+                    $sth->execute(array(":id" => $_SESSION["userid"],
+                                        ":name" => $_POST["name"]));
+                    
+                  }
+                  
+                  //update the session
+                  $_SESSION["usernick"] = $_POST["name"];  
+                  
+                  if (!$errorFlag)
+                    echo '<div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Password Correct.</strong> Changes committed successfully.
+                          </div>';
                 } else {
                   echo '<div class="alert alert-error">
                           <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -82,7 +114,8 @@
                 <div class="control-group">
                   <label class="control-label" for="oldpass">Current Password</label>
                   <div class="controls">
-                    <input type="password" id="oldpass" name="oldpass" placeholder="Current Password">
+                    <input type="password" id="oldpass" name="oldpass" 
+                     placeholder="Current Password" required>
                   </div>
                 </div>
                 <hr>
@@ -96,7 +129,7 @@
                 <div class="control-group">
                   <label class="control-label" for="confirmpass">Confirm Password</label>
                   <div class="controls">
-                    <input type="password" style="float:left;" 
+                    <input type="password" style="float:left;" name="confirmpass"
                     id="confirmpass" class="password_confirm" placeholder="Confirm Password">
                   </div>
                 </div>
@@ -106,7 +139,9 @@
                 <div class="control-group">
                   <label class="control-label" for="name">Display Name</label>
                   <div class="controls">
-                    <input type="text" id="name" placeholder="Display Name">
+                    <input type="text" id="name" name="name" 
+                     value="<?php echo $_SESSION["usernick"]; ?>"
+                     placeholder="Display Name">
                   </div>
                 </div>
                 <div class="control-group">

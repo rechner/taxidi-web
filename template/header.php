@@ -64,7 +64,7 @@
           <a class="brand" href="index.php">Taxídí</a>
             <div class="btn-group pull-right">
               <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="icon-user"></i> <?php echo $_SESSION["username"]; ?>
+                <i class="icon-user"></i> <?php echo $_SESSION["usernick"]; ?>
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">

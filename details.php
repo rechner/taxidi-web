@@ -105,7 +105,7 @@
     <ul class="nav nav-list">
       <li class="nav-header"><?php echo _('Search') ?></li>
       <li><a href="search.php"><i class="icon-search"></i><?php echo _('Search') ?></a></li>
-      <li><a href="#"><i class="icon-filter"></i><?php echo _('Advanced') ?></a></li>
+      <li><a href="advsearch.php"><i class="icon-filter"></i><?php echo _('Advanced') ?></a></li>
       <li><a href="#"><i class="icon-bookmark"></i><?php echo _('Saved Searches') ?></a></li>
       <li class="nav-header"><?php echo _('Actions') ?></li>
       <li><a href="print.php?id=<?php echo $_GET["id"]; ?>" target="_blank"><i class="icon-print"></i><?php echo _('Print details') ?></a></li>

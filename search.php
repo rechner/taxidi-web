@@ -12,7 +12,7 @@
               <ul class="nav nav-list">
                 <li class="nav-header"><?php echo _("Search"); ?></li>
                 <li class="active"><a href="#"><i class="icon-search"></i><?php echo _("Search"); ?></a></li>
-                <li><a href="#"><i class="icon-filter"></i><?php echo _("Advanced"); ?></a></li>
+                <li><a href="advsearch.php"><i class="icon-filter"></i><?php echo _("Advanced"); ?></a></li>
                 <li><a href="#"><i class="icon-bookmark"></i><?php echo _("Saved Searches"); ?></a></li>
               </ul>
               <ul class="nav nav-list">

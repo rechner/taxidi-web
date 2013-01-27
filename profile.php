@@ -2,9 +2,6 @@
   //internationalisation
   $domain = "profile";
   require_once 'locale.php';
-
-  $page_title = "Profile Settings";
-  require_once "template/header.php";
   
   require_once "config.php";
   require_once "functions.php";
@@ -26,29 +23,11 @@
           }
           return $salt;
   }
-?>
-          <!-- sidebar -->
-          <div class="span3">
-            <div class="well sidebar-nav">
-              <ul class="nav nav-list">
-                <li class="nav-header"><?php echo _("Search"); ?></li>
-                <li class="active"><a href="#"><i class="icon-search"></i><?php echo _("Search"); ?></a></li>
-                <li><a href="advsearch.php"><i class="icon-filter"></i><?php echo _("Advanced"); ?></a></li>
-                <li><a href="#"><i class="icon-bookmark"></i><?php echo _("Saved Searches"); ?></a></li>
-              </ul>
-              <ul class="nav nav-list">
-                <li class="nav-header"><?php echo _("Actions"); ?></li>
-                <li><a href="register.php"><i class="icon-plus-sign"></i><?php echo _("Register"); ?></a></li>
-                <li><a href="#"><i class="icon-user"></i><?php echo _("Register Visitor"); ?></a></li>
-              </ul>
-            </div>
-          </div>
-          <!-- /sidebar -->
-
-          <div class="span9">
-            <?php
+  
               if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                session_start();
                 $errorFlag = false; // let us know further down if there was a problem
+                $passwordcorrect = false;
                 $dbh = db_connect();
     
                 // from login.php:33
@@ -93,21 +72,50 @@
                   $_SESSION["usernick"] = $_POST["name"];  
                   
                   if (!$errorFlag)
-                    echo '<div class="alert alert-success">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong>Password Correct.</strong> Changes committed successfully.
-                          </div>';
-                } else {
-                  echo '<div class="alert alert-error">
-                          <button type="button" class="close" data-dismiss="alert">&times;</button>
-                          <strong>Password Incorrect.</strong> Please try again.
-                        </div>';
+                    $passwordcorrect = true;
+                    
                 }
                   
               }
-              
-            ?>
+
+  $page_title = "Profile Settings";
+  require_once "template/header.php";
+?>
+          <!-- sidebar -->
+          <div class="span3">
+            <div class="well sidebar-nav">
+              <ul class="nav nav-list">
+                <li class="nav-header"><?php echo _("Search"); ?></li>
+                <li class="active"><a href="#"><i class="icon-search"></i><?php echo _("Search"); ?></a></li>
+                <li><a href="advsearch.php"><i class="icon-filter"></i><?php echo _("Advanced"); ?></a></li>
+                <li><a href="#"><i class="icon-bookmark"></i><?php echo _("Saved Searches"); ?></a></li>
+              </ul>
+              <ul class="nav nav-list">
+                <li class="nav-header"><?php echo _("Actions"); ?></li>
+                <li><a href="register.php"><i class="icon-plus-sign"></i><?php echo _("Register"); ?></a></li>
+                <li><a href="#"><i class="icon-user"></i><?php echo _("Register Visitor"); ?></a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- /sidebar -->
+
+          <div class="span9">
             <!-- password form-->
+            <?php
+              if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                if ($passwordcorrect) {
+                  echo '<div class="alert alert-success">
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                      <strong>Password Correct.</strong> Changes committed successfully.
+                    </div>';
+                } else {
+                  echo '<div class="alert alert-error">
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                      <strong>Password Incorrect.</strong> Please try again.
+                    </div>';
+                }
+              }
+            ?>
             <form class="well form-horizontal" name="search" action="profile.php" method="post">
               <fieldset>
                 <legend>User Profile <small>Change Password</small></legend>

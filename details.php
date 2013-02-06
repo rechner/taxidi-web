@@ -34,10 +34,14 @@
                     "', notes = '"             . $_POST["notes"]        . 
                     "', \"lastModified\" = '"  . date("Y-m-d H:i:s.u", $_SERVER["REQUEST_TIME"]) . 
                   "' WHERE id = $id;"; */
-      $sql = "UPDATE data SET name = :name, lastname = :lastname, phone = :phone, \"mobileCarrier\" = :mobilecarrier, grade = :grade, dob = :dob, activity = :activity, room = :room, medical = :medical, parent1 = :parent1, parent2 = :parent2, \"parentEmail\" = :parentemail, notes = :notes, \"lastModified\" = " . date("Y-m-d H:i:s.u", $_SERVER["REQUEST_TIME"]) . "WHERE id = :id;";
+      $sql = "UPDATE data SET name = :name, lastname = :lastname, phone = :phone, \"mobileCarrier\" = :mobilecarrier, grade = :grade, dob = :dob, activity = :activity, room = :room, medical = :medical, parent1 = :parent1, parent2 = :parent2, \"parentEmail\" = :parentemail, notes = :notes, \"lastModified\" = :lastmodified WHERE id = :id;";
       
       $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-      $sth->execute(array(":name" => $_POST["name"], ":lastname" => $_POST["lastname"], ":phone" => $_POST["phone"], ":mobilecarrier" => isset($_POST["mobileCarrier"]) ? "1" : "0", ":grade" => $_POST["grade"], ":dob" => $_POST["dob"], ":activity" => is_numeric($_POST["activity"]) ? $_POST["activity"] : 0, ":room" => is_numeric($_POST["room"]) ? $_POST["room"] : 0, ":medical" => $_POST["medical"], ":parent1" => $_POST["parent1"], ":parent2" => $_POST["parent2"], ":parentemail" => $_POST["parent_email"], ":notes" => $_POST["notes"], ":id" => $id));
+      $sth->execute(array(":name" => $_POST["name"], ":lastname" => $_POST["lastname"], ":phone" => $_POST["phone"], ":mobilecarrier" => isset($_POST["mobileCarrier"]) ? "1" : "0", ":grade" => $_POST["grade"], ":dob" => $_POST["dob"], ":activity" => is_numeric($_POST["activity"]) ? $_POST["activity"] : 0, ":room" => is_numeric($_POST["room"]) ? $_POST["room"] : 0, ":medical" => $_POST["medical"], ":parent1" => $_POST["parent1"], ":parent2" => $_POST["parent2"], ":parentemail" => $_POST["parent_email"], ":notes" => $_POST["notes"], ":id" => $id, ":lastmodified" => date("Y-m-d H:i:s.u", $_SERVER["REQUEST_TIME"])));
+      /*print("\nfoo\n");
+      $temp = $sth->errorInfo();
+      print($temp[2]);
+      print("\nfoo\n");*/
       
       //TODO check for error
       $modifysuccess = true;

@@ -452,7 +452,7 @@ selecttab = function(tab) {
 <div class="well" style="overflow-x: auto;">
   <ul class="thumbnails">
     <li class="span3" style="text-align: center;">
-      <a href="#" class="thumbnail">
+      <a href="photo.php<?php echo "?id=" . $edata["picture"] ?>" class="thumbnail">
         <img id="photomain" src="photo.php<?php echo "?id=" . $edata["picture"] ?>"/>
       </a>
       <a href="#photouploadModal" data-toggle="modal"><?php echo _("Upload New Photo"); ?></a>

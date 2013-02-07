@@ -57,6 +57,11 @@
                                 }
                         } else {
                                 $error = _("Incorrect username or password");
+                                error_log("[" . date('d/M/Y:H:i:s O') . 
+                                  "] authentication failure: [client: " . 
+                                  $_SERVER['REMOTE_ADDR'] . 
+                                  "] [user: " . $_POST['username'] . "]\n", 
+                                  3, "/var/log/taxidi.log");
                         }
                 } else {
                         $error = _("Form not completed");

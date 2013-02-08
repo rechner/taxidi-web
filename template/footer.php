@@ -30,7 +30,7 @@
           "dateFormat": "yy-mm-dd",
         });
         $.datepicker.setDefaults(
-          $.datepicker.regional[ "en-GB" ]
+          $.datepicker.regional[ "" ]
         );
       });
     </script>

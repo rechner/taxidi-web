@@ -25,8 +25,13 @@
       @import url("themes/<?php echo $theme?>/css/jquery-ui.css");
     </style>
     <script>
-      $.datepicker.setDefaults({
-        "dateFormat": "yy-mm-dd",
+      $(function() {
+        $.datepicker.setDefaults({
+          "dateFormat": "yy-mm-dd",
+        });
+        $.datepicker.setDefaults(
+          $.datepicker.regional[ "en-GB" ]
+        );
       });
     </script>
   </body>

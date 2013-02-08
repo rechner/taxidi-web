@@ -189,7 +189,6 @@
 <script>
   $(function(){
     $("#date").datepicker().on("focus", function() {$("#datef_single").prop("checked", true);});
-    $.datepicker.setDefaults( $.datepicker.regional[ "" ] );
   });
 </script>
 <?php

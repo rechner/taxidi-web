@@ -26,12 +26,12 @@
     </style>
     <script>
       $(function() {
-        $.datepicker.setDefaults({
-          "dateFormat": "yy-mm-dd",
-        });
         $.datepicker.setDefaults(
           $.datepicker.regional[ "" ]
         );
+        $.datepicker.setDefaults({
+          "dateFormat": "yy-mm-dd",
+        });
       });
     </script>
   </body>

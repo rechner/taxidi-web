@@ -1,5 +1,5 @@
-<!-- Be sure to call locale.php before header.php -->
 <?php
+  // be sure to call locale before index.php
   $old_domain = textdomain(NULL);
   bindtextdomain('header', "locale"); 
   textdomain('header');

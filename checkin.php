@@ -13,19 +13,13 @@
             VALUES (
               :person,
               current_date,
-              (SELECT name
-                FROM services
-                WHERE id = :service),
+              (SELECT name FROM services WHERE id = :service),
               '23:59:59',
               now()::timestamp,
               :code,
               :location,
-              (SELECT name
-                FROM activities
-                WHERE id = :activity),
-              (SELECT name
-                FROM rooms
-                WHERE id = :room));";
+              (SELECT name FROM activities WHERE id = :activity),
+              (SELECT name FROM rooms WHERE id = :room));";
   $dbh = db_connect();
   $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
   $sth->execute(array(
@@ -36,7 +30,5 @@
     ":activity" => $_GET["activity"],
     ":room"     => $_GET["room"]
   ));
-  echo "\nPDO::errorInfo():\n";
-  print_r($dbh->errorInfo());
   
 ?>

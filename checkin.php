@@ -9,21 +9,6 @@
     return $read[$i];
   }
   
-  /*"""INSERT INTO statistics(person, date, service, expires,
-                  checkin, checkout, code, location, activity, room)
-                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""", 
-                  (person, str(datetime.date.today()), service, expiry,
-                  datetime.datetime.now(), None, code, location, activity, room)*/
-  // date = "current_date"
-  // service name = "SELECT name FROM services WHERE id = $servid;"
-  // expires = "23:59:59"
-  // checkin = "now()::timestamp"
-  // code = get_code();
-  // location = TODO
-  // activity = "SELECT name FROM activities WHERE id = $actid;"
-  // room = "SELECT name FROM rooms WHERE id = $roomid;"
-  // sql function(int person, int service, string location, int activity, int room)
-  
   $sql = "INSERT INTO statistics(person, date, service, expires, checkin, code, location, activity, room)
             VALUES (
               :person,

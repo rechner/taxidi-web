@@ -48,8 +48,10 @@
                   <?php
                     $service = $_POST["service"];
                     $now = strtotime(date("H:m:s"));
-                    foreach ($dbh->query("SELECT id, name, \"endTime\" FROM services ORDER BY time;") as $row) {
-                      $selected = $service != "" ? ($service == $row["id"]) : ($now < strtotime($row["endTime"]));
+                    $before = false;
+                    foreach ($dbh->query("SELECT id, name, \"endTime\" FROM services ORDER BY \"endTime\";") as $row) {
+                      $selected = $service != "" ? ($service == $row["id"]) : (!$before and ($now < strtotime($row["endTime"])));
+                      $before = $now < strtotime($row["endTime"]);
                       echo "<option value=\"{$row["id"]}\"" . ($selected ? " selected" : "") . ">{$row["name"]}</option>\n";
                     }
                   ?>

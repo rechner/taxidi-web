@@ -5,6 +5,15 @@
 
   $page_title = "Search";
   require_once "template/header.php";
+  
+  require_once 'config.php';
+  require_once "functions.php";
+  $dbh = db_connect();
+  
+  $inp = $_POST["search"];
+  if (array_key_exists('search', $_GET)) {
+    $inp = $_GET['search'];
+  }
 ?>
           <!-- sidebar -->
           <div class="span3">
@@ -30,25 +39,29 @@
             <!-- Search form -->
             <form class="well form-search" name="search" action="search.php" method="post">
               <input type="text" class="input-medium search-query" name="search" 
-                placeholder="<?php echo _("Search"); ?>…" autofocus>
+                placeholder="<?php echo _("Search"); ?>…"
+                <?php echo ($inp != "" ? "value=\"$inp\"" : "" )?> autofocus>
               <button type="submit" class="btn"><?php echo _("Search"); ?></button>
+              <div class="pull-right">
+                Service:
+                <select class="input-medium" name="service">
+                  <?php
+                    $service = $_POST["service"];
+                    $now = strtotime(date("H:m:s"));
+                    foreach ($dbh->query("SELECT id, name, \"endTime\" FROM services ORDER BY time;") as $row) {
+                      $selected = $service != "" ? ($service == $row["id"]) : ($now < strtotime($row["endTime"]));
+                      echo "<option value=\"{$row["id"]}\"" . ($selected ? " selected" : "") . ">{$row["name"]}</option>\n";
+                    }
+                  ?>
+                </select> 
+              </div>
             </form>
             
             <?php
-              //get input:
-              $inp = $_POST["search"];
-              //check for get:
-              if (array_key_exists('search', $_GET)) {
-                $inp = $_GET['search'];
-              }
               if ($inp == "") {
                 echo '';
               } else {
                 // do query
-                require_once "functions.php";
-                require_once 'config.php';
-                $dbh = db_connect();
-                
                 $inp = trim($inp);
                 //Perform a query:
                 if ($inp == '*') {
@@ -105,7 +118,7 @@
                   foreach ($sth as $row) {
                     echo '<tr>
                           <td style="width:30px"><input type="checkbox" name="foo"></td>';
-                    echo '<td><a href="details.php?id='.$row[0].'&query='.$inp.'">' . $row[1] . ' ' . $row[2] .'</a></td>';
+                    echo '<td><a href="details.php?id='.$row[0].'&query='.$inp.'&service='.$_POST["service"].'">' . $row[1] . ' ' . $row[2] .'</a></td>';
                     echo '<td>' . $row[3] . '</td>';
                     echo '<td>' . $row[4] . '</td>';
                     echo '<td>' . $row[5] . '</td>';

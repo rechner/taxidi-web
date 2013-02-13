@@ -60,15 +60,15 @@
                             ORDER BY lastname;";
                 } else {
                   $sql = "SELECT DISTINCT data.id, data.name, lastname, 
-                              activities.name, rooms.name, paging
-                              FROM \"data\" 
-                              LEFT JOIN activities ON data.activity=activities.id
-                              LEFT JOIN rooms ON data.room = rooms.id WHERE
-                                data.name || ' ' || lastname ILIKE :inp
-                                OR parent1 ILIKE :inp
-                                OR parent2 ILIKE :inp
-                                OR phone LIKE :inp
-                                ORDER BY lastname;";
+                            activities.name, rooms.name, paging
+                            FROM \"data\" 
+                            LEFT JOIN activities ON data.activity=activities.id
+                            LEFT JOIN rooms ON data.room = rooms.id WHERE
+                              data.name || ' ' || lastname ILIKE :inp
+                              OR parent1 ILIKE :inp
+                              OR parent2 ILIKE :inp
+                              OR phone LIKE :inp
+                              ORDER BY lastname;";
                 }
                 
                 $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));

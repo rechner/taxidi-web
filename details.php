@@ -419,6 +419,27 @@ $(function(){
   $("#cancelbutton").click(function() {
     window.location.href = "search.php?search=" + encodeURIComponent($.getparam("query"));
   });
+  
+  $("#checkin").click(function() {
+    var but = $(this);
+    if (!but.hasClass("disabled")) {
+      but.addClass("disabled");
+      $.ajax({
+        url:  "checkin.php",
+        type: "POST",
+        data: {
+          person:  <?php echo $_GET["id"];?>,
+          service: <?php echo $_GET["service"];?>
+        },
+      }).done(function(data) {
+        if (data.success) {
+          //TODO
+        }
+      }).always(function(data) {
+        but.removeClass("disabled");
+      });
+    }
+  });
 });
 
 //TODO, this function is dumb, fix it
@@ -470,6 +491,20 @@ selecttab = function(tab) {
         ?>
       </div>
     </li>
+    <div class="span3">
+      <div class="pull-right">
+        <button class="btn" type="button" id="checkin">
+          Check in to<br>
+          <?php 
+            $sql = "SELECT name FROM services WHERE id = :id;";
+            $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $sth->execute(array(":id" => $_GET["service"]));
+            $result = $sth->fetch(PDO::FETCH_BOTH);
+            echo $result[0];
+          ?>
+        </button>
+      </div>
+    </div>
     <ul class="nav nav-tabs span9" style="margin-top: -18px;">
       <li id="tabselect_main" class="<?php echo ($_POST["tab"] != "extended" ? "active" : ""); ?>">
         <a href="javascript:selecttab('main');"><?php echo _("Main"); ?></a>

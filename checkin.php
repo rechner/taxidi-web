@@ -18,8 +18,8 @@
   $dbh = db_connect();
   $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
   $sth->execute(array(
-    ":person"   => $_GET["person"],
-    ":service"  => $_GET["service"],
+    ":person"   => $_REQUEST["person"],
+    ":service"  => $_REQUEST["service"],
     ":code"     => get_code(),
     ":location" => get_client_ip()
   ));

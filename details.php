@@ -113,6 +113,7 @@
       <li><a href="#"><i class="icon-bookmark"></i><?php echo _('Saved Searches') ?></a></li>
       <li class="nav-header"><?php echo _('Actions') ?></li>
       <li><a href="print.php?id=<?php echo $_GET["id"]; ?>" target="_blank"><i class="icon-print"></i><?php echo _('Print details') ?></a></li>
+      <li><a href="#"><i class="icon-tags"></i><?php echo _('Print nametags') ?></a></li>
       <li><a data-toggle="modal" href="#downloadModal"><i class="icon-download"></i><?php echo _('Download details') ?></a></li>
       <li><a href="#"><i class="icon-bullhorn"></i><?php echo _('Create incident report') ?></a></li>
       <li><a data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i><?php echo _('Delete record') ?></a></li>
@@ -491,9 +492,8 @@ selecttab = function(tab) {
         ?>
       </div>
     </li>
-    <div class="span3">
-      <div class="pull-right">
-        <button class="btn" type="button" id="checkin">
+    <div class="span3 pull-right">
+        <button class="btn btn-success btn-block btn-large" type="button" id="checkin">
           Check in to<br>
           <?php 
             $sql = "SELECT name FROM services WHERE id = :id;";
@@ -503,7 +503,10 @@ selecttab = function(tab) {
             echo $result[0];
           ?>
         </button>
-      </div>
+        <button class="btn btn-block btn-large" type="button" id="checkin">
+          Check in to<br>
+          Multiple Services
+        </button>
     </div>
     <ul class="nav nav-tabs span9" style="margin-top: -18px;">
       <li id="tabselect_main" class="<?php echo ($_POST["tab"] != "extended" ? "active" : ""); ?>">

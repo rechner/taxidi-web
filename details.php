@@ -418,7 +418,8 @@ $(function(){
   } catch(e) { }
   
   $("#cancelbutton").click(function() {
-    window.location.href = "search.php?search=" + encodeURIComponent($.getparam("query"));
+    var service = encodeURIComponent($.getparam("query"));
+    window.location.href = "search.php?search=" + encodeURIComponent($.getparam("query")) + (service ? "&service=" + service : "");
   });
   
   $("#checkin").click(function() {
@@ -441,6 +442,7 @@ $(function(){
       });
     }
   });
+  
 });
 
 //TODO, this function is dumb, fix it

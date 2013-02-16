@@ -10,10 +10,7 @@
   require_once "functions.php";
   $dbh = db_connect();
   
-  $inp = $_POST["search"];
-  if (array_key_exists('search', $_GET)) {
-    $inp = $_GET['search'];
-  }
+  $_REQUEST["search"] = trim($_REQUEST["search"]);
 ?>
           <!-- sidebar -->
           <div class="span3">
@@ -37,16 +34,16 @@
 
           <div class="span9">
             <!-- Search form -->
-            <form class="well form-search" name="search" action="search.php" method="post">
+            <form class="well form-search" name="search" action="search.php" method="get">
               <input type="text" class="input-medium search-query" name="search" 
                 placeholder="<?php echo _("Search"); ?>…"
-                <?php echo ($inp != "" ? "value=\"$inp\"" : "" )?> autofocus>
+                <?php echo ($_REQUEST["search"] != "" ? "value=\"{$_REQUEST["search"]}\"" : "" )?> autofocus>
               <button type="submit" class="btn"><?php echo _("Search"); ?></button>
               <div class="pull-right">
                 Service:
                 <select class="input-medium" name="service">
                   <?php
-                    $service = $_POST["service"];
+                    $service = $_REQUEST["service"];
                     $now = strtotime(date("H:m:s"));
                     $before = false;
                     foreach ($dbh->query("SELECT id, name, \"endTime\" FROM services ORDER BY \"endTime\";") as $row) {
@@ -60,11 +57,9 @@
             </form>
             
             <?php
-              if ($inp == "") {
+              if ($_REQUEST["search"] == "") {
                 echo '';
               } else {
-                // do query
-                $inp = trim($inp);
                 //Perform a query:
                 if ($inp == '*') {
                   $sql = "SELECT DISTINCT data.id, data.name, lastname, 
@@ -87,13 +82,13 @@
                 }
                 
                 $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                $sth->execute(array(":inp" => "%".$inp."%"));
+                $sth->execute(array(":inp" => "%".$_REQUEST["search"]."%"));
                                 
                 if ($sth->rowCount() == 0) {
                   echo '<div class="alert alert-error">';
                   echo '<a class="close" data-dismiss="alert" href="#">×</a>';
                   echo "<h4 class=\"alert-heading\">" . 
-                    sprintf(_("No results for &ldquo;%s&rdquo;"), $inp). "</h4>";
+                    sprintf(_("No results for &ldquo;%s&rdquo;"), $_REQUEST["search"]). "</h4>";
                   echo '</div>';
                 } else {
                   // setup table:
@@ -120,7 +115,7 @@
                   foreach ($sth as $row) {
                     echo '<tr>
                           <td style="width:30px"><input type="checkbox" name="foo"></td>';
-                    echo '<td><a href="details.php?id='.$row[0].'&query='.$inp.'&service='.$_POST["service"].'">' . $row[1] . ' ' . $row[2] .'</a></td>';
+                    echo '<td><a href="details.php?id='.$row[0].'&query='.$_REQUEST["search"].'&service='.$_REQUEST["service"].'">' . $row[1] . ' ' . $row[2] .'</a></td>';
                     echo '<td>' . $row[3] . '</td>';
                     echo '<td>' . $row[4] . '</td>';
                     echo '<td>' . $row[5] . '</td>';

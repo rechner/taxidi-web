@@ -186,14 +186,18 @@
         <tr>
           <th><input type="checkbox" class="select-all"></th>
           <th>Service</th>
-          <th>Time</th>
+          <th>Start</th>
+          <th>End</th>
         </tr>
       </thead>
       <tbody>
         <?php
           foreach ($dbh->query("SELECT * FROM services ORDER BY \"endTime\";") as $row) {
-            echo "<tr><td><input type=\"checkbox\"></td>";
-            echo "<td>{$row["name"]}</td></tr>";
+            echo "<tr><td><input type=\"checkbox\" name=\"{$row["id"]}\"></td>";
+            echo "<td>{$row["name"]}</td>";
+            echo "<td>".date('H:i', round(strtotime($row["time"])/60)*60);".</td>";
+            $endtime = date('H:i', round(strtotime($row["endTime"])/60)*60);
+            echo "<td>".($endtime == "00:00" ? "24:00" : $endtime)."</td></tr>";
           }
         ?>
       </tbody>

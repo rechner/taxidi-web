@@ -175,6 +175,38 @@
   </div>
 </div>
 
+<div id="multicheckinModal" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>Multi Check-in</h3>
+  </div>
+  <div class="modal-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th><input type="checkbox"></th>
+          <th>Service</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"></td>
+          <td>Foo Service</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"></td>
+          <td>Bar Service</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <a class="btn" data-dismiss="modal" ><?php echo _('Close') ?></a>
+    <a class="btn btn-success">Check in</a>
+  </div>
+</div>
+
 <div id="photouploadModal" class="modal hide fade">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -505,7 +537,7 @@ selecttab = function(tab) {
             echo $result[0];
           ?>
         </button>
-        <button class="btn btn-block btn-large" type="button" id="checkin">
+        <button class="btn btn-block btn-large" type="button" href="#multicheckinModal" id="checkin" data-toggle="modal">
           Check in to<br>
           Multiple Services
         </button>

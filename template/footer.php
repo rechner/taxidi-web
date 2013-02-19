@@ -34,6 +34,13 @@
         $.datepicker.setDefaults({
           "dateFormat": "yy-mm-dd",
         });
+        
+        $("table input[type=checkbox].select-all").click(function() {
+          $("input[type=checkbox]", $(this).closest("table")).attr("checked", $(this).is(":checked"));
+        });
+        $("table input[type=checkbox]:not(.select-all)").click(function() {
+          $("input[type=checkbox].select-all", $(this).closest("table")).attr("checked", false);
+        });
       });
     </script>
   </body>

@@ -184,7 +184,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th><input type="checkbox"></th>
+          <th><input type="checkbox" class="select-all"></th>
           <th>Service</th>
           <th>Time</th>
         </tr>

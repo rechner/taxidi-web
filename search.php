@@ -95,14 +95,7 @@
                   echo '<table class="table">
                           <thead>
                             <tr>
-                              <script language="JavaScript">
-                                function toggle(source) {
-                                  checkboxes = document.getElementsByName(\'foo\');
-                                  for(var i in checkboxes)
-                                    checkboxes[i].checked = source.checked;
-                                }
-                              </script>
-                              <th><input type="checkbox" onClick="toggle(this)"></th>
+                              <th><input type="checkbox" class="select-all"></th>
                               <th>' . _("Name") . '</th>
                               <th>' . _("Activity") . '</th>
                               <th>' . _("Room") . '</th>

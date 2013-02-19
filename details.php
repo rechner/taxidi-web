@@ -190,14 +190,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><input type="checkbox"></td>
-          <td>Foo Service</td>
-        </tr>
-        <tr>
-          <td><input type="checkbox"></td>
-          <td>Bar Service</td>
-        </tr>
+        <?php
+          foreach ($dbh->query("SELECT * FROM services ORDER BY \"endTime\";") as $row) {
+            echo "<tr><td><input type=\"checkbox\"></td>";
+            echo "<td>{$row["name"]}</td></tr>";
+          }
+        ?>
       </tbody>
     </table>
   </div>

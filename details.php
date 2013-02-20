@@ -452,12 +452,17 @@ $(function(){
   } catch(e) { }
   
   $("#cancelbutton").click(function() {
-    var service = encodeURIComponent($.getparam("query"));
-    window.location.href = "search.php?search=" + encodeURIComponent($.getparam("query")) + (service ? "&service=" + service : "");
+    var service = encodeURIComponent($.getparam("service"));
+    window.location.href = "search.php?search=" + encodeURIComponent($.getparam("query")) + (service != "null" ? "&service=" + service : "");
   });
   
+  var checkinsuccess = function() {
+    var service = encodeURIComponent($.getparam("service"));
+    window.location.href = "search.php?checkedin=" + encodeURIComponent("<?php echo $edata["name"];?>") + (service != "null" ? "&service=" + service : "");
+  }
+  
   $("#checkin").click(function() {
-    var but = $(this);
+    var but = $(this), dontreset = false;
     if (!but.hasClass("disabled")) {
       but.addClass("disabled");
       $.ajax({
@@ -469,16 +474,18 @@ $(function(){
         },
       }).done(function(data) {
         if (data.success) {
-          //TODO
+          dontreset = true;
+          checkinsuccess();
         }
       }).always(function(data) {
-        but.removeClass("disabled");
+        if(!dontreset)
+          but.removeClass("disabled");
       });
     }
   });
   
   $("#multicheckin").click(function() {
-    var but = $(this);
+    var but = $(this), dontreset = false;
     if (!but.hasClass("disabled")) {
       but.addClass("disabled");
       $.ajax({
@@ -495,11 +502,14 @@ $(function(){
           })()
         },
       }).done(function(data) {
+        console.log(data);
         if (data.success) {
-          //TODO
+          dontreset = true;
+          checkinsuccess();
         }
       }).always(function(data) {
-        but.removeClass("disabled");
+        if(!dontreset)
+          but.removeClass("disabled");
       });
     }
   });

@@ -24,9 +24,10 @@
     ));
   }
   
+  header('Content-type: application/json');
   if (!array_key_exists("services", $_REQUEST)) {
     checkin($_REQUEST["person"], $_REQUEST["service"]);
-    echo "OK"; //TODO
+    echo json_encode(array("success" => true));
   } else {
     $services = intval($_REQUEST["services"]);
     for ($i = 0; $i < floor(log($services, 2)) + 1; $i++) {
@@ -34,7 +35,7 @@
         checkin($_REQUEST["person"], $i);
       }
     }
-    echo "OK"; //TODO
+    echo json_encode(array("success" => true));
   }
   
 ?>

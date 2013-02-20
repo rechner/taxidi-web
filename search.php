@@ -33,6 +33,14 @@
           <!-- /sidebar -->
 
           <div class="span9">
+            <?php
+              if(array_key_exists("checkedin", $_GET)) {
+                echo '<div class="span9"><div class="alert alert-success">';
+                echo '<a class="close" data-dismiss="alert" href="#">×</a>';
+                echo "<h4 class=\"alert-heading\">{$_GET["checkedin"]} checked in successfully.";
+                echo '</h4></div>';
+              }
+            ?>
             <!-- Search form -->
             <form class="well form-search" name="search" action="search.php" method="get">
               <input type="text" class="input-medium search-query" name="search" 

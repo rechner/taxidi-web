@@ -12,11 +12,29 @@
   $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
   ob_start();
   include "/usr/lib/cgi-bin/secure-code.php";
-  $sth->execute(array(
-    ":person"   => $_REQUEST["person"],
-    ":service"  => $_REQUEST["service"],
-    ":code"     => ob_get_clean(),
-    ":location" => get_client_ip()
-  ));
+  $code = ob_get_clean();
+  
+  function checkin($person, $service) {
+    global $code, $sth;
+    $sth->execute(array(
+      ":person"   => $person,
+      ":service"  => $service,
+      ":code"     => $code,
+      ":location" => get_client_ip()
+    ));
+  }
+  
+  if (!array_key_exists("services", $_REQUEST)) {
+    checkin($_REQUEST["person"], $_REQUEST["service"]);
+    echo "OK"; //TODO
+  } else {
+    $services = intval($_REQUEST["services"]);
+    for ($i = 0; $i < floor(log($services, 2)) + 1; $i++) {
+      if (($services >> $i) & 1) {
+        checkin($_REQUEST["person"], $i);
+      }
+    }
+    echo "OK"; //TODO
+  }
   
 ?>

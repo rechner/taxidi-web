@@ -205,7 +205,7 @@
   </div>
   <div class="modal-footer">
     <a class="btn" data-dismiss="modal" ><?php echo _('Close') ?></a>
-    <a class="btn btn-success">Check in</a>
+    <a class="btn btn-success" id="multicheckin">Check in</a>
   </div>
 </div>
 
@@ -465,7 +465,34 @@ $(function(){
         type: "POST",
         data: {
           person:  <?php echo $_GET["id"];?>,
-          service: <?php echo $_GET["service"];?>
+          service: parseInt("<?php echo $_GET["service"];?>")
+        },
+      }).done(function(data) {
+        if (data.success) {
+          //TODO
+        }
+      }).always(function(data) {
+        but.removeClass("disabled");
+      });
+    }
+  });
+  
+  $("#multicheckin").click(function() {
+    var but = $(this);
+    if (!but.hasClass("disabled")) {
+      but.addClass("disabled");
+      $.ajax({
+        url:  "checkin.php",
+        type: "POST",
+        data: {
+          person:   <?php echo $_GET["id"];?>,
+          services: (function() {
+            var services = 0;
+            $("#multicheckinModal input[type=checkbox]:not(.select-all):checked").each(function() {
+              services |= 1 << (parseInt(this.name))
+            });
+            return services;
+          })()
         },
       }).done(function(data) {
         if (data.success) {

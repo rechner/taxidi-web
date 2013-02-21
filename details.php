@@ -566,16 +566,16 @@ selecttab = function(tab) {
       </div>
     </li>
     <div class="span3 pull-right">
-        <button class="btn btn-success btn-block btn-large" type="button" id="checkin">
-          Check in to<br>
-          <?php 
+        <?php 
+          if (array_key_exists("service", $_REQUEST)) {
+            echo "<button class=\"btn btn-success btn-block btn-large\" type=\"button\" id=\"checkin\">Check in to<br>";
             $sql = "SELECT name FROM services WHERE id = :id;";
             $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $sth->execute(array(":id" => $_GET["service"]));
             $result = $sth->fetch(PDO::FETCH_BOTH);
-            echo $result[0];
-          ?>
-        </button>
+            echo $result[0] . "</button>";
+          }
+        ?>
         <button class="btn btn-block btn-large" type="button" href="#multicheckinModal" id="checkin" data-toggle="modal">
           Check in to<br>
           Multiple Services

@@ -470,7 +470,7 @@ $(function(){
         type: "POST",
         data: {
           person:  <?php echo $_GET["id"];?>,
-          service: parseInt("<?php echo $_GET["service"];?>")
+          service: parseInt("<?php echo array_key_exists("service", $_REQUEST) ? $_GET["service"] : 0;?>")
         },
       }).done(function(data) {
         if (data.success) {
@@ -576,7 +576,7 @@ selecttab = function(tab) {
             echo $result[0] . "</button>";
           }
         ?>
-        <button class="btn btn-block btn-large" type="button" href="#multicheckinModal" id="checkin" data-toggle="modal">
+        <button class="btn btn-block btn-large" type="button" href="#multicheckinModal" id="multicheckin" data-toggle="modal">
           Check in to<br>
           Multiple Services
         </button>

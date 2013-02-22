@@ -130,4 +130,9 @@
             
           </div>
       </div>
+      <script>
+        $("select[name=service]").change(function() {
+          location.href = location.href.replace(/service=(\d+)/gi, "service=" + $("select[name=service]").val());
+        });
+      </script>
 <?php require_once "template/footer.php" ; ?>

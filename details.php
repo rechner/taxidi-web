@@ -205,7 +205,7 @@
   </div>
   <div class="modal-footer">
     <a class="btn" data-dismiss="modal" ><?php echo _('Close') ?></a>
-    <a class="btn btn-success" id="multicheckin">Check in</a>
+    <a class="btn btn-success disabled" id="multicheckin">Check in</a>
   </div>
 </div>
 
@@ -514,9 +514,20 @@ $(function(){
     }
   });
   
+  //add the selector ":not(:first)" to the first line
+  //  if you don't want the top row to be clickable
+  $("#multicheckinModal table tr").click(function() {
+    $("input[type=checkbox]", this).click();
+  }).find("input[type=checkbox]").change(function() {
+    $("#multicheckin")[($(this).closest("table").find(":checked")
+      .length > 0 ? "remove" : "add") + "Class"]("disabled");
+  }).click(function(e) {
+    e.stopPropagation();
+  });
+  
 });
 
-//TODO, this function is dumb, fix it
+//TODO, this function is durp, fix it
 selecttab = function(tab) {
   var tabs = ["main", "extended"];
   for (var t in tabs) {

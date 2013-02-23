@@ -502,7 +502,6 @@ $(function(){
           })()
         },
       }).done(function(data) {
-        console.log(data);
         if (data.success) {
           dontreset = true;
           checkinsuccess();

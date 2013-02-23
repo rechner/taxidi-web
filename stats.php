@@ -170,7 +170,7 @@
       $result = pg_query($connection, $query) or 
         die("Error in query: $query." . pg_last_error($connection));
       while ($row = pg_fetch_assoc($result)) {
-        echo "<tr><td><a href=\"details.php?id={$row["id"]}\">";
+        echo "<tr><td><a href=\"details.php?id={$row["id"]}{$row["person"]}\">";
         //echo "{$row["person"]}</td><td>";
         if ($_GET["mode"] == "full") {
           echo "{$row["name"]} {$row["lastname"]}</a></td><td>{$row["activity"]}</td><td>{$row["roomname"]}</td><td>{$row["paging"]}</td><td>{$row["code"]}";

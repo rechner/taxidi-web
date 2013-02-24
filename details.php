@@ -102,8 +102,29 @@
   }
 
   require_once "template/header.php";
+  
+  $single_checkin_button_code = "";
+  if (array_key_exists("service", $_REQUEST)) {
+    $single_checkin_button_code .=
+      "<button class=\"btn btn-success btn-block btn-large\" type=\"button\" id=\"checkin\">Check in to<br>";
+    $sql = "SELECT name FROM services WHERE id = :id;";
+    $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+    $sth->execute(array(":id" => $_GET["service"]));
+    $result = $sth->fetch(PDO::FETCH_BOTH);
+    $single_checkin_button_code .= $result[0] . "</button>";
+  }
 ?> 
 <!-- sidebar -->
+</div>
+<div class="span12 visible-phone" style="margin-bottom: 20px;">
+  <?php echo $single_checkin_button_code; ?>
+  <button class="btn btn-block btn-large" type="button" href="#multicheckinModal" id="multicheckin" data-toggle="modal">
+    Check in to<br>
+    Multiple Services
+  </button>
+</div>
+<div class="row-fluid">
+
 <div class="span3">
   <div class="well sidebar-nav">
     <ul class="nav nav-list">
@@ -575,16 +596,16 @@ selecttab = function(tab) {
         ?>
       </div>
     </li>
-    <div class="span3 pull-right">
+    <style>
+      @media (max-width: 767px) {
+        .checkin {
+          
+        }
+      }
+    </style>
+    <div class="span3 pull-right hidden-phone">
         <?php 
-          if (array_key_exists("service", $_REQUEST)) {
-            echo "<button class=\"btn btn-success btn-block btn-large\" type=\"button\" id=\"checkin\">Check in to<br>";
-            $sql = "SELECT name FROM services WHERE id = :id;";
-            $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-            $sth->execute(array(":id" => $_GET["service"]));
-            $result = $sth->fetch(PDO::FETCH_BOTH);
-            echo $result[0] . "</button>";
-          }
+          echo $single_checkin_button_code;
         ?>
         <button class="btn btn-block btn-large" type="button" href="#multicheckinModal" id="multicheckin" data-toggle="modal">
           Check in to<br>

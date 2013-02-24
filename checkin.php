@@ -38,4 +38,6 @@
     echo json_encode(array("success" => true));
   }
   
+  //TODO http://taxidi-kiosk1.local:8888/print.php?token=foxesarepawesome&action=print&id=2243
+  
 ?>

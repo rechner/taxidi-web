@@ -11,6 +11,22 @@
   $dbh = db_connect();
   
   $_REQUEST["search"] = trim($_REQUEST["search"]);
+  
+  $service = $_REQUEST["service"];
+  $newservice = null;
+  $now = strtotime(date("H:m:s"));
+  $before = false;
+  $services = "";
+  foreach ($dbh->query("SELECT id, name, \"endTime\" FROM services ORDER BY \"endTime\";") as $row) {
+    $selected = $service != "" ? ($service == $row["id"]) : (!$before and ($now < strtotime($row["endTime"])));
+    $before = $now < strtotime($row["endTime"]);
+    $services .= "<option value=\"{$row["id"]}\"" . ($selected ? " selected" : "") . ">{$row["name"]}</option>\n";
+    $newservice = $selected ? $row["id"] : $newservice;
+  }
+  if ($service == "") {
+    $_REQUEST["service"] = $newservice;
+    header("Location: search.php?".http_build_query($_REQUEST));
+  }          
 ?>
           <!-- sidebar -->
           <div class="span3">
@@ -51,14 +67,7 @@
                 Service:
                 <select class="input-medium" name="service">
                   <?php
-                    $service = $_REQUEST["service"];
-                    $now = strtotime(date("H:m:s"));
-                    $before = false;
-                    foreach ($dbh->query("SELECT id, name, \"endTime\" FROM services ORDER BY \"endTime\";") as $row) {
-                      $selected = $service != "" ? ($service == $row["id"]) : (!$before and ($now < strtotime($row["endTime"])));
-                      $before = $now < strtotime($row["endTime"]);
-                      echo "<option value=\"{$row["id"]}\"" . ($selected ? " selected" : "") . ">{$row["name"]}</option>\n";
-                    }
+                    echo $services;
                   ?>
                 </select> 
               </div>

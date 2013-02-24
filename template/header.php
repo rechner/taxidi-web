@@ -82,7 +82,7 @@
               <li<?php echo (basename($_SERVER['PHP_SELF']) == "stats.php" ? " class=\"active\"" : "");?>><a href="stats.php"><?php echo _('Statistics') ?></a></li>
               <li class="divider-vertical"></li>
             </ul>
-            <form class="navbar-search pull-left" action="search.php" method="post">
+            <form class="navbar-search pull-left" action="search.php" method="get">
                 <input name="search" type="text" class="search-query input-medium"
                   placeholder="<?php echo _("Search"); ?>">
               </form>

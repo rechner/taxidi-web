@@ -189,6 +189,7 @@
             <label class="control-label" for="username"><?php echo _('Username') ?></label>
             <div class="controls">
               <input type="text" id="username" name="username"
+                     autocapitalize="off"
                      placeholder="<?php echo _('Username') ?>" autofocus>
             </div>
           </div>

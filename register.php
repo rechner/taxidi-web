@@ -113,7 +113,12 @@
     
     header("Content-Type: application/json");
     if ($register == TRUE) {
-      echo "{\"success\":true,\"id\":".$id.",\"name\":\"" . $_POST["name"] . " " . $_POST["lastname"] . "\"}";
+      echo json_encode(array(
+        "success"  => true,
+        "id"       => $id,
+        "name"     => $_POST["name"],
+        "lastname" => $_POST["lastname"]
+      ));
       exit;
     } else {
       echo "{\"success\":false}";
@@ -363,6 +368,7 @@
 
 <link href="resources/css/Jcrop.min.css" rel="stylesheet">
 <script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
+<script src="resources/js/blobbuilder.js"> </script>
 <script src="resources/js/canvas_toblob.js"> </script>
 <script src="resources/js/jquery.getparams.js"> </script>
 
@@ -459,7 +465,7 @@ $(function(){
       var fd = new FormData(document.forms.namedItem("details"));
       getcroppedphoto(function(file) {
         fd.append("photo", file);
-        $.ajax({
+        $.post({
           url: $("form[name=details]").attr("action"),
           type: "POST",
           data: fd,

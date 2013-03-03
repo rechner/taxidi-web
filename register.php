@@ -169,7 +169,7 @@
     </div>
        
     <input type="file" accept="image/*" id="photoinput" name="origphoto" style="height: 0px; width: 0px;">
-    <form enctype="multipart/form-data" class="form-horizontal" action="" method="post" name="details">
+    <form enctype="multipart/form-data" class="form-horizontal" action="register.php" method="post" name="details">
       <fieldset>
         <div class="control-group">
           <label class="control-label">Photo</label>
@@ -234,8 +234,8 @@
                 <?php echo _("Birthdate"); ?></label>
             </div>
             <div>
+                 <!--onKeyDown="return dFilter (event.keyCode, this, '####-##-##');"-->
               <input type="date" class="input-small" name="dob" id="dob"
-                 onKeyDown="return dFilter (event.keyCode, this, '####-##-##');"
                  onkeyup="showAge();" oninput="showAge();" required
                  pattern="^[12]\d{3}-(0?[1-9]|1[0-2])-([012]?[0-9]|3[01])$"
                  data-validation-pattern-message="Must be a valid ISO8601 date."
@@ -368,7 +368,6 @@
 
 <link href="resources/css/Jcrop.min.css" rel="stylesheet">
 <script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
-<script src="resources/js/blobbuilder.js"> </script>
 <script src="resources/js/canvas_toblob.js"> </script>
 <script src="resources/js/jquery.getparams.js"> </script>
 
@@ -465,7 +464,7 @@ $(function(){
       var fd = new FormData(document.forms.namedItem("details"));
       getcroppedphoto(function(file) {
         fd.append("photo", file);
-        $.post({
+        $.ajax({
           url: $("form[name=details]").attr("action"),
           type: "POST",
           data: fd,

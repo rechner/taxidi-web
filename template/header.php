@@ -70,6 +70,12 @@
               </a>
               <ul class="dropdown-menu">
                 <li><a href="profile.php"><?php echo _('Profile') ?></a></li>
+                <?php 
+                  // only show admin links for admins
+                  if ($_SESSION["useradmin"]) { 
+                    echo "<li><a href=\"users.php\">" . _('User Management') . "</a></li>";
+                  }
+                ?>
                 <li class="divider"></li>
                 <li><a href="logout.php"><?php echo _('Sign Out') ?></a></li>
               </ul>

@@ -32,7 +32,7 @@
                 if (!empty($_POST["username"]) && !empty($_POST["password"])) {
                         $dbh = db_connect();
                         
-                        $sql  = "SELECT id, \"user\", hash, salt, name FROM users WHERE \"user\" = :username";
+                        $sql  = "SELECT id, \"user\", hash, salt, name, admin FROM users WHERE \"user\" = :username";
                         $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
                         
                         $sth->execute(array(":username" => $_POST["username"]));
@@ -42,6 +42,7 @@
                                 $_SESSION["userid"]   = $data["id"];
                                 $_SESSION["username"] = $data["user"];
                                 $_SESSION["usernick"] = $data[$data["name"] ? "name" : "user"];
+                                $_SESSION["useradmin"] = $data["admin"];
                                 
                                 $_SESSION["salt"]        = hash("sha256", $_SERVER["REQUEST_TIME"]);
                                 $_SESSION["fingerprint"] = session_create_fingerprint();

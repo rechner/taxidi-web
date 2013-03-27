@@ -2,6 +2,7 @@
 <!-- vim: tabstop=2:softtabstop=2 -->
 <?php
   require_once "config.php";
+  require_once 'functions.php';
   
   //internationalisation
   $domain = "search";
@@ -11,8 +12,10 @@
   require_once "template/header.php";
   
   function getvar($vname) {
-    return (array_key_exists($vname, $_POST) ? $_POST[$vname] : $_GET[$vname]);
+    return array_key_exists($vname, $_POST) ? $_POST[$vname] : $_GET[$vname];
   }
+  
+  $dbh = db_connect();
   
   $connection = pg_connect ("host=$dbhost dbname=$dbname 
                             user=$dbuser password=$dbpass");
@@ -120,15 +123,15 @@
             <?php
               if (!empty($_GET)) {
                 $searchfilters = array( 
-                  "name"     => "data.name || ' ' || data.lastname ILIKE '%" . getvar("name") . "%'",
-                  "room"     => "data.room = " . getvar("room"),
-                  "activity" => "data.activity = " . getvar("activity"),
-                  "date1"    => "data.dob > '" . getvar("date1") . "'",
-                  "date2"    => "data.dob < '" . getvar("date2") . "'",
-                  "date3"    => "data.\"joinDate\" > '" . getvar("date3") . "'",
-                  "date4"    => "data.\"joinDate\" < '" . getvar("date4") . "'",
-                  "date5"    => "data.\"lastSeen\" > '" . getvar("date5") . "'",
-                  "date6"    => "data.\"lastSeen\" < '" . getvar("date6") . "'",
+                  "name"     => "data.name || ' ' || data.lastname ILIKE " . $dbh->quote("%".getvar("name")."%"),
+                  "room"     => "data.room = " . $dbh->quote(getvar("room")),
+                  "activity" => "data.activity = " . $dbh->quote(getvar("activity")),
+                  "date1"    => "data.dob > " . $dbh->quote(getvar("date1")),
+                  "date2"    => "data.dob < " . $dbh->quote(getvar("date2")),
+                  "date3"    => "data.\"joinDate\" > " . $dbh->quote(getvar("date3")),
+                  "date4"    => "data.\"joinDate\" < " . $dbh->quote(getvar("date4")),
+                  "date5"    => "data.\"lastSeen\" > " . $dbh->quote(getvar("date5")),
+                  "date6"    => "data.\"lastSeen\" < " . $dbh->quote(getvar("date6")),
                 );
                 $wherequery = array();
                 foreach ($searchfilters as $n => $q) {

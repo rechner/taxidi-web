@@ -3,14 +3,14 @@
   //get input:
   if (is_numeric($id = $_GET["id"])) { 
     require_once 'config.php';
-    $connection = pg_connect ("host=$dbhost dbname=$dbname 
-                              user=$dbuser password=$dbpass");
+    require_once 'functions.php';
+    $dbh = db_connect();
                               
     $domain = "print";
     require_once 'locale.php';
                               
     ///*
-    $query = "SELECT data.name, lastname, dob, activities.name as activity, rooms.name as room,
+    $sql = "SELECT data.name, lastname, dob, activities.name as activity, rooms.name as room,
                      grade, phone, \"mobileCarrier\", paging, parent1, parent2,
                      \"parentEmail\", medical, \"joinDate\", \"lastSeen\",
                      \"lastModified\", count, visitor, expiry, \"noParentTag\",
@@ -18,10 +18,10 @@
                 FROM data 
                 LEFT JOIN activities ON data.activity=activities.id
                 LEFT JOIN rooms ON data.room = rooms.id
-                WHERE data.id = $id;";
-    $result = pg_query($connection, $query) or 
-      die("Error in query: $query." . pg_last_error($connection));
-    $edata = pg_fetch_assoc($result);
+                WHERE data.id = :id;";
+    $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+    $sth->execute(array(":id" => $id));
+    $edata = $sth->fetch(PDO::FETCH_ASSOC);
     
     if (!$edata) {
       header("HTTP/1.1 400 Bad Request");
@@ -29,8 +29,6 @@
     }
     
     $page_title = "{$edata["name"]} {$edata["lastname"]}";
-
-    pg_free_result($result);
   
   } else {
     header("HTTP/1.1 400 Bad Request");

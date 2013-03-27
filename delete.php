@@ -2,21 +2,19 @@
   //get input:
   if (is_numeric($id = $_GET["id"])) { 
     require_once 'config.php';
-    $connection = pg_connect ("host=$dbhost dbname=$dbname 
-                              user=$dbuser password=$dbpass");
+    require_once 'functions.php';
+    $dbh = db_connect();
                               
-    $query = "SELECT * FROM data WHERE id = $id;";
-    $result = pg_query($connection, $query) or 
-      die("Error in query: $query." . pg_last_error($connection));
-    $edata = pg_fetch_assoc($result);
+    $sth = $dbh->prepare("SELECT * FROM data WHERE id = :id;");
+    $sth->execute(array(":id" => $_GET["id"]));
+    $edata = $sth->fetch(PDO::FETCH_ASSOC);
     
     if (!$edata) {
       header("HTTP/1.1 400 Bad Request");
       die("ID " . $id . " does not exist.");
     } else {
-      $query = "DELETE FROM data WHERE id = $id;";
-      $result = pg_query($connection, $query) or
-        die("Error in query: $query." . pg_last_error($connection));
+      $sth = $dbh->prepare("DELETE FROM data WHERE id = :id;");
+      $sth->execute(array(":id" => $_POST["id"]));
         
       //delete photos
       $files = glob($photo_path . str_pad($edata["picture"], 6, "0", 0) . "*");
@@ -33,9 +31,6 @@
           header( "Location: http://$host$uri/search.php" );
       }
     }
-  
-    pg_free_result($result);
-    exit;
   
   } else {
     header("HTTP/1.1 400 Bad Request");

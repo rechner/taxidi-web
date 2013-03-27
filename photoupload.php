@@ -1,6 +1,7 @@
 <?php
 
 require_once "config.php";
+require_once 'functions.php';
 
 $target_path = "uploads/" . $_POST["id"]; 
 
@@ -42,13 +43,10 @@ $output = array(
 if (array_key_exists("photo", $_FILES)) {
   if ($_FILES["photo"]["type"] == "image/png" or $_FILES["photo"]["type"] == "image/jpeg") {
     if ($_FILES["photo"]["size"] < $photo_maxsize) {
-      $connection = pg_connect ("host=$dbhost dbname=$dbname 
-                                user=$dbuser password=$dbpass");
-      $query = "SELECT picture FROM data WHERE id = {$_POST["id"]};";
-      $result = pg_query($connection, $query) or 
-        die("Error in query: $query." . pg_last_error($connection));
-      $rdata = pg_fetch_assoc($result);
-      pg_free_result($result);
+      $dbh = db_connect();
+      $sth = $dbh->prepare('SELECT picture FROM data WHERE id = :id');
+      $sth->execute(array(":id" => $_POST["id"]));
+      $rdata = $sth->fetch(PDO::FETCH_ASSOC);
       
       //TODO remove all other possible pictures.
       //TODO check for error with deleting
@@ -57,10 +55,8 @@ if (array_key_exists("photo", $_FILES)) {
         unlink($files[0]);
       }
 
-      $result = pg_query($connection, "SELECT max(picture) FROM data;") or 
-        die("Error in query: $query." . pg_last_error($connection));
-      $rdata = pg_fetch_assoc($result);
-      pg_free_result($result);
+      $sth = $dbh->query("SELECT max(picture) FROM data;");
+      $rdata = $sth->fetch(PDO::FETCH_ASSOC);
       
       $parts = explode("/", $_FILES["photo"]["type"]);
       $filen = intval($rdata["max"]) + 1;
@@ -75,13 +71,10 @@ if (array_key_exists("photo", $_FILES)) {
       
       //TODO make a new method of getting a new id that doesn't fill up
       $lastmodified = date("Y-m-d H:i:s.u", $_SERVER["REQUEST_TIME"]);
-      $query = "UPDATE data SET picture = '$filen', \"lastModified\" = '" . $lastmodified . "' WHERE id = {$_POST["id"]};";
-      $result = pg_query($connection, $query) or 
-        die("Error in query: $query." . pg_last_error($connection));
-      pg_free_result($result);
+      $sql = "UPDATE data SET picture = :filelen, \"lastModified\" = :lastmod WHERE id = :id;";
+      $sth = $dbh->prepare($sql);
+      $sth->execute(array(":id" => $_POST["id"], ":lastmod" => $lastmodified, ":filelen" => $filen));
       $output["modified"] = $lastmodified;
-    
-      pg_close($connection);
     } else {
       echo _("File too large");
     }

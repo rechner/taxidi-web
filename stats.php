@@ -1,12 +1,12 @@
 <?php
     require_once 'config.php';
+    require_once "functions.php";
     
     //internationalisation
     $domain = "search";
     require_once 'locale.php';
 
-    $connection = pg_connect ("host=$dbhost dbname=$dbname 
-                              user=$dbuser password=$dbpass");
+    $dbh = db_connect();
                               
     $page_title = "Statistics";
     
@@ -50,7 +50,7 @@
     // human label         http+php    postgres
       _("Service")  => array("service" , "services"  ),
       _("Activity") => array("activity", "activities"),
-      _("Room")    => array("room"    , "rooms"),
+      _("Room")     => array("room"    , "rooms"),
     );
   if ($_GET["mode"] != "medical") {
     echo "<form class=\"form-horizontal well\" method=\"get\">
@@ -177,10 +177,8 @@
         } elseif ($_GET["mode"] == "medical") {
           echo "{$row["name"]} {$row["lastname"]}</a></td><td>{$row["medical"]}</td><td>" . str_replace("\n", '<br>', $row["notes"]);
         }
-        //echo print_r($row);
         echo "</td></tr>\n";
       }
-      pg_free_result($result);
       echo "</tbody></table>";
     }
   ?>
@@ -191,7 +189,4 @@
     $("#date").datepicker().on("focus", function() {$("#datef_single").prop("checked", true);});
   });
 </script>
-<?php
-  require_once "template/footer.php" ;
-  pg_close($connection);
-?>
+<?php require_once 'template/footer.php'; ?>

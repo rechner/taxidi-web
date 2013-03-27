@@ -1,6 +1,7 @@
 <?php
   /* vim: tabstop=2:expandtab:softtabstop=2 */
   require_once 'config.php';
+    require_once 'functions.php';
   
   function resize_image($file, $w, $h, $crop=FALSE) {
     // @param file, width, height, crop

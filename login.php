@@ -99,7 +99,7 @@
     <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png"> -->
     <!--<link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png"> -->
     <!--<link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png"> -->
-    <link rel="apple-touch-icon-precomposed" href="resources/img/apple-touch-icon-57-optimized.png">
+    <!-- <link rel="apple-touch-icon-precomposed" href="resources/img/apple-touch-icon-57-optimized.png"> -->
   </head>
 
   <body>
@@ -141,42 +141,35 @@
       </div>
     </div>
     
-    <div class="modal hide fade" id="banner" tabindex="-1" role="dialog" aria-labelledby="bannerLabel" aria-hidden="true" style="margin-top: -270px;">
-      <div class="modal-header" style="background-color: #850505; border-bottom-color: #600000; color: white;">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="bannerLabel" style="margin: 0;">
-          <i class="icon-warning-sign icon-white" style="margin-top: 7px;">
-          </i> <?php echo _('Warning'); ?> </h3>
-      </div>
-      <div class="modal-body" style="background-color: #800000; color: white;">
-        <h2 style="text-align: center"><i class="icon-lock icon-white" style="margin-top: 10px;"></i> 
-          <?php echo _('Private Computer System') ?> 
-          <i class="icon-lock icon-white" style="margin-top: 10px;"></i></h2><br>
-        <p style="text-align: justify">
-          This   computer  system  including  all  related  equipment,   network  devices
-          (specifically including Internet access), are provided only for authorized use.
-          All computer systems  may be monitored  for all  lawful purposes,  including to
-          ensure  that  their  use  is  authorized,  for management  of  the  system,  to 
-          facilitate  protection  against  unauthorized  access,  and  to verify security
-          procedures, survivability and operational security.  Monitoring includes active
-          attacks  by  authorized  personnel  and  their  entities  to test or verify the
-          security  of  the  system.  During  monitoring,  information  may  be examined,
-          recorded, copied and used for authorized purposes.  All  information  including 
-          personal information, placed on or sent over this system may be monitored. Uses
-          of this system,  authorized  or unauthorized, constitutes consent to monitoring
-          of  this  system.  Unauthorized  use may  subject you  to criminal prosecution.
-          Evidence of any  such unauthorized  use collected during monitoring may be used
-          for  administrative,  criminal  or other  adverse  action.</p>
-        <p><b>
-          <?php echo _('Login Agreement'); /* Use of this system constitutes consent to monitoring for these purposes. */ ?>
-        <br></b></p>
-        <!-- <i>Die Benutzung diesem System setzt ein Zustimmung zur Überwachung.</i><br>
-        L'utilisation de ce système constitue un consentement de ce contrôle.</p> -->
+    <!-- TODO: Store banner in config so it's not duplicated twice here --> 
+    <div class="visible-desktop" id="modal_banner"></div>
+    
+    <div class="row-fluid" id="noscript_banner">
+      <div class="span4"></div>
+      <div class="span5" style="margin-left: auto; margin-right:auto">
+        <div class="alert alert-error">
+          <h2 style="text-align: center"><i class="icon-lock" style="margin-top: 10px;"></i> 
+            <?php echo _('Private Computer System') ?> 
+            <i class="icon-lock" style="margin-top: 10px;"></i></h2><br>
+          <p style="text-align: justify">
+            This   computer  system  including  all  related  equipment,   network  devices
+            (specifically including Internet access), are provided only for authorized use.
+            All computer systems  may be monitored  for all  lawful purposes,  including to
+            ensure  that  their  use  is  authorized,  for management  of  the  system,  to 
+            facilitate  protection  against  unauthorized  access,  and  to verify security
+            procedures, survivability and operational security.  Monitoring includes active
+            attacks  by  authorized  personnel  and  their  entities  to test or verify the
+            security  of  the  system.  During  monitoring,  information  may  be examined,
+            recorded, copied and used for authorized purposes.  All  information  including 
+            personal information, placed on or sent over this system may be monitored. Uses
+            of this system,  authorized  or unauthorized, constitutes consent to monitoring
+            of  this  system.  Unauthorized  use may  subject you  to criminal prosecution.
+            Evidence of any  such unauthorized  use collected during monitoring may be used
+            for  administrative,  criminal  or other  adverse  action.</p>
+          <p><b>
+            <?php echo _('Login Agreement'); /* Use of this system constitutes consent to monitoring for these purposes. */ ?>
+          <br></b></p>
         </div>
-      <div class="modal-footer" style="background-color: #850505; color: white; border-top-color: #600000; box-shadow: 0 1px 0 #700000 inset;">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">
-          <?php echo _('Continue'); ?> <i class="icon-arrow-right"></i>
-        </button>
       </div>
     </div>
     
@@ -184,6 +177,9 @@
       <div class="span4"></div>
         <div class="span4">
         <?php echo $error ? "<div class=\"alert alert-error\">$error</div>": ""; ?>
+        
+        
+        
         <form class="form-horizontal" method="POST">
           <legend><strong><?php echo _('Login') ?></strong></legend>
           <div class="control-group">
@@ -211,7 +207,58 @@
           </div>
         </form>
     
+    <noscript>
+      <div style="text-align: center">
+        <a href="login.php?locale=en">English</a> &middot;
+        <a href="login.php?locale=de_DE">Deutsch</a> &middot;
+        <a href="login.php?locale=fr_FR.utf8">françias</a> &middot;
+        <a href="#"><?php echo _('Translate this application') ?></a>
+      </div>
+    </noscript>
+    
     <script>
+      // add modal banner:
+      var width = $(window).width();
+      $(document).ready(function() {
+        if (width > 979) {
+          console.log("Desktop view");
+          document.getElementById('noscript_banner').innerHTML = "";
+          document.getElementById('modal_banner').innerHTML = 
+          '<div class="modal hide fade" id="banner" tabindex="-1" role="dialog" aria-labelledby="bannerLabel" aria-hidden="true" style="margin-top: -270px;">' +
+          '<div class="modal-header" style="background-color: #850505; border-bottom-color: #600000; color: white;">' +
+          '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+          '<h3 id="bannerLabel" style="margin: 0;">' +
+            '<i class="icon-warning-sign icon-white" style="margin-top: 7px;">' +
+            '</i> <?php echo _('Warning'); ?> </h3></div>' +
+          '<div class="modal-body" style="background-color: #800000; color: white;">' +
+          '<h2 style="text-align: center"><i class="icon-lock icon-white" style="margin-top: 10px;"></i> '+
+            '<?php echo _('Private Computer System') ?> '+
+            '<i class="icon-lock icon-white" style="margin-top: 10px;"></i></h2><br>'+
+          '<p style="text-align: justify">'+
+            'This   computer  system  including  all  related  equipment,   network  devices'+
+            '(specifically including Internet access), are provided only for authorized use.'+
+            'All computer systems  may be monitored  for all  lawful purposes,  including to'+
+            'ensure  that  their  use  is  authorized,  for management  of  the  system,  to'+
+            'facilitate  protection  against  unauthorized  access,  and  to verify security'+
+            'procedures, survivability and operational security.  Monitoring includes active'+
+            'attacks  by  authorized  personnel  and  their  entities  to test or verify the'+
+            'security  of  the  system.  During  monitoring,  information  may  be examined,'+
+            'recorded, copied and used for authorized purposes.  All  information  including '+
+            'personal information, placed on or sent over this system may be monitored. Uses'+
+            'of this system,  authorized  or unauthorized, constitutes consent to monitoring'+
+            'of  this  system.  Unauthorized  use may  subject you  to criminal prosecution.'+
+            'Evidence of any  such unauthorized  use collected during monitoring may be used'+
+            'for  administrative,  criminal  or other  adverse  action.</p>'+
+          '<p><b>'+
+            '<?php echo _('Login Agreement'); /* Use of this system constitutes consent to monitoring for these purposes. */ ?>'+
+          '<br></b></p></div>'+
+          '<div class="modal-footer" style="background-color: #850505; color: white; border-top-color: #600000; box-shadow: 0 1px 0 #700000 inset;">'+
+          '<button class="btn" data-dismiss="modal" aria-hidden="true"><?php echo _('Continue'); ?> <i class="icon-arrow-right"></i>'+
+          '</button></div></div>';
+        }
+      });
+      
+      
       $(function(){
         <? echo $_SERVER['REQUEST_METHOD'] != "POST" ? "$('#banner').modal('show');" : ""; ?>
         $("#banner").on("hide", function() {$("#username").focus();});

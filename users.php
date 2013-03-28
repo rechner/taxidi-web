@@ -7,7 +7,6 @@
   require_once "functions.php";
   
   if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    session_start();
     $errorFlag = false; // let us know further down if there was a problem
     
   }
@@ -45,7 +44,7 @@
               </div></div>';
       } else { ?>
     
-        <form class="well form-horizontal" action="users.php" method="post">
+        <form class="well form-horizontal" action="users.php" name="add" method="post">
           <fieldset>
             <legend>Add System User</legend>
             <div class="control-group">
@@ -70,6 +69,11 @@
               </div>
             </div>
             <!-- TODO: password generation -->
+            <div class="control-group">
+              <div class="controls">
+                <a class="btn btn-info" id="passgen" onclick="passgen();">Generate Random Password</a>
+              </div>
+            </div>
             <hr>
             <div class="control-group">
               <label class="control-label" for="name">Display Name</label>
@@ -94,6 +98,14 @@
                 </label>
               </div>
             </div>
+            <div class="control-group">
+              <div class="controls">
+                <label class="checkbox">
+                  <input type="checkbox" name="admin" id="admin">
+                  Administrator
+                </label>
+              </div>
+            </div>
             <div class="form-actions">
               <button type="submit" class="btn btn-primary">Add User</button>
               <a class="btn" href="users.php">Cancel</a>
@@ -108,24 +120,33 @@
         
                 //BASIC
                 $(".password_check").passStrength({
-                    shortPass: 		"top_shortPass",	//optional
-                    badPass:		"top_badPass",		//optional
-                    goodPass:		"top_goodPass",		//optional
-                    strongPass:		"top_strongPass",	//optional
-                    baseStyle:		"top_testresult",	//optional
-                    username:			"#username",		//required override
-                    messageloc:		1			//before == 0 or after == 1
+                    shortPass:    "top_shortPass",  //optional
+                    badPass:    "top_badPass",    //optional
+                    goodPass:   "top_goodPass",   //optional
+                    strongPass:   "top_strongPass", //optional
+                    baseStyle:    "top_testresult", //optional
+                    username:     "#username",    //required override
+                    messageloc:   1     //before == 0 or after == 1
                 });
                 
                 $(".password_confirm").passConfirm({
                     confirmPass: "top_badPasslong",
-                    goodPass:		"top_goodPass",
+                    goodPass:   "top_goodPass",
                     baseStyle:   "top_testresult",
                     password:    "#pass",
-                    strongPass:		"top_strongPass",
+                    strongPass:   "top_strongPass",
                     messageloc: 1
                 });
               });
+              
+              function passgen() {
+                
+                var randomstring = Math.random().toString(36).slice(-8).toUpperCase();
+                
+                alert("Copy this password into a safe place before clicking OK:\n\n" + randomstring);
+                document.add.pass.value = randomstring;
+                document.add.confirmpass.value = randomstring;
+              }
         </script>
     <?php } ?>
   </div>

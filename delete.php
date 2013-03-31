@@ -14,7 +14,7 @@
       die("ID " . $id . " does not exist.");
     } else {
       $sth = $dbh->prepare("DELETE FROM data WHERE id = :id;");
-      $sth->execute(array(":id" => $_POST["id"]));
+      $sth->execute(array(":id" => $_GET["id"]));
         
       //delete photos
       $files = glob($photo_path . str_pad($edata["picture"], 6, "0", 0) . "*");

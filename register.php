@@ -1,7 +1,7 @@
 <?php
   /* vim: tabstop=2:expandtab:softtabstop=2 */
   require_once 'config.php';
-    require_once 'functions.php';
+  require_once 'functions.php';
   
   function resize_image($file, $w, $h, $crop=FALSE) {
     // @param file, width, height, crop
@@ -26,11 +26,15 @@
   $register = FALSE; // placeholder to show success message
 
   if ($_SERVER['REQUEST_METHOD'] == "POST" and array_key_exists('activity', $_POST))  {
-    $result = pg_query($connection, "SELECT prefix FROM activities WHERE id = '".$_POST["activity"]."';") or
-        die("Error in query: $query." . pg_last_error($connection));
-    
-    $prefix = pg_fetch_result($result, 0, 0);
-    $paging = $prefix . "-" . substr($_POST["phone"], -4);
+    $dbh = db_connect();
+    $sth = $dbh->prepare("SELECT prefix FROM activities WHERE id = :id;");
+    $sth->execute(array(":id" => $_POST["activity"]));
+    $result = $sth->fetch(PDO::FETCH_ASSOC);    
+
+    if (!$result) {
+      die("PostgreSQL error");
+    }
+    $paging = $result["prefix"] . "-" . substr($_POST["phone"], -4);
     
     $photo_ref = "";
     if (array_key_exists("photo", $_FILES)) {
@@ -78,7 +82,7 @@
         $reason = "Unsupported image type";
       }
     } else { $photoSuccess = TRUE; }
-			
+      
     $query = "INSERT INTO data " .
                 "(name, lastname, phone, \"mobileCarrier\", paging, grade, " .
                 "dob, activity, room, medical, parent1, parent2, "   .

@@ -62,10 +62,8 @@
             <div class=\"controls\">
             <select name=\"{$sysname[0]}\" id=\"{$sysname[0]}\">
             <option value=\"any\" selected> -- " . _("Any") . " -- </option>";
-      $query = "SELECT id, name FROM {$sysname[1]};";
-      $result = pg_query($connection, $query) or
-        die("Error in query: $query." . pg_last_error($connection));
-      while ($data = pg_fetch_assoc($result)) {
+      $sth = $dbh->query("SELECT id, name FROM {$sysname[1]};");
+      while ($data = $sth->fetch(PDO::FETCH_ASSOC)) {
         echo "<option value=\"{$data["id"]}\"";
         if ( $data["id"] == $_GET[$sysname[0]] ) {
           echo " selected";
@@ -73,7 +71,6 @@
         }
         echo ">{$data["name"]}</option>\n";
       }
-      pg_free_result($result);
       echo "</select></div></div>";
     }
     
@@ -112,21 +109,19 @@
     
   if (!array_key_exists("mode",$_GET) or $_GET["mode"] == "stats") {
     $stats = array(
-      "<b>Total</b>"      => "WHERE true",
-      "Members"    => "LEFT JOIN data ON data.id = person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
-      "Visitors"   => "LEFT JOIN data ON data.id = person WHERE data.visitor = TRUE",
-      "Volunteers" => "WHERE volunteer > 1",
+      "<b>Total</b>" => "WHERE true",
+      "Members"      => "LEFT JOIN data ON data.id = person WHERE (data.visitor = FALSE or data.visitor IS NULL)",
+      "Visitors"     => "LEFT JOIN data ON data.id = person WHERE data.visitor = TRUE",
+      "Volunteers"   => "WHERE volunteer > 1",
     );
     echo "<div class=\"control-group form-inline\">
         <label class=\"control-label\">Statistics</label>
         <div class=\"controls\">";
     foreach ($stats as $name => $querymain) {
       $query = "SELECT count(person) FROM statistics " . $querymain . $queryend . ";" ;
-      $result = pg_query($connection, $query) or 
-        die("Error in query: $query." . pg_last_error($connection));
-      $row = pg_fetch_assoc($result);
+      $sth = $dbh->query($query);
+      $row = $sth->fetch(PDO::FETCH_ASSOC);
       echo "$name: {$row["count"]}<br/>";
-      pg_free_result($result);
     }
     echo "</div></div>";
   }
@@ -167,9 +162,8 @@
     
       echo "</tr></thead><tbody>";
       //echo $query;
-      $result = pg_query($connection, $query) or 
-        die("Error in query: $query." . pg_last_error($connection));
-      while ($row = pg_fetch_assoc($result)) {
+      $sth = $dbh->query($query);
+      while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr><td><a href=\"details.php?id={$row["id"]}{$row["person"]}\">";
         //echo "{$row["person"]}</td><td>";
         if ($_GET["mode"] == "full") {

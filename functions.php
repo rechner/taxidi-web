@@ -26,7 +26,10 @@
   
   function db_connect() {
     global $dbdsn;
-    return new PDO($dbdsn, null, null, array(PDO::ATTR_PERSISTENT => true));
+    return new PDO($dbdsn, null, null, array(
+      PDO::ATTR_PERSISTENT => true,
+      PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION
+    ));
   }
   
   function get_client_ip() {

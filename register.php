@@ -15,9 +15,8 @@
 
     return $img;
   }
-
-  $connection = pg_connect ("host=$dbhost dbname=$dbname 
-                              user=$dbuser password=$dbpass");
+  
+  $dbh = db_connect();
                               
   //internationalisation
   $domain = "details";
@@ -26,15 +25,9 @@
   $register = FALSE; // placeholder to show success message
 
   if ($_SERVER['REQUEST_METHOD'] == "POST" and array_key_exists('activity', $_POST))  {
-    $dbh = db_connect();
-    $sth = $dbh->prepare("SELECT prefix FROM activities WHERE id = :id;");
-    $sth->execute(array(":id" => $_POST["activity"]));
-    $result = $sth->fetch(PDO::FETCH_ASSOC);    
-
-    if (!$result) {
-      die("PostgreSQL error");
-    }
-    $paging = $result["prefix"] . "-" . substr($_POST["phone"], -4);
+    $sth = $dbh->prepare('SELECT prefix FROM activities WHERE id = :id');
+    $paging = $sth->execute(array(":id" => $_POST["id"]))->fetchColumn() ."-"
+      . substr($_POST["phone"], -4);
     
     $photo_ref = "";
     if (array_key_exists("photo", $_FILES)) {
@@ -45,11 +38,8 @@
           
           /* python analogue of this bit checks the file system for the
            * next image in the sequence, not the database */
-          $result = pg_query($connection, "SELECT max(picture::integer) FROM data WHERE picture != '';") or 
-            die("Error in query: $query." . pg_last_error($connection));
-          $rdata = pg_fetch_assoc($result);
-          pg_free_result($result);
-          $nextImage = intval($rdata["max"]) + 1;
+          $sth = $dbh->query("SELECT max(picture::integer) FROM data WHERE picture != '';");
+          $nextImage = $sth->fetchColumn() + 1;
           
           $parts = explode("/", $_FILES["photo"]["type"]);
           $target_path = $photo_path . str_pad($nextImage, 6, "0", 0) . 
@@ -82,37 +72,33 @@
         $reason = "Unsupported image type";
       }
     } else { $photoSuccess = TRUE; }
-      
-    $query = "INSERT INTO data " .
-                "(name, lastname, phone, \"mobileCarrier\", paging, grade, " .
-                "dob, activity, room, medical, parent1, parent2, "   .
-                "\"parentEmail\", notes, visitor, \"joinDate\", "    .
-                "\"lastSeen\", \"lastModified\", count, picture) " . 
-              " VALUES (" .
-                "'"    . $_POST["name"]         .
-                "', '" . $_POST["lastname"]     .
-                "', '" . $_POST["phone"]        . 
-                "', '" . (isset($_POST["mobileCarrier"]) ? "1" : "0") . 
-                "', '" . $paging .
-                "', '" . $_POST["grade"]        .
-                "', '" . $_POST["dob"]          . 
-                "', '" . (is_numeric($_POST["activity"]) ? $_POST["activity"] : 0 ) . 
-                "', '" . (is_numeric($_POST["room"]) ? $_POST["room"] : 0 )         . 
-                "', '" . $_POST["medical"]      . 
-                "', '" . $_POST["parent1"]      . 
-                "', '" . $_POST["parent2"]      . 
-                "', '" . $_POST["parent_email"] . 
-                "', '" . $_POST["notes"]        . 
-                "', 'f" .
-                "', '" . date("Y-m-d", $_SERVER["REQUEST_TIME"]) .
-                "', '" . date("Y-m-d", $_SERVER["REQUEST_TIME"]) .
-                "', '" . date("Y-m-d H:i:s.u", $_SERVER["REQUEST_TIME"]) . 
-              "', '0', '" . $photo_ref . "') RETURNING id;";
-          
-    $result = pg_query($connection, $query) or 
-      die("Error in query: $query." . pg_last_error($connection));
-    $id = pg_fetch_result($result, 0, 0);
-    pg_free_result($result);
+	  
+    $id = $dbh->query('INSERT INTO data (
+        name, lastname, phone, "mobileCarrier", paging, grade, dob, activity,
+        room, medical, parent1, parent2, "parentEmail", notes, visitor,
+        "joinDate", "lastSeen", "lastModified", count, picture
+      ) VALUES (' . implode(', ', array_map(array($dbh, 'quote'), array(
+        $_POST['name'],
+        $_POST['lastname'],
+        $_POST['phone'],
+        (isset($_POST['mobileCarrier']) ? '1' : '0'),
+        $paging,
+        $_POST['grade'],
+        $_POST['dob'],
+        (is_numeric($_POST['activity']) ? $_POST['activity'] : 0 ),
+        (is_numeric($_POST['room']) ? $_POST['room'] : 0 ),
+        $_POST['medical'],
+        $_POST['parent1'],
+        $_POST['parent2'],
+        $_POST['parent_email'],
+        $_POST['notes'],
+        'f',
+        date('Y-m-d', $_SERVER['REQUEST_TIME']),
+        date('Y-m-d', $_SERVER['REQUEST_TIME']),
+        date('Y-m-d H:i:s.u', $_SERVER['REQUEST_TIME']),
+        '0',
+        $photo_ref
+      ))) . ') RETURNING id')->fetchColumn();
     
     $register = TRUE;
     
@@ -172,7 +158,7 @@
             $_POST["name"] . " " . $_POST["lastname"]) .-->
       <span> </span>
     </div>
-       
+    
     <input type="file" accept="image/*" id="photoinput" name="origphoto" style="height: 0px; width: 0px;">
     <form enctype="multipart/form-data" class="form-horizontal" action="register.php" method="post" name="details">
       <fieldset>
@@ -259,15 +245,12 @@
               <?php
                 echo (is_null($edata["activity"]) ? "<option disabled selected>" .
                     _("Activity") . "</option>\n" : "");
-                $query = "SELECT id, name FROM activities;";
-                $result = pg_query($connection, $query) or
-                    die("Error in query: $query." . pg_last_error($connection));
-                while ($data = pg_fetch_assoc($result)) {
+                $sth = $dbh->query('SELECT id, name FROM activities');
+                while ($data = $sth->fetch(PDO::FETCH_ASSOC)) {
                   echo "<option value=\"{$data["id"]}\"" . 
                     ($data["id"] == $edata["activity"] ? " selected" : "") . 
                     ">{$data["name"]}</option>\n";
                 }
-                pg_free_result($result);
               ?>
             </select>
           </div>
@@ -277,13 +260,9 @@
           <div class="controls">
             <select name="room" id="room">
               <?php
-                $query = "SELECT id, name FROM rooms;";
-                $result = pg_query($connection, $query) or
-                  die("Error in query: $query." . pg_last_error($connection));
-                while ($data = pg_fetch_assoc($result)) {
+                $sth = $dbh->query('SELECT id, name FROM rooms');
+                while ($data = $sth->fetch(PDO::FETCH_ASSOC))
                   echo "<option value=\"{$data["id"]}\">{$data["name"]}</option>\n";
-                }
-                pg_free_result($result);
               ?>
             </select>
           </div>
@@ -377,6 +356,7 @@
 <script src="resources/js/jquery.getparams.js"> </script>
 
 <script type="text/javascript">
+
 $(function(){
   //$("input,select,textarea,checkbox").not("[type=submit]").jqBootstrapValidation();
   
@@ -447,7 +427,7 @@ $(function(){
   }
   resetjcrop();
 
-  $("#photoinput").on("change", function() {
+  $("#photoinput").on("click", function() {
     var filereader = new FileReader();
     filereader.onload = function(e) {
       $("#photopreview")[0].src = e.target.result;
@@ -495,9 +475,4 @@ $(function(){
 });
 </script>
 
-<?php
-  require_once "template/footer.php" ;
-  pg_close($connection);
-?>
-
-
+<?php require_once "template/footer.php"; ?>

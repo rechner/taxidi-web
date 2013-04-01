@@ -67,7 +67,7 @@
         echo "<option value=\"{$data["id"]}\"";
         if ( $data["id"] == $_GET[$sysname[0]] ) {
           echo " selected";
-          $$sysname[0] = $data["name"];
+          $$sysname[0] = $dbh->quote($data["name"]);
         }
         echo ">{$data["name"]}</option>\n";
       }
@@ -93,11 +93,11 @@
     $filters = array();
     foreach (array("service", "activity", "room") as $filter) {
       if (is_numeric($_GET[$filter]) and $_GET[$filter] >= 1) {
-        $filters[] = "statistics.$filter LIKE '{$$filter}'";
+        $filters[] = "statistics.$filter LIKE {$$filter}";
       }
     }
     if ($_GET["datef"] == "single") {
-      $filters[] = "statistics.date = DATE '{$_GET["date"]}'";
+      $filters[] = "statistics.date = to_date(" . $dbh->quote($_GET["date"]) . ",'YYYY-MM-DD')";
     }
     $queryend = (count($filters) > 0 ? " and " . implode(" and ", $filters): "");
   } else if ($_GET["mode"] == "medical") {

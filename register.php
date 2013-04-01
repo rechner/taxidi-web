@@ -26,7 +26,7 @@
 
   if ($_SERVER['REQUEST_METHOD'] == "POST" and array_key_exists('activity', $_POST))  {
     $sth = $dbh->prepare('SELECT prefix FROM activities WHERE id = :id');
-    $paging = $sth->execute(array(":id" => $_POST["id"]))->fetchColumn() ."-"
+    $paging = $sth->execute(array(":id" => $_POST['activity']))->fetchColumn() ."-"
       . substr($_POST["phone"], -4);
     
     $photo_ref = "";

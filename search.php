@@ -13,7 +13,7 @@
   $_REQUEST["search"] = trim($_REQUEST["search"]);
   
   $service = $_REQUEST["service"];
-  $newservice = null;
+  $newservice = 1;
   $now = strtotime(date("H:m:s"));
   $before = false;
   $services = "";
@@ -23,7 +23,7 @@
     $services .= "<option value=\"{$row["id"]}\"" . ($selected ? " selected" : "") . ">{$row["name"]}</option>\n";
     $newservice = $selected ? $row["id"] : $newservice;
   }
-  if ($service == "") {
+  if ($service == "" and $_REQUEST["search"] != "") {
     $_REQUEST["service"] = $newservice;
     header("Location: search.php?".http_build_query($_REQUEST));
   }          

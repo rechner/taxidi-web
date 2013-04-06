@@ -71,7 +71,7 @@
               </div>
             </form>
             
-            <form action="confirmdelete.php" method="post">
+            <form action="confirmdelete.php?search=<?php echo $_REQUEST['search']; ?>&service=<?php echo $_REQUEST['service']; ?>" method="post">
               <div style="margin-bottom: 20px;">
                 <button type="submit" class="btn btn-danger" type="button">Delete Selected</button>
               </div>

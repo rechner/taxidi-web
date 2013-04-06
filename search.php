@@ -79,13 +79,15 @@
                 echo '';
               } else {
                 //Perform a query:
-                if ($inp == '*') {
+                if ($_REQUEST["search"] == '*') {
                   $sql = "SELECT DISTINCT data.id, data.name, lastname, 
                             activities.name, rooms.name, paging
                             FROM \"data\" 
                             LEFT JOIN activities ON data.activity=activities.id
                             LEFT JOIN rooms ON data.room = rooms.id
                             ORDER BY lastname;";
+                  $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                  $sth->execute();
                 } else {
                   $sql = "SELECT DISTINCT data.id, data.name, lastname, 
                             activities.name, rooms.name, paging
@@ -97,10 +99,11 @@
                               OR parent2 ILIKE :inp
                               OR phone LIKE :inp
                               ORDER BY lastname;";
+                  $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                  $sth->execute(array(":inp" => "%".$_REQUEST["search"]."%"));
                 }
                 
-                $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                $sth->execute(array(":inp" => "%".$_REQUEST["search"]."%"));
+                
                                 
                 if ($sth->rowCount() == 0) {
                   echo '<div class="alert alert-error">';

@@ -43,7 +43,6 @@
                 <li><a href="#"><i class="icon-user"></i><?php echo _("Register Visitor"); ?></a></li>
                 <li><a href="#"><i class="icon-print"></i><?php echo _("Print Search"); ?></a></li>
                 <li><a href="#"><i class="icon-download-alt"></i><?php echo _("Download Results"); ?></a></li>
-                <li><a href="#"><i class="icon-trash"></i>Delete Selected</a></li>
               </ul>
             </div>
           </div>
@@ -67,84 +66,95 @@
               <div class="pull-right">
                 Service:
                 <select class="input-medium" name="service">
-                  <?php
-                    echo $services;
-                  ?>
+                  <?php echo $services; ?>
                 </select> 
               </div>
             </form>
             
-            <?php
-              if ($_REQUEST["search"] == "") {
-                echo '';
-              } else {
-                //Perform a query:
-                if ($_REQUEST["search"] == '*') {
-                  $sql = "SELECT DISTINCT data.id, data.name, lastname, 
-                            activities.name, rooms.name, paging
-                            FROM \"data\" 
-                            LEFT JOIN activities ON data.activity=activities.id
-                            LEFT JOIN rooms ON data.room = rooms.id
-                            ORDER BY lastname;";
-                  $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                  $sth->execute();
+            <form action="confirmdelete.php" method="post">
+              <div style="margin-bottom: 20px;">
+                <button type="submit" class="btn btn-danger" type="button">Delete Selected</button>
+              </div>
+              <?php
+                if ($_REQUEST["search"] == "") {
+                  echo '';
                 } else {
-                  $sql = "SELECT DISTINCT data.id, data.name, lastname, 
-                            activities.name, rooms.name, paging
-                            FROM \"data\" 
-                            LEFT JOIN activities ON data.activity=activities.id
-                            LEFT JOIN rooms ON data.room = rooms.id WHERE
-                              data.name || ' ' || lastname ILIKE :inp
-                              OR parent1 ILIKE :inp
-                              OR parent2 ILIKE :inp
-                              OR phone LIKE :inp
+                  //Perform a query:
+                  if ($inp == '*') {
+                    $sql = "SELECT DISTINCT data.id, data.name, lastname, 
+                              activities.name, rooms.name, paging
+                              FROM \"data\" 
+                              LEFT JOIN activities ON data.activity=activities.id
+                              LEFT JOIN rooms ON data.room = rooms.id
                               ORDER BY lastname;";
+                  } else {
+                    $sql = "SELECT DISTINCT data.id, data.name, lastname, 
+                              activities.name, rooms.name, paging
+                              FROM \"data\" 
+                              LEFT JOIN activities ON data.activity=activities.id
+                              LEFT JOIN rooms ON data.room = rooms.id WHERE
+                                data.name || ' ' || lastname ILIKE :inp
+                                OR parent1 ILIKE :inp
+                                OR parent2 ILIKE :inp
+                                OR phone LIKE :inp
+                                ORDER BY lastname;";
+                  }
+                  
                   $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
                   $sth->execute(array(":inp" => "%".$_REQUEST["search"]."%"));
-                }
-                
-                
-                                
-                if ($sth->rowCount() == 0) {
-                  echo '<div class="alert alert-error">';
-                  echo '<a class="close" data-dismiss="alert" href="#">×</a>';
-                  echo "<h4 class=\"alert-heading\">" . 
-                    sprintf(_("No results for &ldquo;%s&rdquo;"), $_REQUEST["search"]). "</h4>";
-                  echo '</div>';
-                } else {
-                  // setup table:
-                  echo '<table class="table">
-                          <thead>
-                            <tr>
-                              <th><input type="checkbox" class="select-all"></th>
-                              <th>' . _("Name") . '</th>
-                              <th>' . _("Activity") . '</th>
-                              <th>' . _("Room") . '</th>
-                              <th>' . _("Paging") . '</th>
-                            </tr>
-                          </thead>
-                          <tbody>';
-                  // iterate over result set
-                  // print each row
-                  foreach ($sth as $row) {
-                    echo '<tr>
-                          <td style="width:30px"><input type="checkbox" name="foo"></td>';
-                    echo '<td><a href="details.php?id='.$row[0].'&query='.$_REQUEST["search"].'&service='.$_REQUEST["service"].'">' . $row[1] . ' ' . $row[2] .'</a></td>';
-                    echo '<td>' . $row[3] . '</td>';
-                    echo '<td>' . $row[4] . '</td>';
-                    echo '<td>' . $row[5] . '</td>';
-                    echo '</tr>';
-                    
+                                  
+                  if ($sth->rowCount() == 0) {
+                    echo '<div class="alert alert-error">';
+                    echo '<a class="close" data-dismiss="alert" href="#">×</a>';
+                    echo "<h4 class=\"alert-heading\">" . 
+                      sprintf(_("No results for &ldquo;%s&rdquo;"), $_REQUEST["search"]). "</h4>";
+                    echo '</div>';
+                  } else {
+                    // setup table:
+                    echo '<table class="table">
+                            <thead>
+                              <tr>
+                                <th><input type="checkbox" class="select-all"></th>
+                                <th>' . _("Name") . '</th>
+                                <th>' . _("Activity") . '</th>
+                                <th>' . _("Room") . '</th>
+                                <th>' . _("Paging") . '</th>
+                              </tr>
+                            </thead>
+                            <tbody>';
+                    // iterate over result set
+                    // print each row
+                    foreach ($sth as $row) {
+                      echo '<tr>
+                            <td style="width:30px"><input type="checkbox" name="'.$row['id'].'"></td>';
+                      echo '<td><a href="details.php?id='.$row[0].'&query='.$_REQUEST["search"].'&service='.$_REQUEST["service"].'">' . $row[1] . ' ' . $row[2] .'</a></td>';
+                      echo '<td>' . $row[3] . '</td>';
+                      echo '<td>' . $row[4] . '</td>';
+                      echo '<td>' . $row[5] . '</td>';
+                      echo '</tr>';
+                      
+                    }
+                    echo '</tbody></table>';
                   }
-                  echo '</tbody></table>';
                 }
-              }
-            ?>
+              ?>
+            </form>
           </div>
       </div>
       <script>
         $("select[name=service]").change(function() {
           location.href = location.href.replace(/service=(\d+)/gi, "service=" + $("select[name=service]").val());
         });
+        
+        /*$(function() {
+          $("#delete").click(function(e) {
+            e.preventDefault();
+            var checked = []
+            $(":checked").closest("tr").find("td:nth-of-type(2) a").each(function() {
+              checked.push(parseInt(this.href.match(/id=(\d+)/m)[1]).toString(16).toUpperCase());
+            });
+            console.log(checked.toString());
+          });
+        });*/
       </script>
 <?php require_once "template/footer.php" ; ?>

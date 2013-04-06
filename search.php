@@ -43,6 +43,7 @@
                 <li><a href="#"><i class="icon-user"></i><?php echo _("Register Visitor"); ?></a></li>
                 <li><a href="#"><i class="icon-print"></i><?php echo _("Print Search"); ?></a></li>
                 <li><a href="#"><i class="icon-download-alt"></i><?php echo _("Download Results"); ?></a></li>
+                <li><a href="#"><i class="icon-trash"></i>Delete Selected</a></li>
               </ul>
             </div>
           </div>
@@ -136,7 +137,6 @@
                 }
               }
             ?>
-            
           </div>
       </div>
       <script>

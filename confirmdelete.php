@@ -21,15 +21,21 @@
   else
     ($page_title = 'Confirm Delete') && require_once 'template/header.php';
 ?>
-<form action="" method="post">
-  <?php
-    echo 'Are you sure you wish to delete the following ', count($todelete), ' people?<br><ul>';
-    while ($row = $sth->fetch(PDO::FETCH_ASSOC))
-      echo sprintf('<li><input type="checkbox" checked style="display:none" name="%1$d">%2$s %3$s</li>',
-        $row['id'], $row['name'], $row['lastname']);
-    echo '</ul>';
-  ?>
-  <button type="submit" name="action" value="delete" class="btn btn-danger" type="button">Delete Selected</button>
-  <a class="btn" href="<?php echo $returnuri; ?>">Cancel</a>
-</form>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span4 offset4">
+      <form action="" method="post">
+        <?php
+          echo 'Are you sure you wish to delete the following ', count($todelete), ' people?<br><ul>';
+          while ($row = $sth->fetch(PDO::FETCH_ASSOC))
+            echo sprintf('<li><input type="checkbox" checked style="display:none" name="%1$d">%2$s %3$s</li>',
+              $row['id'], $row['name'], $row['lastname']);
+          echo '</ul>';
+        ?>
+        <button type="submit" name="action" value="delete" class="btn btn-danger" type="button">Delete Selected</button>
+        <a class="btn" href="<?php echo $returnuri; ?>">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
 <?php require_once "template/footer.php" ?>

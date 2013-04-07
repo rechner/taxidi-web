@@ -11,12 +11,12 @@
   $confirmed = array_key_exists('action', $_POST) && $_POST['action'] == 'delete';
   $sth = $dbh->prepare((!$confirmed ? 'SELECT id,name,lastname' : 'DELETE') .
     ' FROM data WHERE id IN (' . substr(str_repeat(',?', count($todelete)), 1) . ')');
-  $sth->execute($todelete);
+  count($todelete) > 0 && $sth->execute($todelete);
   
   $returnuri = sprintf('search.php?search=%1$s&service=%2$d',
       $_REQUEST['search'], $_REQUEST['service']);
   
-  if ($confirmed)
+  if ($confirmed || count($todelete) == 0)
     header('Location: ' . $returnuri) && exit;
   else
     ($page_title = 'Confirm Delete') && require_once 'template/header.php';

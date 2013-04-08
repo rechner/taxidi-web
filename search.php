@@ -72,7 +72,7 @@
             </form>
             
             <form action="confirmdelete.php?search=<?php echo $_REQUEST['search']; ?>&service=<?php echo $_REQUEST['service']; ?>" method="post">
-              <div style="margin-bottom: 20px;">
+              <div id="actionbar" style="margin-bottom: 20px;">
                 <button type="submit" class="btn btn-danger" type="button">Delete Selected</button>
               </div>
               <?php
@@ -145,6 +145,12 @@
         $("select[name=service]").change(function() {
           location.href = location.href.replace(/service=(\d+)/gi, "service=" + $("select[name=service]").val());
         });
+        
+        var showbar = function() {
+           $('#actionbar')[$(":checkbox:checked").length ? "show" : "hide"]();
+        }
+        $(":checkbox").click(showbar);
+        showbar();
         
         /*$(function() {
           $("#delete").click(function(e) {

@@ -28,6 +28,7 @@
         }
         $("table " + check + ".select-all").click(selectall).each(selectall).length > 0 && 
         $("table " + check + ":not(.select-all)").click(function() {
+          // select all unmarked checkboxes
           $(check + ".select-all", $(this).closest("table")).attr("checked", false);
         });
       });

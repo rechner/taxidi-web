@@ -38,10 +38,11 @@
             foreach (explode(",", $_SERVER[$key]) as $ip) {
                 if (filter_var($ip, FILTER_VALIDATE_IP) !== false) {
                     return $ip;
-                }
-            }
-        }
-    }
+                  }
+              }
+          }
+      }
+  }
     
    /**
    * This function generates a password salt as a string of x (default = 15) characters
@@ -60,5 +61,5 @@
           }
           return $salt;
   }
-}
+
 ?>

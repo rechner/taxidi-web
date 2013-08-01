@@ -5,14 +5,62 @@
   
   require_once "config.php";
   require_once "functions.php";
-  
-  if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $errorFlag = false; // let us know further down if there was a problem
-    
-  }
 
   $page_title = "User Management";
   require_once "template/header.php";
+  
+  $dbh = db_connect();
+  $errorFlag = false; // let us know further down if there was a problem
+  $successFlag = false;
+  
+  if ($_SERVER['REQUEST_METHOD'] == "POST") {
+          
+    // Check if user exists
+    if ($_POST["username"] != "") {
+        $sql = "SELECT * FROM users WHERE \"user\" = :user";
+        $sth = $dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $sth->execute(array(":user" => $_POST["username"]));
+        
+        if ($sth->rowCount() != 0) {
+            $errorFlag = true;
+            $errorMessage = "Username <strong>".$_POST['username']."</strong> already exists.";
+        } else {
+            // Check if passwords match
+            if ($_POST["pass"] === $_POST["confirmpass"]) {
+                // Everything's good, so add the row:
+                $salt = generateSalt(40);
+                $hash = hash("sha256", $_POST["pass"] . $salt);
+                
+                // INSERT query
+                $sql = "INSERT INTO users(\"user\", hash, salt, name, " .
+                    "admin, \"leftHanded\") VALUES (:user, :hash, " .
+                    ":salt, :name, :admin, :hand);";
+                $sth = $dbh->prepare($sql, 
+                    array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                try {
+                    $sth->execute(array(":user" => $_POST["username"],
+                                    ":hash" => $hash,
+                                    ":salt" => $salt,
+                                    ":name" => $_POST["name"],
+                                    ":admin" => ( isset($_POST["admin"]) ? 1 : 0 ),
+                                    ":hand" => ( isset($_POST["lefthanded"]) ? 1 : 0)));
+                } catch (PDOError $e) {
+                    $errorFlag = true;
+                    $errorMessage = $e->getMessage();
+                    break;
+                }
+                
+                $successFlag = true;
+                                    
+            } else {
+                $errorFlag = true;
+                $errorMessage = "Passwords do not match.";
+            }
+        }
+    }  
+    
+  }
+
 ?>
 
   <!-- sidebar -->
@@ -20,11 +68,11 @@
     <div class="well sidebar-nav">
       <ul class="nav nav-list">
         <li class="nav-header"><?php echo _("Actions"); ?></li>
-        <li <?php echo ($SESSION['useradmin'] >= true ? 'class="disabled"' : 'class="active"'); ?>
+        <li <?php echo ($_SESSION['useradmin'] >= true ? 'class="disabled"' : 'class="active"'); ?>
           ><a href="#"><i class="icon-plus-sign"></i><?php echo _("Add User"); ?></a></li>
-        <li <?php echo ($SESSION['useradmin'] >= true ? 'class="disabled"' : ''); ?>
+        <li <?php echo ($_SESSION['useradmin'] >= true ? 'class="disabled"' : ''); ?>
           ><a href="#"><i class="icon-user"></i><?php echo _("Modify User"); ?></a></li>
-        <li <?php echo ($SESSION['useradmin'] >= true ? 'class="disabled"' : ''); ?>
+        <li <?php echo ($_SESSION['useradmin'] >= true ? 'class="disabled"' : ''); ?>
           ><a href="#"><i class="icon-remove"></i><?php echo _("Delete User"); ?></a></li>
       </ul>
     </div>
@@ -34,7 +82,7 @@
   <!-- main content -->
   <div class="span9">
     <?php
-      if ($SESSION['useradmin']) {
+      if (!$_SESSION['useradmin']) {
         echo  '<div class="well"><div class="alert alert-error">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Incorrect permissions.</strong><br>
@@ -42,7 +90,21 @@
                 If you believe this is an error, contact your system
                 administrator.
               </div></div>';
-      } else { ?>
+      } else { 
+          
+        if ($errorFlag) 
+           echo '<div class="alert alert-error">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Unable to add user.</strong><br>'. $errorMessage .
+                '</div>';
+                
+        if ($successFlag)
+            echo '<div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Success.</strong><br>Sucessfully added the user <strong>' .
+                $_POST["username"] . '</strong> to the system.
+                </div>';
+    ?>
     
         <form class="well form-horizontal" action="users.php" name="add" method="post">
           <fieldset>

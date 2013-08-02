@@ -30,9 +30,9 @@
       $sth->closeCursor();
     }
     $sth = $dbh->prepare('SELECT * FROM notifications
-      WHERE isunread = true AND datetime > :olddate
+      WHERE isunread = true AND datetime > ?
       ORDER BY datetime');
-    $sth->execute(array(':olddate' => $old));
+    $sth->execute(array($old));
     while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
       print_r($row);
     }

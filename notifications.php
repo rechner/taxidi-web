@@ -7,14 +7,13 @@
   
   $method = $_SERVER['REQUEST_METHOD'];
   if ($method == 'POST') {
-    $sql = 'INSERT INTO notifications (
-      message, priority, location) VALUES (
-      :message, :priority, :location);';
-    $sth = $dbh->prepare($sql);
+    $sth = $dbh->prepare('INSERT INTO notifications
+      (message, priority, location)
+      VALUES (?, ?, ?)');
     $sth->execute(array(
-      ':message'  => $_REQUEST['message'],
-      ':priority' => $_REQUEST['priority'],
-      ':location' => $_REQUEST['location']
+      $_REQUEST['message'],
+      $_REQUEST['priority'],
+      $_REQUEST['location']
     ));
   } elseif ($method == 'GET') {
     ignore_user_abort(false);

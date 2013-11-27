@@ -7,6 +7,11 @@
   
   require_once "functions.php";
   session_assert_valid();
+
+  if(!isset($_SERVER['HTTPS'])) {  //Force use of SSL
+            header("location: https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+        }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,7 +56,7 @@
       }
     </style>
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="https://raw.github.com/jschr/bootstrap-modal/master/css/bootstrap-modal.css" rel="stylesheet">
+    <link href="resources/css/bootstrap-modal.css" rel="stylesheet">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>

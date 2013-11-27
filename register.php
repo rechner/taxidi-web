@@ -73,7 +73,7 @@
         $reason = "Unsupported image type";
       }
     } else { $photoSuccess = TRUE; }
-	  
+    
     $id = $dbh->query('INSERT INTO data (
         name, lastname, phone, "mobileCarrier", paging, grade, dob, activity,
         room, medical, parent1, parent2, "parentEmail", notes, visitor,
@@ -352,7 +352,7 @@
 
 
 <link href="resources/css/Jcrop.min.css" rel="stylesheet">
-<script src="https://raw.github.com/tapmodo/Jcrop/master/js/jquery.Jcrop.min.js"> </script>
+<script src="resources/js/jquery.Jcrop.min.js"> </script>
 <script src="resources/js/canvas_toblob.js"> </script>
 <script src="resources/js/jquery.getparams.js"> </script>
 
